@@ -1,0 +1,77 @@
+@startuml sequence
+
+actor Visiteur
+actor Participant
+actor Organisateur
+participant "Webapp" as Webapp
+participant "Serveur" as Serveur
+participant "BDD" as BDD
+
+== Inscription du visiteur ==
+Visiteur -> Webapp : Inscription (email, mot de passe)
+Webapp -> Serveur : Transfert des informations d'inscription
+Serveur -> BDD : Enregistrer nouvel utilisateur (visiteur)
+BDD -> Serveur : Confirmation enregistrement
+Serveur -> Webapp : Confirmation d'inscription
+Webapp -> Visiteur : Compte créé avec succès
+
+== Connexion du participant ==
+Visiteur -> Webapp : Se connecter (email, mot de passe)
+Webapp -> Serveur : Vérification des informations de connexion
+Serveur -> BDD : Valider les informations utilisateur
+BDD -> Serveur : Informations correctes
+Serveur -> Webapp : Connexion réussie
+Webapp -> Visiteur : Page d'accueil affichée (Visiteur devient Participant)
+
+== Création d'événement par l'organisateur ==
+Organisateur -> Webapp : Créer un événement
+Webapp -> Serveur : Requête création événement
+Serveur -> BDD : Enregistrer événement (nom, date, QR code...)
+BDD -> Serveur : Confirmation enregistrement
+Serveur -> Webapp : QR code et code d'accès générés
+Webapp -> Organisateur : QR code et code d'accès affichés
+
+== Connexion du participant par QR code ==
+Participant -> Webapp : Scanner le QR code
+Webapp -> Serveur : Vérifier accès à l'événement
+Serveur -> BDD : Vérification QR code
+BDD -> Serveur : Confirmation validité événement
+Serveur -> BDD : Envoie d'une requête pour enregister le participant
+BDD -> Serveur : Confirmation enregistrement
+Serveur -> Webapp : Accès accordé
+Webapp -> Participant : Page de téléversement affichée
+
+== Téléversement des photos ==
+Participant -> Webapp : Téléverser photos/vidéos
+Webapp -> Serveur : Transfert des photos/vidéos
+Serveur -> BDD : Enregistrer les photos/vidéos (statut : en attente)
+BDD -> Serveur : Confirmation enregistrement
+Serveur -> Webapp : Confirmation téléversement
+Webapp -> Participant : Photos/vidéos en attente de validation
+
+== Modération ==
+Organisateur -> Webapp : Accéder aux photos/vidéos à valider
+Webapp -> Serveur : Requête pour récupérer les téléversements en attente
+Serveur -> BDD : Récupérer photos/vidéos non validées
+BDD -> Serveur : Envoi des téléversements
+Serveur -> Webapp : Envoi des photos/vidéos à l'organisateur
+Organisateur -> Webapp : Valider ou rejeter photos/vidéos
+Webapp -> Serveur : Mise à jour du statut des photos/vidéos
+Serveur -> BDD : Mise à jour des statuts (validé/rejeté)
+BDD -> Serveur : Confirmation mise à jour
+Serveur -> Webapp : Confirmation statut photos/vidéos
+Webapp -> Organisateur : Confirmation validation
+
+== Ajout de modérateur par l'organisateur ==
+Organisateur -> Webapp : Désigner un participant comme modérateur
+Webapp -> Serveur : Mise à jour du rôle du participant
+Serveur -> BDD : Mettre à jour le rôle du participant (modérateur)
+BDD -> Serveur : Confirmation mise à jour
+Serveur -> Webapp : Confirmation changement de rôle
+Webapp -> Organisateur : Participant désigné comme modérateur
+
+== Notifications aux participants ==
+Serveur -> Participant : Envoi email notification (photos validées)
+Serveur -> Participant : Envoi email notification (clôture téléversement)
+
+@enduml
