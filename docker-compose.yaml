@@ -5,7 +5,7 @@ services:
       context: ./FrontOffice
       dockerfile: dockerfile
     volumes:
-      - ./FrontOffice:/frontOffice
+      - ./FrontOffice:/usr/src/frontOffice
     ports:
       - "5173:5173"
 
@@ -14,7 +14,7 @@ services:
       context: ./Api
       dockerfile: dockerfile
     volumes:
-      - ./Api:/api
+      - ./Api:/usr/src/api
     ports:
       - "3000:3000"
     depends_on:
@@ -27,7 +27,7 @@ services:
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
     env_file:
-      - api.env
+      - .api.env
 
   adminer:
     image: adminer
