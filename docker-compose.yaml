@@ -1,0 +1,45 @@
+services:
+
+  frontoffice-westiti:
+    build: 
+      context: ./FrontOffice
+      dockerfile: dockerfile
+    volumes:
+      - ./FrontOffice:/frontOffice
+    ports:
+      - "5173:5173"
+
+  api-westiti:
+    build:
+      context: ./Api
+      dockerfile: dockerfile
+    volumes:
+      - ./Api:/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres-westiti
+
+  postgres-westiti:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    env_file:
+      - api.env
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  
+  # nginx:
+  #   image: nginx
+  #   volumes:
+  #     - ./nginx/local.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - 80:80
+    
