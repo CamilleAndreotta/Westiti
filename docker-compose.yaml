@@ -1,4 +1,4 @@
-services:
+sservices:
   frontoffice-westiti:
     build:
       context: ./FrontOffice
