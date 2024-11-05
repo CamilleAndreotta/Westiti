@@ -5,7 +5,7 @@ services:
       context: ./FrontOffice
       dockerfile: dockerfile
     volumes:
-      - ./FrontOffice:/frontOffice
+      - ./FrontOffice:/usr/src/frontOffice
     ports:
       - "5173:5173"
 
