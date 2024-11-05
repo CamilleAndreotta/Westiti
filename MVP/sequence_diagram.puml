@@ -1,0 +1,30 @@
+@startuml sequence
+
+actor Visiteur
+
+participant "Webapp" as Webapp
+participant "Serveur" as Serveur
+participant "BDD" as BDD
+
+== Connexion du participant ==
+Visiteur -> Webapp : Se connecter (email, mot de passe)
+Webapp -> Serveur : Vérification des informations de connexion
+Serveur -> BDD : Valider les informations utilisateur
+BDD -> BDD : Vérification des informations utilisateur
+BDD --> Serveur : Erreur d'authentification (401) : Combinaison email/mot de passe incorrecte
+Serveur --> Webapp : Erreur d'authentification (401) : Combinaison email/mot de passe incorrecte
+Webapp --> Visiteur : Erreur d'authentification (401) : Combinaison email/mot de passe incorrecte
+BDD -> BDD : Informations utilisateur valides
+BDD --> Serveur : Informations correctes (200)
+Serveur -> Serveur : Génération JWT
+
+Serveur --> Webapp : Connexion réussie (200)
+Webapp --> Visiteur : Page d'accueil affichée (Visiteur devient Participant)
+
+
+
+
+
+
+
+@enduml
