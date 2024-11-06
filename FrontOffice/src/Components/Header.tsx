@@ -1,8 +1,11 @@
+import "../styles/Header.css"
+
 const Header = () => {
     return (
-        <header>
-            <h1>Header</h1>
-        </header>
+        <div className="header">
+            <img src="logo" alt="logo" />
+            <div>|||</div>
+        </div>
     )
 }
 
