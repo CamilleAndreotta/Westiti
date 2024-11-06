@@ -2,7 +2,7 @@ import { Route, BrowserRouter, Routes } from "react-router-dom";
 
 import Homepage from "./Pages/Homepage";
 
-import "./styles/App.css";
+import "./styles/App.scss";
 
 const App = () => {
   return (
