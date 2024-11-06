@@ -1,11 +1,11 @@
 services:
-
   frontoffice-westiti:
-    build: 
+    build:
       context: ./FrontOffice
       dockerfile: dockerfile
     volumes:
       - ./FrontOffice:/usr/src/frontOffice
+      - node_modules:/usr/src/frontOffice/node_modules
     ports:
       - "5173:5173"
 
@@ -15,6 +15,7 @@ services:
       dockerfile: dockerfile
     volumes:
       - ./Api:/usr/src/api
+      - node_modules:/usr/src/Api/node_modules
     ports:
       - "3000:3000"
     depends_on:
@@ -35,11 +36,12 @@ services:
     ports:
       - "8080:8080"
 
-  
   # nginx:
   #   image: nginx
   #   volumes:
   #     - ./nginx/local.conf:/etc/nginx/nginx.conf
   #   ports:
   #     - 80:80
-    
+
+volumes:
+  node_modules:
