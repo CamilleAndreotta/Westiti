@@ -7,6 +7,8 @@
     height: 80vh;
   }
   .signup__container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
   }
@@ -70,11 +72,9 @@
   width: 100%;
 }
 .signup__input:hover {
-    border: #0056b3 solid 2px!important;
-    box-shadow: 1px 1px 5px 1px  #0056b3;
-    box-sizing: border-box!important;
+  border: #0056b3 solid 2px !important;
+  box-shadow: 1px 1px 5px 1px #0056b3;
 }
-
 .signup__submit {
   padding: 1rem 2rem;
   font-size: 1rem;
@@ -86,9 +86,24 @@
   text-align: center;
   cursor: pointer;
 }
+.signup__submit:disabled {
+  cursor: not-allowed;
+}
 
 .signup__submit:hover {
   background-color: #0056b3;
   color: #fff;
   cursor: pointer;
+}
+.signup__container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.signup__account-exist {
+  color: wheat;
+}
+.signup__account-exist > a:visited {
+  color: grey;
 }
