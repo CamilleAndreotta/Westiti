@@ -1,24 +1,27 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import image from "../assets/img/loadingscreen.webp";
 import "../styles/homepage.css";
+import Button from "../Components/Button";
+import { Link } from "react-router-dom";
 
 const Homepage: React.FC = () => {
   return (
     <div className="homepage">
-      <div className="left__section">
-        <h1>Bienvenue sur Westiti</h1>
-        <div className="buttons">
-          <Link to="/signup" className="signup__button">
-            Signup
-          </Link>
-          <Link to="/signin" className="signin__button">
-            Signin
-          </Link>
+      <div className="homepage__box">
+        <div className="left__section">
+          <h1>Bienvenue sur Westiti</h1>
+          <div className="buttons">
+            <Button className="btn" to="/signup">
+              S'inscrire
+            </Button>
+            <Link to="/signin">
+              <Button className="btn">Se connecter</Button>
+            </Link>
+          </div>
         </div>
-      </div>
-      <div className="right__section">
-        <img src={image} alt="Home" />
+        <div className="right__section">
+          <img src={image} alt="Home" />
+        </div>
       </div>
     </div>
   );
