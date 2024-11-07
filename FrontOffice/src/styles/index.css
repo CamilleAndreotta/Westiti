@@ -1,3 +1,5 @@
-* {
+#root{
   box-sizing: border-box;
+  font-family: var(--font_family_primary);
+  font-size: 20px;
 }
