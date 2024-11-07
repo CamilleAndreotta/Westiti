@@ -1,13 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
   public async create(createUserDto: CreateUserDto) {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+    if (
+      !createUserDto.email.match(/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/i)
+    ) {
+      throw new UnauthorizedException({ message: 'Email invalide' });
+    }
+
+    if (
+      createUserDto.password.match(/[a-z]/g) === null ||
+      createUserDto.password.match(/[A-Z]/g) === null ||
+      createUserDto.password.match(/[0-9]/g) === null ||
+      createUserDto.password.match(/[^a-zA-Z\d]/g) === null
+    ) {
+      throw new UnauthorizedException({ message: 'Mot de passe faible' });
+    }
+
+    if (createUserDto.password.length < 12) {
+      throw new UnauthorizedException({ message: 'Mot de passe trop court' });
+    }
     return this.prismaService.user.upsert({
       where: {
         email: createUserDto.email,
@@ -16,8 +37,45 @@ export class UserService {
       create: {
         name: createUserDto.name,
         email: createUserDto.email,
-        password: createUserDto.password,
+        password: hashedPassword,
         avatar: 'test',
+      },
+    });
+  }
+
+  public async update(id: string, updateUserDto: UpdateUserDto) {
+    if (
+      updateUserDto.password.match(/[a-z]/g) === null ||
+      updateUserDto.password.match(/[A-Z]/g) === null ||
+      updateUserDto.password.match(/[0-9]/g) === null ||
+      updateUserDto.password.match(/[^a-zA-Z\d]/g) === null
+    ) {
+      throw new UnauthorizedException({ message: 'Mot de passe faible' });
+    }
+
+    if (updateUserDto.password.length < 12) {
+      throw new UnauthorizedException({ message: 'Mot de passe trop court' });
+    }
+
+    if (
+      !updateUserDto.email.match(/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/i)
+    ) {
+      throw new UnauthorizedException({ message: 'Email invalide' });
+    }
+
+    const user = await this.findOne(id);
+    let hashedPassword = user.password;
+    if (updateUserDto.password !== undefined) {
+      hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+    }
+
+    return this.prismaService.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updateUserDto,
+        password: hashedPassword,
       },
     });
   }
@@ -34,14 +92,10 @@ export class UserService {
     });
   }
 
-  public async update(id: string, updateUserDto: UpdateUserDto) {
-    return this.prismaService.user.update({
+  findByEmail(email: string) {
+    return this.prismaService.user.findUnique({
       where: {
-        id,
-      },
-      data: {
-        ...updateUserDto,
-        updated_at: new Date(),
+        email: email,
       },
     });
   }
