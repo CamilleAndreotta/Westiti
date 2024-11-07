@@ -1,0 +1,33 @@
+.user__box {
+  position: relative;
+}
+
+.user__box input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+
+.user__box label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.user__box input:focus ~ label,
+.user__box input:valid ~ label {
+  top: -20px;
+  left: 0;
+  font-size: 12px;
+}

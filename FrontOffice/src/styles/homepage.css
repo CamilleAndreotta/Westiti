@@ -1,7 +1,31 @@
+html,
+body {
+  margin: 0;
+  height: 100vh;
+  padding: 0;
+  background-color: #171420;
+}
+
 .homepage {
   display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
   background-color: #171420;
+}
+
+.homepage__box {
+  width: 80%;
+  max-width: 1200px;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .left__section {
@@ -15,6 +39,7 @@
 .left__section h1 {
   font-size: 3rem;
   margin-bottom: 2rem;
+  color: #fff;
 }
 
 .buttons {
@@ -23,52 +48,28 @@
   gap: 1rem;
 }
 
-.signup__button,
-.signin__button {
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  text-align: center;
-}
-
-.signup__button:hover,
-.signin__button:hover {
-  background-color: #0056b3;
-  color: #fff;
-}
-
 .right__section {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .right__section img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  max-height: 600px;
+  border-radius: 10px;
 }
 
-/* Responsivité */
+/* Responsive */
 @media (max-width: 768px) {
-  .homepage {
+  .homepage__box {
     flex-direction: column;
   }
 
-  .left__section,
-  .right__section {
-    flex: none;
+  .right__section img {
+    max-height: none;
     width: 100%;
-    height: 50vh;
-  }
-
-  .left__section {
-    order: 2;
-  }
-
-  .right__section {
-    order: 1;
   }
 }
