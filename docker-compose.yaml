@@ -5,7 +5,7 @@ services:
       dockerfile: dockerfile
     volumes:
       - ./FrontOffice:/usr/src/frontOffice
-      - node_modules:/usr/src/frontOffice/node_modules
+      - /usr/src/frontOffice/node_modules
     ports:
       - "5173:5173"
 
@@ -15,13 +15,14 @@ services:
       dockerfile: dockerfile
     volumes:
       - ./Api:/usr/src/api
-      - node_modules:/usr/src/Api/node_modules
+      - /usr/src/api/node_modules
     ports:
       - "3000:3000"
     depends_on:
       - postgres-westiti
 
   postgres-westiti:
+    container_name: postgres-westiti
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -42,6 +43,3 @@ services:
   #     - ./nginx/local.conf:/etc/nginx/nginx.conf
   #   ports:
   #     - 80:80
-
-volumes:
-  node_modules:
