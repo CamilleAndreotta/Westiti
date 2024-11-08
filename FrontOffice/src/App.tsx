@@ -4,18 +4,20 @@ import AOS from "aos";
 import Homepage from "./Pages/Homepage";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
+import EventsPage from "./Pages/EventsPage";
 
-import 'aos/dist/aos.css'; 
+import "aos/dist/aos.css";
 import "./styles/app.css";
 
 const App = () => {
- AOS.init();
+  AOS.init();
   return (
-    <BrowserRouter >
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/events" element={<EventsPage />} />
       </Routes>
     </BrowserRouter>
   );
