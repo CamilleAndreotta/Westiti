@@ -22,4 +22,30 @@ model user {
   avatar     String?
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
+  creator event[]
+  participations userevent[]
+}
+
+model event {
+  id String @id @default(uuid())
+  name String
+  content String
+  started_at DateTime @db.Timestamp(6)
+  ended_at DateTime @db.Timestamp(6)
+  access_code String
+  upload_status Boolean
+  picture String
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+  creator_id user @relation(fields: [userId], references: [id])
+  userId String
+  participants userevent[]
+}
+
+model userevent {
+  id Int @id @default(autoincrement())
+  user_id user @relation(fields: [userId], references: [id])
+  userId String
+  event_id event @relation(fields: [eventId], references: [id])
+  eventId String
 }
