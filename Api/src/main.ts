@@ -4,6 +4,16 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: [
+      'http://localhost:5173',
+      'localhost:3000',
+      'http://localhost',
+      'http://app.localhost',
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  });
   const config = new DocumentBuilder()
     .setTitle('WeStiti API')
     .setDescription('WeStiti description')
