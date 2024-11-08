@@ -1,7 +1,9 @@
 import { useState } from "react";
 import passwordValidator from "password-validator";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+
 import validator from "validator";
+import Layout from "../Components/Layout";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import AuthLayout from "../Components/AuthLayout";
@@ -10,6 +12,7 @@ import "../styles/signup.css";
 import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
+import { toast, ToastContainer } from "react-toastify";
 
 type UserSignupProps = {
   email: string;
@@ -18,6 +21,7 @@ type UserSignupProps = {
   username: string;
 };
 const Signup = () => {
+  const navigate = useNavigate();
   const [signup, setSignup] = useState<UserSignupProps>({
     email: "",
     password: "",
@@ -107,7 +111,7 @@ const Signup = () => {
           name: signup.username,
         }),
       });
-
+      console.log(response);
       const data = await response.json();
       console.log(data);
 
@@ -115,13 +119,35 @@ const Signup = () => {
         console.log("Une erreur s'est produite pendant la création du compte");
         return;
       }
+      localStorage.setItem("isConnected", "true");
+      localStorage.setItem("userId", data.id);
+      localStorage.setItem("username", data.name);
+      localStorage.setItem("email", data.email);
+      localStorage.setItem("avatar", data.avatar);
 
+      toast.success("Compte crée", {
+        autoClose: 2000,
+        position: "bottom-center",
+      });
+      navigate(`/events/${data.id}`);
       console.log("Compte créé avec succès");
     } catch (error) {
       console.log("Erreur:", error);
     }
   };
 
+
+  const userInfoAreOk = () => {
+    if (
+      !signup.email ||
+      !signup.password ||
+      !signup.password_confirmation ||
+      !signup.username
+    ) {
+      return false;
+    }
+    return true;
+  };
   return (
     <AuthLayout title="Inscription">
       <form onSubmit={submit}>
@@ -163,16 +189,7 @@ const Signup = () => {
             Connectez-vous
           </Link>
         </p>
-        <Button
-          className="btn"
-          type="submit"
-          disabled={
-            !signup.email ||
-            !signup.password ||
-            !signup.password_confirmation ||
-            !signup.username
-          }
-        >
+        <Button className="btn" type="submit"/*  disabled={userInfoAreOk()} */>
           Créer son compte
         </Button>
       </form>

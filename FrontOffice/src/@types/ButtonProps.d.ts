@@ -3,6 +3,6 @@ export interface ButtonProps {
   onClick?: () => void; 
   children: React.ReactNode; 
   className?: string; 
-  type?:string| undefined;
+  type?:"submit" | "reset" | "button";
   disabled?:string
 }
