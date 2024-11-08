@@ -18,7 +18,7 @@ export class AuthService {
     if (
       !registerDto.email.match(/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/i)
     ) {
-      throw new UnauthorizedException({ message: 'Email invalide123' });
+      throw new UnauthorizedException({ message: 'Email invalide' });
     }
 
     const user = await this.userService.findByEmail(registerDto.email);
