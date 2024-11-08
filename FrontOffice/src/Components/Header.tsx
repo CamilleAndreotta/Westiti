@@ -10,7 +10,7 @@ import "../styles/header.css";
 const Header = () => {
   const [menuBurgerIsOpen, setMenuBurgerIsOpen] = useState(false);
   const [userIsConnected, setUserIsConnected] = useState(false);
-  
+
   const navigate = useNavigate();
 
   const userName: string = "John Doe";
@@ -43,7 +43,9 @@ const Header = () => {
   return (
     <div className="header">
       <div className="header__container">
-        <img className="header__logo" src={Logo} alt="logo" />
+        <Link to="/">
+          <img className="header__logo" src={Logo} alt="logo" />
+        </Link>
         {menuBurgerIsOpen ? (
           <img
             src={BurgerMenuOpen}

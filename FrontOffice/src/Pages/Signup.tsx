@@ -1,14 +1,14 @@
 import { useState } from "react";
 import passwordValidator from "password-validator";
 import { Link } from "react-router-dom";
-import validator from 'validator'
-import Layout from "../Components/Layout";
+import validator from "validator";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
+import AuthLayout from "../Components/AuthLayout";
 
 import "../styles/signup.css";
-import "../styles/input.css"
-import "../styles/button.css"
+import "../styles/input.css";
+import "../styles/button.css";
 import "aos/dist/aos.css";
 
 type UserSignupProps = {
@@ -40,7 +40,7 @@ const Signup = () => {
       .has()
       .lowercase() // Must have lowercase letters
       .has()
-      .digits(1)// Must have at least 1 digit
+      .digits(1) // Must have at least 1 digit
       .has()
       .symbols(1) // Must have at least 1 symbol
       .has()
@@ -48,7 +48,7 @@ const Signup = () => {
       .spaces() // Should not have spaces
       .is()
       .not()
-      .oneOf(["Passw0rd", "Password123", '1234', 'azerty']); // Blacklist these values
+      .oneOf(["Passw0rd", "Password123", "1234", "azerty"]); // Blacklist these values
 
     console.log(schema.validate(signup.password));
     if (!schema.validate(password)) {
@@ -94,16 +94,20 @@ const Signup = () => {
       console.log("Pas d'email");
       return;
     }
-    
-    try {      
+
+    try {
       const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({password: signup.password,email :signup.email,  name : signup.username}),
+        body: JSON.stringify({
+          password: signup.password,
+          email: signup.email,
+          name: signup.username,
+        }),
       });
-      
+
       const data = await response.json();
       console.log(data);
 
@@ -119,8 +123,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="login__box">
-      <h2>Inscription</h2>
+    <AuthLayout title="Inscription">
       <form onSubmit={submit}>
         <Input
           type="text"
@@ -173,7 +176,7 @@ const Signup = () => {
           Créer son compte
         </Button>
       </form>
-    </div>
+    </AuthLayout>
   );
 };
 

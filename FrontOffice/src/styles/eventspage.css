@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+body {
+  margin: 40px 0;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #171420;
+  -webkit-font-smoothing: antialiased;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  padding-top: 100px;
+}
+
+.container {
+  padding: 40px 80px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 40px;
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import { Link } from "react-router-dom";
+import AuthLayout from "../Components/AuthLayout";
 
 import "../styles/signin.css";
 import "../styles/button.css";
@@ -15,8 +16,7 @@ const Signin: React.FC = () => {
   };
 
   return (
-    <div className="login__box">
-      <h2>Connexion</h2>
+    <AuthLayout title="Connexion">
       <form onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -40,9 +40,11 @@ const Signin: React.FC = () => {
             Inscrivez-vous
           </Link>
         </p>
-        <Button  className="btn" type="submit">Se connecter</Button>
+        <Button className="btn" type="submit">
+          Se connecter
+        </Button>
       </form>
-    </div>
+    </AuthLayout>
   );
 };
 
