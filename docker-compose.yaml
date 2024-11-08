@@ -20,6 +20,8 @@ services:
       - "3000:3000"
     depends_on:
       - postgres-westiti
+    env_file:
+      - .api.env
 
   postgres-westiti:
     container_name: postgres-westiti
