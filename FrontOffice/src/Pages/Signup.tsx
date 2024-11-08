@@ -7,6 +7,8 @@ import Button from "../Components/Button";
 import Input from "../Components/Input";
 
 import "../styles/signup.css";
+import "../styles/input.css"
+import "../styles/button.css"
 import "aos/dist/aos.css";
 
 type UserSignupProps = {
@@ -93,14 +95,15 @@ const Signup = () => {
       return;
     }
     
-    try {
+    try {      
       const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(signup),
+        body: JSON.stringify({password: signup.password,email :signup.email,  name : signup.username}),
       });
+      
       const data = await response.json();
       console.log(data);
 
@@ -116,62 +119,61 @@ const Signup = () => {
   };
 
   return (
-    <Layout>
-      <div className="signup">
-        <div className="signup__container">
-          <form action="submit" className="signup__form" onSubmit={submit}>
-            <Input
-              type="text"
-              placeholder="Email"
-              name="email"
-              value={signup.email}
-              onChange={inputChange}
-              className="signup__input"
-            />
-            <Input
-              type="text"
-              placeholder="Nom d'utilisateur"
-              name="username"
-              value={signup.username}
-              onChange={inputChange}
-              className="signup__input"
-            />
-            <Input
-              type="password"
-              placeholder="Mot de passe"
-              name="password"
-              value={signup.password}
-              onChange={inputChange}
-              className="signup__input"
-            />
-            <Input
-              type="password"
-              placeholder="Confirmation du mot de passe"
-              name="password_confirmation"
-              value={signup.password_confirmation}
-              onChange={inputChange}
-              className="signup__input"
-            />
-            <Button
-              disabled={
-                !signup.email ||
-                !signup.password ||
-                !signup.password_confirmation
-              }
-              type="submit" // Utilisation de type="submit" pour le bouton du formulaire
-              className="signup__submit"
-            >
-              Création de compte
-            </Button>
-          </form>
-          <div className="signup__account-exist">
-            <Link to="/signin">
-              <p>Vous avez déjà un compte ? </p>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </Layout>
+    <div className="login__box">
+      <h2>Inscription</h2>
+      <form onSubmit={submit}>
+        <Input
+          type="text"
+          name="email"
+          label="E-mail"
+          value={signup.email}
+          onChange={inputChange}
+          required
+        />
+        <Input
+          type="text"
+          name="username"
+          label="Nom d'utilisateur"
+          value={signup.username}
+          onChange={inputChange}
+          required
+        />
+        <Input
+          type="password"
+          name="password"
+          label="Mot de passe"
+          value={signup.password}
+          onChange={inputChange}
+          required
+        />
+        <Input
+          type="password"
+          name="password_confirmation"
+          label="Confirmer le mot de passe"
+          value={signup.password_confirmation}
+          onChange={inputChange}
+          required
+        />
+        <p className="signup__text">
+          Vous avez déjà un compte ?{" "}
+          <Link to="/signin" className="signup__link">
+            Connectez-vous
+          </Link>
+        </p>
+        <Button
+          className="btn"
+          type="submit"
+          disabled={
+            !signup.email ||
+            !signup.password ||
+            !signup.password_confirmation ||
+            !signup.username
+          }
+        >
+          Créer son compte
+        </Button>
+      </form>
+    </div>
   );
 };
 

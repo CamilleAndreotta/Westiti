@@ -3,11 +3,13 @@
 :root {
   --background_color: #171420;
   --color: #636374;
+  
   /* font */
-  --font_family_primary: "Be+Vietnam+Pro", sans-serif;
+  --font_family_primary: "Be Vietnam Pro", sans-serif;
   --font_family_secondary: "Roboto", sans-serif;
+  
   /* button */  
-  --button_submit: #0056B3;
+  --button_submit: #636374;
   --button_cancel: #d30c0c;
 }
 

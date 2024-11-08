@@ -8,6 +8,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
   required?: boolean;
+  placeholder?:string
 }
 
 const Input: React.FC<InputProps> = ({
@@ -17,6 +18,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   label,
   required = false,
+  placeholder
 }) => {
   return (
     <div className="user__box">
@@ -26,6 +28,7 @@ const Input: React.FC<InputProps> = ({
         required={required}
         value={value}
         onChange={onChange}
+        placeholder={placeholder}
       />
       <label>{label}</label>
     </div>

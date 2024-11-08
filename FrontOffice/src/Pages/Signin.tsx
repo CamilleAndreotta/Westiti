@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import "../styles/signin.css";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import { Link } from "react-router-dom";
+
+import "../styles/signin.css";
+import "../styles/button.css";
 
 const Signin: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -38,7 +40,7 @@ const Signin: React.FC = () => {
             Inscrivez-vous
           </Link>
         </p>
-        <Button type="submit">Se connecter</Button>
+        <Button  className="btn" type="submit">Se connecter</Button>
       </form>
     </div>
   );

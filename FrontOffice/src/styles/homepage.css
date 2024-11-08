@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
 html,
 body {
   margin: 0;
@@ -12,34 +15,36 @@ body {
   align-items: center;
   height: 100vh;
   background-color: #171420;
+
 }
 
 .homepage__box {
-  width: 80%;
-  max-width: 1200px;
-  padding: 40px;
+  width: 70%;
+  height: 90%;
   background: rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
   border-radius: 10px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  overflow: hidden;
 }
 
 .left__section {
-  flex: 1;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 40px;
+  box-sizing: border-box;
 }
 
 .left__section h1 {
   font-size: 3rem;
   margin-bottom: 2rem;
   color: #fff;
+  text-align: center;
 }
 
 .buttons {
@@ -49,27 +54,32 @@ body {
 }
 
 .right__section {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 50%;
+  height: 100%;
 }
 
 .right__section img {
   width: 100%;
-  height: auto;
-  max-height: 600px;
-  border-radius: 10px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 10px 10px 0; 
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .homepage__box {
     flex-direction: column;
+    height: 90%;
+    width: 90%;
+  }
+
+  .left__section,
+  .right__section {
+    width: 100%;
   }
 
   .right__section img {
-    max-height: none;
-    width: 100%;
+    border-radius: 0 0 10px 10px;
+    display: none;
   }
 }
