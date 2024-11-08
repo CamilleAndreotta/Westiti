@@ -29,7 +29,7 @@ export class UserService {
     if (createUserDto.password.length < 12) {
       throw new UnauthorizedException({ message: 'Mot de passe trop court' });
     }
-    return this.prismaService.user.upsert({
+    const data = await this.prismaService.user.upsert({
       where: {
         email: createUserDto.email,
       },
@@ -41,6 +41,12 @@ export class UserService {
         avatar: 'test',
       },
     });
+    const result = {
+      name: data.name,
+      email: data.email,
+      avatar: data.avatar,
+    };
+    return result;
   }
 
   public async update(id: string, updateUserDto: UpdateUserDto) {
@@ -69,7 +75,7 @@ export class UserService {
       hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
     }
 
-    return this.prismaService.user.update({
+    const data = await this.prismaService.user.update({
       where: {
         id,
       },
@@ -78,6 +84,12 @@ export class UserService {
         password: hashedPassword,
       },
     });
+    const result = {
+      name: data.name,
+      email: data.email,
+      avatar: data.avatar,
+    };
+    return result;
   }
 
   findAll() {
