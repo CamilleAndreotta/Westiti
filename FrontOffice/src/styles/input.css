@@ -2,7 +2,8 @@
   position: relative;
 }
 
-.user__box input {
+.user__box input,
+.user__box textarea {
   width: 100%;
   padding: 10px 0;
   font-size: 16px;
@@ -23,11 +24,37 @@
   color: #fff;
   pointer-events: none;
   transition: 0.5s;
+  display: block;
 }
 
 .user__box input:focus ~ label,
-.user__box input:valid ~ label {
+.user__box input:valid ~ label,
+.user__box textarea:focus ~ label,
+.user__box textarea:valid ~ label {
   top: -20px;
   left: 0;
   font-size: 12px;
+}
+
+.date__input input[type="date"] {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+  appearance: none;
+}
+
+.date__input label {
+  top: -20px;
+  font-size: 12px;
+}
+
+.date__input input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }

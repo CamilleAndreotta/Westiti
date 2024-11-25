@@ -16,10 +16,10 @@
   display: block;
   text-transform: uppercase;
   font-family: var(--font_family_primary);
+  cursor: pointer;
 }
 .buttons a {
   text-decoration: none;
-  
 }
 .buttons a:visited {
   /* font-family: var(--font_family_secondary)!important; */

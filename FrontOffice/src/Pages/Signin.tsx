@@ -73,7 +73,7 @@ const Signin: React.FC = () => {
             Inscrivez-vous
           </Link>
         </p>
-        <Button className="btn" type="submit" onClick={handleSubmit}>
+        <Button className="btn" type="submit">
           Se connecter
         </Button>
       </form>
