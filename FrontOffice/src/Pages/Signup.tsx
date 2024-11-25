@@ -1,7 +1,7 @@
 import { useState } from "react";
 import passwordValidator from "password-validator";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import useToast from "../Hooks/useToast";
 import validator from "validator";
 import Layout from "../Components/Layout";
 import Button from "../Components/Button";
@@ -12,7 +12,7 @@ import "../styles/signup.css";
 import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
-import { toast, ToastContainer } from "react-toastify";
+
 
 type UserSignupProps = {
   email: string;
@@ -21,6 +21,7 @@ type UserSignupProps = {
   username: string;
 };
 const Signup = () => {
+  const { onSuccess } = useToast();
   const navigate = useNavigate();
   const [signup, setSignup] = useState<UserSignupProps>({
     email: "",
@@ -125,12 +126,13 @@ const Signup = () => {
       localStorage.setItem("email", data.email);
       localStorage.setItem("avatar", data.avatar);
 
-      toast.success("Compte crée", {
+      onSuccess("Compte crée");
+      /* toast.success("Compte crée", {
         autoClose: 2000,
         position: "bottom-center",
-      });
+      }); */
       navigate(`/events/${data.id}`);
-      console.log("Compte créé avec succès");
+      //console.log("Compte créé avec succès");
     } catch (error) {
       console.log("Erreur:", error);
     }
