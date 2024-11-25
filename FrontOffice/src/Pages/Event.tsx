@@ -102,7 +102,7 @@ const Event = () => {
       console.error("Index invalide ou fichiers non disponibles.");
       return;
     }
-    files.splice(index, 1);
+    setFiles(prevState => prevState.filter((_, i) => i !== index));
     console.log("Fichiers restants :", files);
   };
 
