@@ -10,23 +10,23 @@ import Button from "../Components/Button";
 
 const Profile: FC = () => {
   type UserProps = {
-    id: string;
-    name: string;
-    email: string;
-    avatar: string;
+    id: null | string;
+    name: null | string;
+    email: null | string;
+    avatar: string | undefined;
   };
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [user, setUser] = useState<UserProps>({
-    id: "",
-    name: "",
-    email: "",
-    avatar: "",
+    id: null,
+    name: null,
+    email: null,
+    avatar: undefined,
   });
   useEffect(() => {
     const isConnected = localStorage.getItem("isConnected");
 
-    const userID = localStorage.getItem("userId");
+    const userId = localStorage.getItem("userId");
     const name = localStorage.getItem("username");
     const email = localStorage.getItem("email");
     const avatar = localStorage.getItem("avatar");
@@ -34,7 +34,7 @@ const Profile: FC = () => {
 
     setUser({
       ...user,
-      id: userID,
+      id: userId,
       name: name,
       email: email,
       avatar:
@@ -65,14 +65,14 @@ const Profile: FC = () => {
               <span className="profile__user-info__email">{user?.email}</span>
             </div>
           </div>
-          
-        </div><Button
-            type="button"
-            className="btn profile__delete-account"
-            onClick={(e) => openModale(e)}
-          >
-            Supprimer mon compte ?
-          </Button>
+        </div>
+        <Button
+          type="button"
+          className="btn profile__delete-account"
+          onClick={(e) => openModale(e)}
+        >
+          Supprimer mon compte ?
+        </Button>
       </div>
       {modalIsOpen && <Modale />}
     </Layout>

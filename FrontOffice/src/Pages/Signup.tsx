@@ -3,7 +3,6 @@ import passwordValidator from "password-validator";
 import { Link, useNavigate } from "react-router-dom";
 import useToast from "../Hooks/useToast";
 import validator from "validator";
-import Layout from "../Components/Layout";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import AuthLayout from "../Components/AuthLayout";
@@ -132,7 +131,7 @@ const Signup = () => {
     }
   };
 
-  const userInfoAreOk = () => {
+  /* const userInfoAreOk = () => {
     if (
       !signup.email ||
       !signup.password ||
@@ -142,7 +141,7 @@ const Signup = () => {
       return false;
     }
     return true;
-  };
+  }; */
   return (
     <AuthLayout title="Inscription">
       <form onSubmit={(e) => submit(e)}>

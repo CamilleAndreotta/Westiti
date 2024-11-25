@@ -7,9 +7,11 @@ import Signup from "./Pages/Signup";
 import EventsPage from "./Pages/EventsPage";
 import Profile from "./Pages/Profile";
 import Event from "./Pages/Event";
+
 import "aos/dist/aos.css";
 import "./styles/app.css";
 import "react-toastify/dist/ReactToastify.css";
+
 const App = () => {
   AOS.init();
   return (
