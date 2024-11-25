@@ -5,4 +5,5 @@ export class CreateEventDto {
   ended_at: Date;
   picture: string;
   creator_id: string;
+  address: string;
 }
