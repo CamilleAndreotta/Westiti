@@ -1,16 +1,16 @@
 // EventsPage.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Layout from "../Components/Layout";
 import Card from "../Components/Card";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
-import Modale from "../Components/Modale";
 
 import "../styles/eventspage.css";
 import "../styles/modale.css";
 import "../styles/button.css";
 import "../styles/input.css";
+import Modale from "../Components/Modale";
 
 interface Event {
   id: string;
@@ -18,7 +18,7 @@ interface Event {
   title: string;
   description: string;
 }
-
+const eventId = "1";
 const EventsPage: React.FC = () => {
   const navigate = useNavigate();
   const [eventsData, setEventsData] = useState<Event[]>([]);
@@ -172,6 +172,9 @@ const EventsPage: React.FC = () => {
               />
             </div>
           ))}
+          <Link to={`/event/${eventId}`}>
+            <Button className="btn">événement 1</Button>
+          </Link>
         </div>
         <div className="events__buttons-container">
           <Button
