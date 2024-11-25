@@ -8,7 +8,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
   required?: boolean;
-  placeholder?:string
+  placeholder?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -18,10 +18,10 @@ const Input: React.FC<InputProps> = ({
   onChange,
   label,
   required = false,
-  placeholder
+  placeholder,
 }) => {
   return (
-    <div className="user__box">
+    <div className={`user__box ${type === "date" ? "date__input" : ""}`}>
       <input
         type={type}
         name={name}
