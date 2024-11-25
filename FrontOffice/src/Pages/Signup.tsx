@@ -13,7 +13,6 @@ import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
 
-
 type UserSignupProps = {
   email: string;
   password: string;
@@ -21,7 +20,7 @@ type UserSignupProps = {
   username: string;
 };
 const Signup = () => {
-  const { onSuccess } = useToast();
+  const { onSuccess, onError } = useToast();
   const navigate = useNavigate();
   const [signup, setSignup] = useState<UserSignupProps>({
     email: "",
@@ -54,12 +53,8 @@ const Signup = () => {
       .is()
       .not()
       .oneOf(["Passw0rd", "Password123", "1234", "azerty"]); // Blacklist these values
-
-    console.log(schema.validate(signup.password));
     if (!schema.validate(password)) {
-      console.log(
-        "Le mot de passe ne correspond pas aux prérequis de sécurité"
-      );
+      onError("Le mot de passe ne correspond pas aux prérequis de sécurité");
       return false;
     }
     return true;
@@ -72,52 +67,56 @@ const Signup = () => {
     }));
   };
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    const testUserPassword = testPasswordSecurity(signup.password);
+    
+    const testUserPassword : boolean = testPasswordSecurity(signup.password);
     if (!testUserPassword) {
+      onError("Le mot de passe ne correspond pas aux prérequis de sécurité");
       throw new Error(
         "Le mot de passe ne correspond pas aux prérequis de sécurité"
       );
     }
-    const testUserEmail = validator.isEmail(signup.email);
+    const testUserEmail: boolean = validator.isEmail(signup.email);
     if (!testUserEmail) {
+      onError("L'email n'est pas valide");
       throw new Error("L'email n'est pas valide");
-    }
-    console.log(e);
-    if (signup.password !== signup.password_confirmation) {
-      console.log("Les mots de passe ne correspondent pas");
-      return;
     }
 
     if (!signup.password || !signup.password_confirmation) {
-      console.log("Pas de mots de passe rentré");
+      onError("Pas de mots de passe rentré");
+      return;
+    }
+
+    if (signup.password !== signup.password_confirmation) {
+      onError("Les mots de passe ne correspondent pas");
       return;
     }
 
     if (!signup.email) {
-      console.log("Pas d'email");
+      onError("Pas d'email");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password: signup.password,
-          email: signup.email,
-          name: signup.username,
-        }),
-      });
-      console.log(response);
+      const response: Response = await fetch(
+        /* `http://localhost:3000/auth/register`, */
+        `${import.meta.env.VITE_DEV_API_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            password: signup.password,
+            email: signup.email,
+            name: signup.username,
+          }),
+        }
+      );
       const data = await response.json();
-      console.log(data);
-
       if (!response.ok) {
-        console.log("Une erreur s'est produite pendant la création du compte");
+        onError(data.message);
         return;
       }
       localStorage.setItem("isConnected", "true");
@@ -125,19 +124,13 @@ const Signup = () => {
       localStorage.setItem("username", data.name);
       localStorage.setItem("email", data.email);
       localStorage.setItem("avatar", data.avatar);
-
       onSuccess("Compte crée");
-      /* toast.success("Compte crée", {
-        autoClose: 2000,
-        position: "bottom-center",
-      }); */
       navigate(`/events/${data.id}`);
-      //console.log("Compte créé avec succès");
     } catch (error) {
+      onError("Erreur:" + error);
       console.log("Erreur:", error);
     }
   };
-
 
   const userInfoAreOk = () => {
     if (
@@ -152,7 +145,7 @@ const Signup = () => {
   };
   return (
     <AuthLayout title="Inscription">
-      <form onSubmit={submit}>
+      <form onSubmit={(e) => submit(e)}>
         <Input
           type="text"
           name="email"
@@ -191,7 +184,7 @@ const Signup = () => {
             Connectez-vous
           </Link>
         </p>
-        <Button className="btn" type="submit"/*  disabled={userInfoAreOk()} */>
+        <Button className="btn" type="submit" /*  disabled={userInfoAreOk()} */>
           Créer son compte
         </Button>
       </form>

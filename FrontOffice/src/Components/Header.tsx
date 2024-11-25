@@ -9,7 +9,7 @@ import "../styles/header.css";
 import useToast from "../Hooks/useToast";
 
 const Header = () => {
-  const { onError, onSuccess } = useToast();
+  const {onError, onSuccess} = useToast();
   const [menuBurgerIsOpen, setMenuBurgerIsOpen] = useState(false);
   const [userIsConnected, setUserIsConnected] = useState(
     localStorage.getItem("isConnected")
@@ -33,7 +33,7 @@ const Header = () => {
       );
       const data = await response.json();
       console.log(data);
-
+      
       if (response.status !== 200) {
         onError("Une erreur s'est produite pendant la déconnexion");
         return;
