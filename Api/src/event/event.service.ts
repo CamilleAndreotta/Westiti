@@ -10,8 +10,12 @@ export class EventService {
   async create(createEventDto: CreateEventDto) {
     // traitement la photo
 
-    const formattedStartedDate = new Date(createEventDto.started_at);
-    const formattedEndedDate = new Date(createEventDto.ended_at);
+    const formattedStartedDate = new Date(
+      createEventDto.started_at.toString().replace('T', ' '),
+    );
+    const formattedEndedDate = new Date(
+      createEventDto.ended_at.toString().replace('T', ' '),
+    );
 
     //let eventAccessCode = new ShortUniqueId({ length: 6 });
 
@@ -80,7 +84,9 @@ export class EventService {
       },
     });
 
-    let formattedStartedDate = new Date(updateEventDto.started_at);
+    let formattedStartedDate = new Date(
+      updateEventDto.started_at.toString().replace('T', ' '),
+    );
     if (
       updateEventDto.started_at === undefined ||
       updateEventDto.started_at === null
@@ -88,7 +94,9 @@ export class EventService {
       formattedStartedDate = eventInDB.started_at;
     }
 
-    let formattedEndedDate = new Date(updateEventDto.ended_at);
+    let formattedEndedDate = new Date(
+      updateEventDto.ended_at.toString().replace('T', ' '),
+    );
     if (
       updateEventDto.ended_at === undefined ||
       updateEventDto.ended_at === null
