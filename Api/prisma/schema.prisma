@@ -30,6 +30,7 @@ model event {
   id String @id @default(uuid())
   name String
   content String
+  address String?
   started_at DateTime @db.Timestamp(6)
   ended_at DateTime @db.Timestamp(6)
   access_code String

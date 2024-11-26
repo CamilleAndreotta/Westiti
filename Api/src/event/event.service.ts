@@ -3,8 +3,6 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import ShortUniqueId from 'short-unique-id';
-import { cp } from 'fs';
-import { response } from 'express';
 
 @Injectable()
 export class EventService {
@@ -37,6 +35,7 @@ export class EventService {
         ended_at: formattedEndedDate,
         picture: createEventDto.picture,
         access_code: eventAccessCode,
+        address: createEventDto.address,
         upload_status: true,
         creator_id: {
           connect: {
@@ -62,19 +61,66 @@ export class EventService {
     });
   }
 
-  // findAll() {
-  //   return `This action returns all event`;
-  // }
+  findAll() {
+    return this.prismaService.event.findMany();
+  }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} event`;
-  // }
+  findOne(id: string) {
+    return this.prismaService.event.findUnique({
+      where: {
+        id: id,
+      },
+    });
+  }
 
-  // update(id: number, updateEventDto: UpdateEventDto) {
-  //   return `This action updates a #${id} event`;
-  // }
+  public async update(id: string, updateEventDto: UpdateEventDto) {
+    const eventInDB = await this.prismaService.event.findUnique({
+      where: {
+        id: id,
+      },
+    });
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} event`;
-  // }
+    let formattedStartedDate = new Date(updateEventDto.started_at);
+    if (
+      updateEventDto.started_at === undefined ||
+      updateEventDto.started_at === null
+    ) {
+      formattedStartedDate = eventInDB.started_at;
+    }
+
+    let formattedEndedDate = new Date(updateEventDto.ended_at);
+    if (
+      updateEventDto.ended_at === undefined ||
+      updateEventDto.ended_at === null
+    ) {
+      formattedEndedDate = eventInDB.ended_at;
+    }
+
+    return this.prismaService.event.update({
+      where: {
+        id,
+      },
+      data: {
+        name: updateEventDto.name,
+        content: updateEventDto.content,
+        address: updateEventDto.address,
+        started_at: formattedStartedDate,
+        ended_at: formattedEndedDate,
+        picture: updateEventDto.picture,
+        upload_status: true,
+      },
+    });
+  }
+
+  public async remove(id: string) {
+    await this.prismaService.userevent.deleteMany({
+      where: {
+        eventId: id,
+      },
+    });
+
+    return this.prismaService.event.delete({
+      where: { id },
+    });
+  }
 }
