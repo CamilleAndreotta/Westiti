@@ -7,6 +7,9 @@ import Modale from "../Components/Modale";
 import "../styles/profile.css";
 import "../styles/modale.css";
 import Button from "../Components/Button";
+import useToast from "../Hooks/useToast";
+import { log } from "node:console";
+import axios from "axios";
 
 const Profile: FC = () => {
   type UserProps = {
@@ -23,6 +26,7 @@ const Profile: FC = () => {
     email: null,
     avatar: undefined,
   });
+  const { onError, onSuccess } = useToast();
   useEffect(() => {
     const isConnected = localStorage.getItem("isConnected");
 
@@ -50,6 +54,28 @@ const Profile: FC = () => {
     e.preventDefault();
     setModalIsOpen(!modalIsOpen);
   };
+
+  const handleDeleteUser = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/user/${localStorage.getItem("userId")}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        onSuccess("Compte supprimé avec succès");
+        localStorage.clear();
+        navigate("/");
+      }
+    } catch (error) {
+      onError("Une erreur c'est produite pendant la suppression de votre compte");
+    }
+  };
   return (
     <Layout>
       <div className="profile">
@@ -74,7 +100,18 @@ const Profile: FC = () => {
           Supprimer mon compte ?
         </Button>
       </div>
-      {modalIsOpen && <Modale />}
+      {modalIsOpen && (
+        <div className="modale__delete-account">
+          <div className="modale__container">
+            <Button className="btn" onClick={handleDeleteUser}>
+              Oui
+            </Button>
+            <Button className="btn" onClick={() => setModalIsOpen(false)}>
+              Non
+            </Button>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
