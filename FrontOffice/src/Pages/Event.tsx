@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -23,7 +23,7 @@ const Event = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/api/photos/${eventId}`,
+        `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/upload`,
         {
           data: files,
           userId,
@@ -76,8 +76,6 @@ const Event = () => {
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files:any = e.target.files;
     const filesArray = Array.from(files);
-    console.log(filesArray);
-    console.log("file", files);
     for (let i = 0; i < filesArray.length; i++) {
       if (!acceptedFormats.includes(files[i].type)) {
         console.log(files[i], files[i].type);
