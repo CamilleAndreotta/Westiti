@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import Logo from "../Assets/Img/logo.webp";
-import BurgerMenuClosed from "../Assets/Img/burger-menu-svgrepo-com.svg";
-import BurgerMenuOpen from "../Assets/Img/close-svgrepo-com.svg";
+import Logo from "../assets/img/logo.webp";
+import BurgerMenuClosed from "../assets/img/burger-menu-svgrepo-com.svg";
+import BurgerMenuOpen from "../assets/img/close-svgrepo-com.svg";
 
 import "../styles/header.css";
 import useToast from "../Hooks/useToast";
@@ -29,6 +29,8 @@ const Header = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          
+
         }
       );
       const data = await response.json();

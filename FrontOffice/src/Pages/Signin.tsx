@@ -9,7 +9,6 @@ import AuthLayout from "../Components/AuthLayout";
 
 import "../styles/signin.css";
 import "../styles/button.css";
-import { log } from "node:console";
 
 const Signin: React.FC = () => {
   const [email, setEmail] = useState<string>("");

@@ -58,7 +58,7 @@ const Event = () => {
     "image/hevc",
   ];
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file:any = e.target.files?.[0];
     console.log("file", file);
     if (!acceptedFormats.includes(file.type)) {
       console.log("Le format de fichier n'est pas accepté");
@@ -74,7 +74,7 @@ const Event = () => {
     setFile(file);
   };
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files: FileList | null = e.target.files;
+    const files:any = e.target.files;
     const filesArray = Array.from(files);
     console.log(filesArray);
     console.log("file", files);
