@@ -32,7 +32,8 @@ const Signin: React.FC = () => {
       if (response.status !== 201) {
         return;
       }
-
+      console.log(data);
+      
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("isConnected", "true");
       localStorage.setItem("userId", "219fc358-b5eb-482b-a3fa-2f02e5d8b066");

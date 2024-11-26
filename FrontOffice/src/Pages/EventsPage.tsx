@@ -12,6 +12,7 @@ import "../styles/button.css";
 import "../styles/input.css";
 import Modale from "../Components/Modale";
 import AutoCompleteInput from "../Components/AutoCompleteInput";
+import axios from "axios";
 
 interface Event {
   id: string;
@@ -86,8 +87,8 @@ const EventsPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/api/event", {
-        method: "POST",
+      const response: any = await axios.post("http://localhost:3000/api/event", {
+        data: createEventForm,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -223,7 +224,7 @@ const EventsPage: React.FC = () => {
               value={createEventForm.started_at}
               onChange={handleCreateEventChange}
               required
-              labelPosition="above"
+              //labelPosition="above"
             />
             {/* Date et heure de fin */}
             <Input
@@ -233,7 +234,7 @@ const EventsPage: React.FC = () => {
               value={createEventForm.ended_at}
               onChange={handleCreateEventChange}
               required
-              labelPosition="above"
+           //   labelPosition="above"
             />
             {/* Lieu de l'événement avec autocomplétion */}
             <AutoCompleteInput

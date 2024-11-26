@@ -48,3 +48,22 @@
 .modale__btn {
   width: 20%;
 }
+.modale__delete-account {
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  
+}
+.modale__container {
+  width: 80%;
+  height: calc(100% - 99px);
+  margin: auto;
+  display: flex;
+  background-color:#636374 ;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

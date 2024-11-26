@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import Logo from "../Assets/Img/logo.webp";
+import Logo from "../assets/img/logo.webp";
 
 import "../styles/header.css";
 import useToast from "../Hooks/useToast";
@@ -28,6 +28,8 @@ const Header: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          
+
         }
       );
       const data = await response.json();

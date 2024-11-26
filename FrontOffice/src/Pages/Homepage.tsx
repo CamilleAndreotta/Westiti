@@ -1,6 +1,6 @@
 import React from "react";
 import image from "../assets/img/loadingscreen.webp";
-import Logo from "../Assets/Img/logo.webp";
+import Logo from "../assets/img/logo.webp";
 import Button from "../Components/Button";
 import { Link } from "react-router-dom";
 
