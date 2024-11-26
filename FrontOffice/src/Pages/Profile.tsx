@@ -2,13 +2,13 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Layout from "../Components/Layout";
-import Modale from "../Components/Modale";
+//import Modale from "../Components/Modale";
 
 import "../styles/profile.css";
 import "../styles/modale.css";
 import Button from "../Components/Button";
 import useToast from "../Hooks/useToast";
-import { log } from "node:console";
+
 import axios from "axios";
 
 const Profile: FC = () => {
