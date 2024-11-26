@@ -6,44 +6,54 @@ import BurgerMenuClosed from "../Assets/Img/burger-menu-svgrepo-com.svg";
 import BurgerMenuOpen from "../Assets/Img/close-svgrepo-com.svg";
 
 import "../styles/header.css";
+import useToast from "../Hooks/useToast";
 
 const Header = () => {
+  const {onError, onSuccess} = useToast();
   const [menuBurgerIsOpen, setMenuBurgerIsOpen] = useState(false);
-  const [userIsConnected, setUserIsConnected] = useState(false);
-  
-  const navigate = useNavigate();
+  const [userIsConnected, setUserIsConnected] = useState(
+    localStorage.getItem("isConnected")
+  );
 
-  const userName: string = "John Doe";
-  const userId: number = 1;
+  const navigate = useNavigate();
 
   const handleMenuBurger = (): void => {
     setMenuBurgerIsOpen(!menuBurgerIsOpen);
   };
   const handleLogout = async (): Promise<void> => {
     try {
-      const response = await fetch(`http://localhost:3000/logout/${userId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3000/auth/logout/${localStorage.getItem("userId")}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
+      console.log(data);
+      
       if (response.status !== 200) {
-        console.log("Une erreur s'est produite pendant la déconnexion");
+        onError("Une erreur s'est produite pendant la déconnexion");
         return;
       }
-      console.log("L'utilisateur a été déconnecté");
-
+      onSuccess("Déconnexion réussie");
+      localStorage.clear();
+      setMenuBurgerIsOpen(false);
+      setUserIsConnected(null);
       navigate("/");
-      console.log(data);
     } catch (error) {
+      onError("Erreur lors de la déconnexion");
       console.log(error, "Logout");
     }
   };
   return (
     <div className="header">
       <div className="header__container">
-        <img className="header__logo" src={Logo} alt="logo" />
+        <Link to="/">
+          <img className="header__logo" src={Logo} alt="logo" />
+        </Link>
         {menuBurgerIsOpen ? (
           <img
             src={BurgerMenuOpen}
@@ -65,7 +75,9 @@ const Header = () => {
             <ul className="header__list">
               {userIsConnected ? (
                 <li className="header__list-item">
-                  <Link to={`/profile/${userId}`}>{userName}</Link>
+                  <Link to={`/profile/${localStorage.getItem("userId")}`}>
+                    {localStorage.getItem("username")}
+                  </Link>
                 </li>
               ) : (
                 <li className="header__list-item">
@@ -74,10 +86,12 @@ const Header = () => {
               )}
 
               <li className="header__list-item">
-                <Link to={`/my-events/${userId}`}>Mes événements</Link>
+                <Link to={`/events/${localStorage.getItem("userId")}`}>
+                  Mes événements
+                </Link>
               </li>
               <li className="header__list-item">
-                <Link to={`/register-to-an-event`}>Rejoindre un événement</Link>
+                <Link to={`/join-an-event`}>Rejoindre un événement</Link>
               </li>
               <li className="header__list-item">
                 <Link to={`/register-new-event`}>

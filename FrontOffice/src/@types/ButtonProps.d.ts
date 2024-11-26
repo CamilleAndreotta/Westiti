@@ -1,8 +1,8 @@
 export interface ButtonProps {
   to?: string; 
-  onClick?: () => void; 
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void; 
   children: React.ReactNode; 
   className?: string; 
-  type?:string| undefined;
-  disabled?:string
+  type?:"submit" | "reset" | "button";
+  disabled?:boolean
 }

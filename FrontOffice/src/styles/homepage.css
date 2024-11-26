@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700&display=swap");
 
 html,
 body {
@@ -15,7 +14,6 @@ body {
   align-items: center;
   height: 100vh;
   background-color: #171420;
-
 }
 
 .homepage__box {
@@ -28,6 +26,20 @@ body {
   display: flex;
   flex-direction: row;
   overflow: hidden;
+  position: relative;
+}
+
+.back__arrow {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.back__arrow img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  filter: invert(1);
 }
 
 .left__section {
@@ -38,6 +50,10 @@ body {
   align-items: center;
   padding: 40px;
   box-sizing: border-box;
+}
+
+.left__section .logo {
+  display: none;
 }
 
 .left__section h1 {
@@ -62,20 +78,36 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0 10px 10px 0; 
+  border-radius: 0 10px 10px 0;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .homepage__box {
     flex-direction: column;
-    height: 90%;
+    height: auto;
     width: 90%;
   }
 
   .left__section,
   .right__section {
     width: 100%;
+  }
+
+  .left__section .logo {
+    display: block;
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .left__section {
+    align-items: center;
+  }
+
+  .back__arrow img {
+    width: 25px;
+    height: 25px;
   }
 
   .right__section img {
