@@ -9,7 +9,7 @@ export class EventService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(createEventDto: CreateEventDto) {
     // traitement la photo
-
+console.log(createEventDto)
     const formattedStartedDate = new Date(
       createEventDto.started_at.toString().replace('T', ' '),
     );
