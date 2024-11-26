@@ -11,6 +11,7 @@ import "../styles/modale.css";
 import "../styles/button.css";
 import "../styles/input.css";
 import Modale from "../Components/Modale";
+import AutoCompleteInput from "../Components/AutoCompleteInput";
 
 interface Event {
   id: string;
@@ -38,17 +39,19 @@ const EventsPage: React.FC = () => {
 
   // États pour les formulaires
   const [createEventForm, setCreateEventForm] = useState({
-    eventName: "",
-    eventDate: "",
-    eventLocation: "",
-    eventDescription: "",
+    name: "",
+    started_at: "",
+    ended_at: "",
+    address: "",
+    content: "",
   });
 
   const [eventCode, setEventCode] = useState("");
 
   // Récupération des événements de l'utilisateur
   useEffect(() => {
-    fetch(`http://localhost:3000/events/user/${userId}`, {
+    fetch(`http://localhost:3000/api/event/${userId}`, {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -83,17 +86,18 @@ const EventsPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/events", {
+      const response = await fetch("http://localhost:3000/api/event", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          name: createEventForm.eventName,
-          date: createEventForm.eventDate,
-          location: createEventForm.eventLocation,
-          description: createEventForm.eventDescription,
+          name: createEventForm.name,
+          content: createEventForm.content,
+          started_at: createEventForm.started_at,
+          ended_at: createEventForm.ended_at,
+          address: createEventForm.address,
           userId: userId,
         }),
       });
@@ -110,10 +114,11 @@ const EventsPage: React.FC = () => {
       // Fermeture de la modale et réinitialisation du formulaire
       setIsCreateEventModalOpen(false);
       setCreateEventForm({
-        eventName: "",
-        eventDate: "",
-        eventLocation: "",
-        eventDescription: "",
+        name: "",
+        started_at: "",
+        ended_at: "",
+        address: "",
+        content: "",
       });
     } catch (error) {
       console.error("Erreur lors de la création de l'événement :", error);
@@ -129,7 +134,7 @@ const EventsPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:3000/events/join`, {
+      const response = await fetch(`http://localhost:3000/api/event/join`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -173,7 +178,13 @@ const EventsPage: React.FC = () => {
             </div>
           ))}
           <Link to={`/event/${eventId}`}>
-            <Button className="btn">événement 1</Button>
+            <div className="event__card">
+              <Card
+                dataImage="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                header="Evenement"
+                content="Mariage numéro 1"
+              />
+            </div>
           </Link>
         </div>
         <div className="events__buttons-container">
@@ -195,35 +206,48 @@ const EventsPage: React.FC = () => {
         >
           <h2 className="modale__title">Créer un événement</h2>
           <form onSubmit={handleCreateEventSubmit}>
+            {/* Nom de l'événement */}
             <Input
               type="text"
-              name="eventName"
+              name="name"
               label="Nom de l'événement"
-              value={createEventForm.eventName}
+              value={createEventForm.name}
               onChange={handleCreateEventChange}
               required
             />
+            {/* Date et heure de début */}
             <Input
-              type="date"
-              name="eventDate"
-              label="Date de l'événement"
-              value={createEventForm.eventDate}
+              type="datetime-local"
+              name="started_at"
+              label="Date et heure de début"
+              value={createEventForm.started_at}
               onChange={handleCreateEventChange}
               required
               labelPosition="above"
             />
+            {/* Date et heure de fin */}
             <Input
-              type="text"
-              name="eventLocation"
-              label="Lieu de l'événement"
-              value={createEventForm.eventLocation}
+              type="datetime-local"
+              name="ended_at"
+              label="Date et heure de fin"
+              value={createEventForm.ended_at}
               onChange={handleCreateEventChange}
               required
+              labelPosition="above"
             />
+            {/* Lieu de l'événement avec autocomplétion */}
+            <AutoCompleteInput
+              value={createEventForm.address}
+              onChange={(value) =>
+                setCreateEventForm({ ...createEventForm, address: value })
+              }
+              label="Lieu de l'événement"
+            />
+            {/* Description de l'événement */}
             <div className="user__box">
               <textarea
-                name="eventDescription"
-                value={createEventForm.eventDescription}
+                name="content"
+                value={createEventForm.content}
                 onChange={handleCreateEventChange}
                 required
               ></textarea>
