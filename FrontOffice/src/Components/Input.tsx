@@ -21,7 +21,9 @@ const Input: React.FC<InputProps> = ({
   placeholder,
 }) => {
   return (
-    <div className={`user__box ${type === "date" ? "date__input" : ""}`}>
+    <div
+      className={`user__box ${type === "datetime-local" ? "date__input" : ""}`}
+    >
       <input
         type={type}
         name={name}

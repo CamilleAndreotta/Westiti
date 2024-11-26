@@ -36,7 +36,7 @@
   font-size: 12px;
 }
 
-.date__input input[type="date"] {
+.date__input input[type="datetime-local"] {
   width: 100%;
   padding: 10px 0;
   font-size: 16px;
@@ -54,7 +54,7 @@
   font-size: 12px;
 }
 
-.date__input input[type="date"]::-webkit-calendar-picker-indicator {
+.date__input input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;
 }
