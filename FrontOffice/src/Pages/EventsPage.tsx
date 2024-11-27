@@ -6,7 +6,7 @@ import Card from "../Components/Card";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 
-import "../styles/eventspage.css";
+import "../styles/eventspage.scss";
 import "../styles/modale.css";
 import "../styles/button.css";
 import "../styles/input.css";
@@ -188,7 +188,6 @@ const EventsPage: React.FC = () => {
               <Card
                 dataImage={event.image}
                 header={event.title}
-                content={event.description}
               />
             </div>
           ))}
@@ -217,13 +216,14 @@ const EventsPage: React.FC = () => {
                 updated_at: string;
                 userId: string;
               }) => (
-                <Card
-                  dataImage="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  header={event.name}
-                  content={event.content}
-                  key={event.id}
-
-                />
+                <Link to={`/event/${event.id}`}>
+                  <Card
+                    dataImage="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    header={event.name}
+                    content={event.content}
+                    key={event.id}
+                  />
+                </Link>
               )
             )}
         </div>
