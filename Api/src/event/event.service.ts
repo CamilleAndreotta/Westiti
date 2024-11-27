@@ -3,6 +3,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import ShortUniqueId from 'short-unique-id';
+import { UploadPhotosDto } from 'src/photo/dto/upload-photos.dto';
 
 @Injectable()
 export class EventService {
@@ -129,6 +130,28 @@ console.log(createEventDto)
 
     return this.prismaService.event.delete({
       where: { id },
+    });
+  }
+
+  public async uploadPhotos(id: string, uploadPhotosDto: UploadPhotosDto) {
+    const currentDate = new Date().toISOString();
+
+    const photos = Object.values(uploadPhotosDto.photos);
+    photos.map((photo) => {
+      delete photo.name;
+      delete photo.size;
+      delete photo.type;
+      photo.userId = uploadPhotosDto.userId;
+      photo.eventId = id;
+      photo.uploaded_at = currentDate;
+      photo.url = 'test';
+      photo.status = false;
+    });
+    console.log(photos);
+
+    await this.prismaService.photo.createMany({
+      data: photos,
+      skipDuplicates: true,
     });
   }
 }
