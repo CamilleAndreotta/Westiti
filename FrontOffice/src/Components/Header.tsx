@@ -1,11 +1,13 @@
 // Header.tsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import useToast from "../Hooks/useToast";
 
 import Logo from "../assets/img/logo.webp";
 
-import "../styles/header.css";
-import useToast from "../Hooks/useToast";
+import "../styles/header.scss";
 
 const Header: React.FC = () => {
   const { onError, onSuccess } = useToast();
@@ -21,24 +23,21 @@ const Header: React.FC = () => {
 
   const handleLogout = async (): Promise<void> => {
     try {
-      const response = await fetch(
+      /* const response = await axios.post(
         `http://localhost:3000/auth/logout/${localStorage.getItem("userId")}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-          },
-          
-
+          },    
         }
       );
-      const data = await response.json();
-      console.log(data);
+      console.log(response); */
 
-      if (response.status !== 200) {
+      /* if (response.status !== 200) {
         onError("Une erreur s'est produite pendant la déconnexion");
         return;
-      }
+      } */
       onSuccess("Déconnexion réussie");
       localStorage.clear();
       setMenuIsOpen(false);
@@ -103,8 +102,9 @@ const Header: React.FC = () => {
                 handleMenuToggle();
                 handleLogout();
               }}
+              
             >
-              Déconnexion
+             <span className='header__logout'>Déconnexion</span> 
             </li>
           )}
         </ul>

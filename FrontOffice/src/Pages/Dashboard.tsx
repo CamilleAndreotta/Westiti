@@ -6,7 +6,6 @@ import Card from "../Components/Card";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 
-
 import Modale from "../Components/Modale";
 import AutoCompleteInput from "../Components/AutoCompleteInput";
 
@@ -22,8 +21,6 @@ import {
 
 import { EventProps } from "../@types/EventProps";
 import { CreateEventFormProps } from "../@types/CreateEventFormProps";
-
-
 
 import "../styles/modale.css";
 import "../styles/button.css";
@@ -76,12 +73,15 @@ const EventsPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="dashboard__page">
-        <h1 className="dashboard__page__title">Voici vos événements</h1>
-        <div className="dashboard__page__container">
+      <div className="dashboard">
+        <h1 className="dashboard__title">Voici vos événements</h1>
+        <div className="dashboard__container">
           {eventsList &&
             eventsList.map((event: EventProps) => (
-              <Link to={`/event/${event.id}`}>
+              <Link
+                to={`/event/${event.id}`}
+                onClick={() => localStorage.setItem("eventName", event.name)}
+              >
                 <Card
                   dataImage={event.picture}
                   header={event.name}
@@ -91,7 +91,7 @@ const EventsPage: React.FC = () => {
               </Link>
             ))}
         </div>
-        <div className="dashboard__page__buttons-container">
+        <div className="dashboard__buttons">
           <Button
             onClick={() => setIsCreateEventModalOpen(true)}
             className="btn"

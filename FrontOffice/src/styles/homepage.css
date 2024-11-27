@@ -89,29 +89,36 @@ body {
     width: 90%;
   }
 
-  .left__section,
   .right__section {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    order: -1;
   }
 
-  .left__section .logo {
-    display: block;
+  .right__section img {
     width: 150px;
-    height: auto;
-    margin-bottom: 20px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin-top: 20px; 
   }
 
   .left__section {
+    width: 100%;
     align-items: center;
+    padding: 20px;
+  }
+
+  .left__section h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
   }
 
   .back__arrow img {
     width: 25px;
     height: 25px;
-  }
-
-  .right__section img {
-    border-radius: 0 0 10px 10px;
-    display: none;
   }
 }

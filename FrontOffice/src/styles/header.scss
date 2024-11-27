@@ -14,8 +14,23 @@ body {
 .header {
   position: relative;
   z-index: 100;
+  &__logout {
+    font-family: "Montserrat", sans-serif;
+    font-size: 9vh;
+    text-transform: uppercase;
+    line-height: 1.2;
+    font-weight: 800;
+    display: inline-block;
+    position: relative;
+    color: #ececee;
+    transition: all 250ms linear;
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+      color: #9898d1;
+    }
+  }
 }
-
 .logo {
   position: absolute;
   top: 50px;

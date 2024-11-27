@@ -1,7 +1,6 @@
 .dashboard {
-  &__page {
-    padding-top: 80px;
-  }
+  padding-top: 80px;
+
   &__title {
     font-size: 2.5rem;
     font-weight: 700;
@@ -14,15 +13,12 @@
     flex-wrap: wrap;
     justify-content: center;
   }
-  &__buttons-container {
+  &__buttons {
     display: flex;
     justify-content: center;
     margin-top: 20px;
     gap: 20px;
-  }
-  &__buttons-container  {
     width: auto;
     margin: 0;
   }
 }
-
