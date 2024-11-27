@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { validFileSize } from "../Utils/event.function";
+
+import { FileProps } from "../@types/FileProps";
+
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
-interface File {
-  name: string;
-  type: string;
-  size: number;
-}
+import "../styles/event.scss";
+import { acceptedFormats } from "../Utils/acceptedFormats";
 
-import "../styles/event.css";
 const Event = () => {
   const { eventId } = useParams();
-  const [file, setFile] = useState<File | null>(null);
-  const [files, setFiles] = useState<File[] | null>([]);
+  const [file, setFile] = useState<FileProps | null>(null);
+  const [files, setFiles] = useState<FileProps[] | null>([]);
   const { onError, onSuccess } = useToast();
   const userId = localStorage.getItem("userId");
+  const maxSize = 2900000;
 
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -48,48 +49,37 @@ const Event = () => {
       console.log(error);
     }
   };
-  const acceptedFormats = [
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-    "image/HEIC",
-    "image/HEVC",
-    "image/heic",
-    "image/hevc",
-  ];
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file:any = e.target.files?.[0];
+    const file: any = e.target.files?.[0];
     console.log("file", file);
+    const data = new FormData();
+    data.append("file", file);
+
+    for (let [key, value] of data.entries()) {
+      console.log(key, value);
+    }
+
     if (!acceptedFormats.includes(file.type)) {
       console.log("Le format de fichier n'est pas accepté");
-      onError(`Le format de ce fichier n\'est pas accepté`);
       return;
     }
     if (file.size > 2900000) {
       console.log("Le fichier est trop lourd, merci de le compresser");
-      onError("Le fichier est trop lourd, merci de le compresser");
       return;
     }
-
     setFile(file);
   };
+
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files:any = e.target.files;
-    const filesArray = Array.from(files);
-    for (let i = 0; i < filesArray.length; i++) {
-      if (!acceptedFormats.includes(files[i].type)) {
-        console.log(files[i], files[i].type);
-        onError("Format de l'image non supporté");
-        return;
-      }
-      if (filesArray[i].size > 2900000) {
-        onError("La photo est trop lourde, merci de le compresser");
-        return;
-      }
-      setFiles(filesArray);
-      return;
-    }
+    const files: any = e.target.files;
+    const filesArray: FileProps[] | any = Array.from(files);
+    const validArray = validFileSize(filesArray);
+    console.log(validArray);
+    setFiles(validArray);
+    return;
   };
+
   const deleteImageFromFiles = (index: number | string) => {
     console.log(typeof index);
     if (typeof index === "string") {
@@ -100,110 +90,60 @@ const Event = () => {
       console.error("Index invalide ou fichiers non disponibles.");
       return;
     }
-    setFiles(prevState => prevState.filter((_, i) => i !== index));
+    setFiles((prevState: FileProps[] | null) =>
+      prevState.filter((_, i) => i !== index)
+    );
     console.log("Fichiers restants :", files);
   };
 
   return (
     <Layout>
-      <div className="event-page">
-        <h1 className="title">Événement {eventId}</h1>
-        <div className="container">
-          <form action=" " encType="multipart/form-data">
-            <label htmlFor="file" style={{ color: "white" }}>
+      <div className="event">
+        <div className="event__box">
+          <h1 className="event__title">Événement {eventId}</h1>
+          <form className="event__form">
+            <label htmlFor="images" className="event__form-label">
+              Ajouter des images
               <input
                 type="file"
-                id="file"
-                name="file"
-                onChange={handleFileChange}
-              />
-            </label>
-            <label htmlFor="files" style={{ color: "white" }}>
-              <input
-                type="file"
-                id="file"
-                name="file"
-                onChange={handleFilesChange}
+                id="images"
                 multiple
+                accept={acceptedFormats.join(",")}
+                onChange={handleFilesChange}
+                className="event__form-input"
               />
             </label>
-            <button className="btn" onClick={(e) => handleUpdateImage(e)}>
-              Partager une ou plusieurs images
-            </button>
-          </form>
-        </div>
-      </div>
-      {file && (
-        <section style={{ color: "white" }}>
-          File details:
-          <div>
-            <img
-              src={URL.createObjectURL(file)}
-              alt="image"
-              style={{ width: "200px", height: "200px" }}
-            />
-            <p>Name: {file.name}</p>
-            <p>Type: {file.type}</p>
-            <p>Size: {file.size} bytes</p>
-            <div style={{ display: "flex" }}>
-              <span>Supprimer la photo :</span>
-              <span
+            {files.length > 0 && (
+              <button
                 className="event__button"
-                onClick={() => deleteImageFromFiles(file.name)}
+                type="button"
+                onClick={handleUpdateImage}
               >
-                X
-              </span>
-            </div>
-          </div>
-        </section>
-      )}
-      <section style={{ color: "white" }}>
-        <ul
-          style={{
-            width: "80%",
-            margin: "auto",
-            display: "flex",
-            flexDirection: "column",
-            flexWrap: "wrap",
-          }}
-        >
-          {files &&
-            files?.map((file, i: any) => (
-              <li
-                style={{ marginBottom: "15px", display: "flex" }}
-                id={file.name}
-              >
+                Partager les images
+              </button>
+            )}
+          </form>
+          <section className="event__files">
+            {files.map((file, index) => (
+              <div key={index} className="event__container">
                 <img
                   src={URL.createObjectURL(file)}
-                  alt="image"
-                  style={{ width: "200px", height: "200px" }}
+                  alt={file.name}
+                  className="event__container-image"
                 />
-                <div>
-                  <p>File details:</p>
-                  <p>Index: {i}</p>
-                  <p>Name: {file.name}</p>
-                  <p>Type: {file.type}</p>
-                  <p>Size: {file.size} bytes</p>
-                </div>
-
-                <div style={{ display: "flex" }}>
-                  <span>Supprimer la photo :</span>
-                  <span
-                    className="event__button"
-                    onClick={() => deleteImageFromFiles(i)}
+                <div className="middle">
+                  <button
+                    className="middle__delete-button"
+                    onClick={() => deleteImageFromFiles(index)}
                   >
-                    X
-                  </span>
+                    &times;
+                  </button>
                 </div>
-              </li>
+              </div>
             ))}
-        </ul>
-      </section>
-     {/*  {file && (
-        <button onClick={(e) => console.log(e)} className="submit">
-          Upload a file
-        </button>
-      )} */}
+          </section>
+        </div>
+      </div>
     </Layout>
   );
 };
