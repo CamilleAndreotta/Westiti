@@ -1,7 +1,7 @@
 import { FileProps } from "../@types/FileProps";
 import { acceptedFormats } from "./acceptedFormats";
 
-export const validFileSize = (arrayOfFiles: [], maxSize: number = 2900000) => {
+export const validFileSize = (arrayOfFiles: [], maxSize: number) => {
   return arrayOfFiles.filter((file: FileProps) => {
     if (!acceptedFormats.includes(file.type)) {
       console.error(

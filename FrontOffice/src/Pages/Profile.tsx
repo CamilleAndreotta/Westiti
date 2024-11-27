@@ -33,7 +33,7 @@ const Profile: FC = () => {
     const userId = localStorage.getItem("userId");
     const name = localStorage.getItem("username");
     const email = localStorage.getItem("email");
-    const avatar = localStorage.getItem("avatar");
+
     console.log(isConnected);
 
     setUser({

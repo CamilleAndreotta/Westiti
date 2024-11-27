@@ -9,12 +9,14 @@ import { FileProps } from "../@types/FileProps";
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
-import "../styles/event.scss";
 import { acceptedFormats } from "../Utils/acceptedFormats";
+
+import "../styles/event.scss";
+import { log } from "node:console";
 
 const Event = () => {
   const { eventId } = useParams();
-  const [file, setFile] = useState<FileProps | null>(null);
+  const [_file, setFile] = useState<FileProps | null>(null);
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const { onError, onSuccess } = useToast();
   const userId = localStorage.getItem("userId");
@@ -22,11 +24,13 @@ const Event = () => {
 
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    console.log(files);
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/upload`,
         {
-          data: files,
+          /* body: files, */
           userId,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -34,11 +38,12 @@ const Event = () => {
           },
         }
       );
+      console.log(response);
+
       if (response.status !== 200) {
         onError("Une erreur c'est produite pendant l'envoi des photos");
         return;
       }
-
       console.log(response);
       setFiles(null);
       setFile(null);
@@ -50,7 +55,7 @@ const Event = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /*  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files?.[0];
     console.log("file", file);
     const data = new FormData();
@@ -64,17 +69,21 @@ const Event = () => {
       console.log("Le format de fichier n'est pas accepté");
       return;
     }
-    if (file.size > 2900000) {
+    if (file.size > maxSize) {
       console.log("Le fichier est trop lourd, merci de le compresser");
       return;
     }
     setFile(file);
   };
-
+ */
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files);
+
     const files: any = e.target.files;
+    console.log(files);
+
     const filesArray: FileProps[] | any = Array.from(files);
-    const validArray = validFileSize(filesArray);
+    const validArray = validFileSize(filesArray, maxSize);
     console.log(validArray);
     setFiles(validArray);
     return;
@@ -90,9 +99,13 @@ const Event = () => {
       console.error("Index invalide ou fichiers non disponibles.");
       return;
     }
-    setFiles((prevState: FileProps[] | null) =>
-      prevState.filter((_, i) => i !== index)
-    );
+    setFiles((prevState) => {
+      if (prevState === null) {
+        // Si prevState est null, retourne simplement null ou un tableau vide
+        return null; // ou return [] si tu préfères un tableau vide.
+      }
+      return prevState.filter((_, i) => i !== index);
+    });
     console.log("Fichiers restants :", files);
   };
 
@@ -100,7 +113,9 @@ const Event = () => {
     <Layout>
       <div className="event__page">
         <div className="event__box">
-          <h1 className="event__title">Événement {eventId}</h1>
+          <h1 className="event__title">
+            Événement {localStorage.getItem("eventName")}
+          </h1>
           <form className="event__form">
             <label htmlFor="images" className="event__label">
               Ajouter des images
@@ -112,7 +127,7 @@ const Event = () => {
                 onChange={handleFilesChange}
               />
             </label>
-            {files.length > 0 && (
+            {files && files?.length > 0 && (
               <button
                 className="event__button"
                 type="button"
@@ -123,23 +138,24 @@ const Event = () => {
             )}
           </form>
           <div className="event__files-section">
-            {files.map((file, index) => (
-              <div key={index} className="img-div">
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt={file.name}
-                  className="image"
-                />
-                <div className="middle">
-                  <button
-                    className="event__delete-button"
-                    onClick={() => deleteImageFromFiles(index)}
-                  >
-                    &times;
-                  </button>
+            {files &&
+              files.map((file: any, index) => (
+                <div key={index} className="img-div">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={file.name}
+                    className="image"
+                  />
+                  <div className="middle">
+                    <button
+                      className="event__delete-button"
+                      onClick={() => deleteImageFromFiles(index)}
+                    >
+                      &times;
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
