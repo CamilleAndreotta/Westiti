@@ -98,11 +98,11 @@ const Event = () => {
 
   return (
     <Layout>
-      <div className="event">
+      <div className="event__page">
         <div className="event__box">
           <h1 className="event__title">Événement {eventId}</h1>
           <form className="event__form">
-            <label htmlFor="images" className="event__form-label">
+            <label htmlFor="images" className="event__label">
               Ajouter des images
               <input
                 type="file"
@@ -110,7 +110,6 @@ const Event = () => {
                 multiple
                 accept={acceptedFormats.join(",")}
                 onChange={handleFilesChange}
-                className="event__form-input"
               />
             </label>
             {files.length > 0 && (
@@ -123,17 +122,17 @@ const Event = () => {
               </button>
             )}
           </form>
-          <section className="event__files">
+          <div className="event__files-section">
             {files.map((file, index) => (
-              <div key={index} className="event__container">
+              <div key={index} className="img-div">
                 <img
                   src={URL.createObjectURL(file)}
                   alt={file.name}
-                  className="event__container-image"
+                  className="image"
                 />
                 <div className="middle">
                   <button
-                    className="middle__delete-button"
+                    className="event__delete-button"
                     onClick={() => deleteImageFromFiles(index)}
                   >
                     &times;
@@ -141,7 +140,7 @@ const Event = () => {
                 </div>
               </div>
             ))}
-          </section>
+          </div>
         </div>
       </div>
     </Layout>
