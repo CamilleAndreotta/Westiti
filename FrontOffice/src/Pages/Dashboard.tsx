@@ -6,10 +6,7 @@ import Card from "../Components/Card";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 
-import "../styles/eventspage.scss";
-import "../styles/modale.css";
-import "../styles/button.css";
-import "../styles/input.css";
+
 import Modale from "../Components/Modale";
 import AutoCompleteInput from "../Components/AutoCompleteInput";
 
@@ -21,10 +18,17 @@ import {
   handleCreateEventSubmit,
   handleEventCodeChange,
   handleJoinEventSubmit,
-} from "../Utils/event.functions";
+} from "../Utils/dashboard.functions";
 
 import { EventProps } from "../@types/EventProps";
 import { CreateEventFormProps } from "../@types/CreateEventFormProps";
+
+
+
+import "../styles/modale.css";
+import "../styles/button.css";
+import "../styles/input.css";
+import "../styles/dashboard.scss";
 
 const EventsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -72,9 +76,9 @@ const EventsPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="events__page">
-        <h1 className="events__title">Voici vos événements</h1>
-        <div className="events__container">
+      <div className="dashboard__page">
+        <h1 className="dashboard__page__title">Voici vos événements</h1>
+        <div className="dashboard__page__container">
           {eventsList &&
             eventsList.map((event: EventProps) => (
               <Link to={`/event/${event.id}`}>
@@ -87,7 +91,7 @@ const EventsPage: React.FC = () => {
               </Link>
             ))}
         </div>
-        <div className="events__buttons-container">
+        <div className="dashboard__page__buttons-container">
           <Button
             onClick={() => setIsCreateEventModalOpen(true)}
             className="btn"

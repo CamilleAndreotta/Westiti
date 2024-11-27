@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import Homepage from "./Pages/Homepage";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
-import EventsPage from "./Pages/EventsPage";
+import EventsPage from "./Pages/Dashboard";
 import Profile from "./Pages/Profile";
 import Event from "./Pages/Event";
 
