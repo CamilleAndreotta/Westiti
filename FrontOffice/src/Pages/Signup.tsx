@@ -7,7 +7,7 @@ import Button from "../Components/Button";
 import Input from "../Components/Input";
 import AuthLayout from "../Components/AuthLayout";
 
-import "../styles/signup.css";
+import "../styles/signup.scss";
 import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
