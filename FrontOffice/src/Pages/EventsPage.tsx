@@ -6,13 +6,15 @@ import Card from "../Components/Card";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 
-import "../styles/eventspage.css";
+import "../styles/eventspage.scss";
 import "../styles/modale.css";
 import "../styles/button.css";
 import "../styles/input.css";
 import Modale from "../Components/Modale";
 import AutoCompleteInput from "../Components/AutoCompleteInput";
 import axios from "axios";
+import { log } from "node:console";
+import useToast from "../Hooks/useToast";
 
 interface Event {
   id: string;
@@ -26,7 +28,7 @@ const EventsPage: React.FC = () => {
   const [eventsData, setEventsData] = useState<Event[]>([]);
   const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
   const [isJoinEventModalOpen, setIsJoinEventModalOpen] = useState(false);
-
+  const { onError, onSuccess } = useToast();
   // Récupération de l'utilisateur connecté
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("access_token");
@@ -45,30 +47,45 @@ const EventsPage: React.FC = () => {
     ended_at: "",
     address: "",
     content: "",
+    picture: "http//pivutre.jpreg",
+    creator_id: localStorage.getItem("userId"),
   });
 
   const [eventCode, setEventCode] = useState("");
-
+  const [eventsList, setEventsList] = useState();
   // Récupération des événements de l'utilisateur
   useEffect(() => {
-    fetch(`http://localhost:3000/api/event/${userId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la récupération des événements");
-        }
-        return response.json();
-      })
-      .then((data: Event[]) => {
-        setEventsData(data);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des événements :", error);
-      });
+    // get all events by user ID
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/event`, {
+          params: { userId },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log(response.data);
+        setEventsList(response.data);
+        /* .then((response) => {
+          if (!response.ok) {
+            throw new Error("Erreur lors de la récupération des événements");
+          }
+          return response.json();
+        })
+        .then((data: Event[]) => {
+          setEventsData(data);
+        })
+        .catch((error) => {
+          console.error(
+            "Erreur lors de la récupération des événements :",
+            error
+          );
+        }); */
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
   }, [userId, accessToken]);
 
   // Gestion des changements dans le formulaire de création d'événement
@@ -87,33 +104,30 @@ const EventsPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response: any = await axios.post("http://localhost:3000/api/event", {
-        data: createEventForm,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          name: createEventForm.name,
-          content: createEventForm.content,
-          started_at: createEventForm.started_at,
-          ended_at: createEventForm.ended_at,
-          address: createEventForm.address,
-          userId: userId,
-        }),
-      });
-
-      if (!response.ok) {
+      const response: any = await axios.post(
+        "http://localhost:3000/api/event",
+        createEventForm,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.status !== 201) {
+        onError("Erreur lors de la création de l'événement");
         throw new Error("Erreur lors de la création de l'événement");
       }
 
-      const newEvent = await response.json();
+      onSuccess("Événement créé avec succès");
+
+      setIsCreateEventModalOpen(false);
 
       // Mise à jour de la liste des événements
       setEventsData([...eventsData, newEvent]);
 
       // Fermeture de la modale et réinitialisation du formulaire
-      setIsCreateEventModalOpen(false);
       setCreateEventForm({
         name: "",
         started_at: "",
@@ -174,11 +188,10 @@ const EventsPage: React.FC = () => {
               <Card
                 dataImage={event.image}
                 header={event.title}
-                content={event.description}
               />
             </div>
           ))}
-          <Link to={`/event/${eventId}`}>
+          {/*  <Link to={`/event/${eventId}`}>
             <div className="event__card">
               <Card
                 dataImage="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -186,7 +199,33 @@ const EventsPage: React.FC = () => {
                 content="Mariage numéro 1"
               />
             </div>
-          </Link>
+          </Link> */}
+          {eventsList &&
+            eventsList.map(
+              (event: {
+                id: string;
+                name: string;
+                content: string;
+                address: string;
+                started_at: string;
+                ended_at: string;
+                access_code: string;
+                upload_status: true;
+                picture: string;
+                created_at: string;
+                updated_at: string;
+                userId: string;
+              }) => (
+                <Link to={`/event/${event.id}`}>
+                  <Card
+                    dataImage="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    header={event.name}
+                    content={event.content}
+                    key={event.id}
+                  />
+                </Link>
+              )
+            )}
         </div>
         <div className="events__buttons-container">
           <Button
@@ -234,7 +273,7 @@ const EventsPage: React.FC = () => {
               value={createEventForm.ended_at}
               onChange={handleCreateEventChange}
               required
-           //   labelPosition="above"
+              //   labelPosition="above"
             />
             {/* Lieu de l'événement avec autocomplétion */}
             <AutoCompleteInput
