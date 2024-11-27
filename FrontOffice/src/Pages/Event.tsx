@@ -59,11 +59,7 @@ const Event = () => {
   ];
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file:any = e.target.files?.[0];
-    file.replace(' ', '-')
-    console.log(file);
-    const data = new FormData();
-    data.append('file', file);
-    console.log(data);
+    console.log("file", file);
     if (!acceptedFormats.includes(file.type)) {
       console.log("Le format de fichier n'est pas accepté");
       onError(`Le format de ce fichier n\'est pas accepté`);
@@ -79,7 +75,6 @@ const Event = () => {
   };
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files:any = e.target.files;
-    //const data = new FormData();
     const filesArray = Array.from(files);
     for (let i = 0; i < filesArray.length; i++) {
       if (!acceptedFormats.includes(files[i].type)) {
