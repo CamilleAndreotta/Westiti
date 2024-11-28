@@ -1,6 +1,5 @@
-
 export interface FileProps {
-    name: string;
-    type: string;
-    size: number;
-  }
+  name?: string | undefined;
+  type?: string | undefined;
+  size?: number | undefined;
+}

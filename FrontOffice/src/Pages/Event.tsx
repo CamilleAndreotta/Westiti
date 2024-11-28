@@ -13,42 +13,75 @@ import { acceptedFormats } from "../Utils/acceptedFormats";
 
 import "../styles/event.scss";
 
+interface PhotoProps {
+  id: number;
+  name: string;
+  type: string;
+  size: number;
+}
 const Event = () => {
   const { onError, onSuccess } = useToast();
   const { eventId } = useParams();
-  const [_file, setFile] = useState<FileProps | null>(null);
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const [event, setEvent] = useState<EventProps | null>();
-  
+  const [_photos, setPhotos] = useState<PhotoProps[] | null>([]);
   const maxSize = 5000000;
 
   useEffect(() => {
-    const fetchData = async () => {
-      await getEventByEventId();
-    };
-    fetchData();
+    try {
+      const fetchData = async () => {
+        Promise.all([
+          await getEventByEventId(),
+          await getAllEventPhotosByUsertId(),
+        ]);
+      };
+      fetchData();
+    } catch (error) {
+      onError("Une erreur est survenue lors de la récupération des données");
+      console.log(error);
+    }
   }, []);
 
   const getEventByEventId = async () => {
     try {
       const response = await axios.get(`
         ${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/`);
+
       console.log(response);
       setEvent(response.data);
+      onSuccess("événement récupéré");
     } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // récupérer tout les photos de l'user lié à un event
+  const getAllEventPhotosByUsertId = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await axios.get(`
+      ${
+        import.meta.env.VITE_DEV_API_URL
+      }/api/photo/event/${eventId}/user/${userId}`);
+      console.log(response);
+      setPhotos(response.data);
+      onSuccess("Photos récupérées");
+    } catch (error) {
+      onError("Une erreur c'est produite lors de la récupération des photos");
       console.log(error);
     }
   };
 
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(files);
     if (!files) {
       return;
     }
-    const fileSelected: any = files[0];
     const formData = new FormData();
-    formData.append("file", fileSelected);
+    /*  const fileSelected: any = files[0]; */
+    files.forEach((file: any) => {
+      formData.append("file", file);
+    });
 
     try {
       const userId = localStorage.getItem("userId");
@@ -66,13 +99,13 @@ const Event = () => {
       );
       console.log(response);
 
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         onError("Une erreur c'est produite pendant l'envoi des photos");
         return;
       }
+
       console.log(response);
       setFiles(null);
-      setFile(null);
       onSuccess("Photos envoyées");
       return;
     } catch (error) {
@@ -123,7 +156,6 @@ const Event = () => {
           <h1 className="event__title">Événement {event?.name}</h1>
           <div className="event__informations">
             <div className="event__img">
-              {" "}
               <img
                 src={event?.picture}
                 alt=""

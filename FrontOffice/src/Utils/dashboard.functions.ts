@@ -89,35 +89,53 @@ export const handleCreateEventChange = (
 export const handleJoinEventSubmit = async (
   e: React.FormEvent<HTMLFormElement>,
   setIsJoinEventModalOpen: Dispatch<SetStateAction<boolean>>,
-  setEventCode: Dispatch<SetStateAction<string>>
+  setEventCode: Dispatch<SetStateAction<string>>,
+  eventCode: string,
+  onSuccess: (message: string) => void,
+  onError: (message: string) => void
 ) => {
   e.preventDefault();
 
   try {
-    const accessToken = localStorage.getItem("access_token");
-    //const userId = localStorage.getItem("user_id");
-    const response = await axios.post(`http://localhost:3000/api/event/join`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const userId: string | null = localStorage.getItem("userId");
+    const data: {
+      userId: string | null;
+      access_code: string;
+    } = {
+      userId,
+      access_code: eventCode,
+    };
+    const accessToken: string | null = localStorage.getItem("access_token");
+    const response = await axios.post(
+      `http://localhost:3000/api/event/join`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
-    if (response.status !== 200) {
+    if (response.status !== 201) {
+      onError("Erreur lors de la jonction à l'événement");
       throw new Error("Erreur lors de la jonction à l'événement");
     }
 
     // Fermeture de la modale et réinitialisation du formulaire
     setIsJoinEventModalOpen(false);
     setEventCode("");
+    onSuccess("Vous êtes maintenant membre de cet événement");
   } catch (error) {
-    console.error("Erreur lors de la jonction à l'événement :", error);
+    onError("Erreur lors de la jonction à l'événement");
+    console.error("Erreur lors de la jonction à l'événement");
   }
 };
 
-  // Gestion des changements dans le formulaire de rejoindre un événement
-  export const handleEventCodeChange = (e: React.ChangeEvent<HTMLInputElement>,
-    setEventCode: Dispatch<SetStateAction<string>>
-  ) => {
-    setEventCode(e.target.value);
-  };
+// Gestion des changements dans le formulaire de rejoindre un événement
+export const handleEventCodeChange = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  setEventCode: Dispatch<SetStateAction<string>>
+) => {
+  setEventCode(e.target.value);
+};
