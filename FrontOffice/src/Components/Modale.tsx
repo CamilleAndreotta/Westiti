@@ -24,12 +24,8 @@ const Modale: React.FC<ModaleProps> = ({ children, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modale__overlay" onClick={onClose}>
-      <div
-        className="modale__box"
-        onClick={(e) => e.stopPropagation()}
-        ref={modalRef}
-      >
+    <div className="modale__overlay">
+      <div className="modale__box" ref={modalRef}>
         {/* Bouton de fermeture */}
         <button className="modale__close" onClick={onClose}>
           &times;

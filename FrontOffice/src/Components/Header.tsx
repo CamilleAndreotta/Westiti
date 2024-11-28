@@ -1,7 +1,6 @@
 // Header.tsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 import useToast from "../Hooks/useToast";
 
@@ -23,21 +22,6 @@ const Header: React.FC = () => {
 
   const handleLogout = async (): Promise<void> => {
     try {
-      /* const response = await axios.post(
-        `http://localhost:3000/auth/logout/${localStorage.getItem("userId")}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },    
-        }
-      );
-      console.log(response); */
-
-      /* if (response.status !== 200) {
-        onError("Une erreur s'est produite pendant la déconnexion");
-        return;
-      } */
       onSuccess("Déconnexion réussie");
       localStorage.clear();
       setMenuIsOpen(false);
@@ -48,10 +32,11 @@ const Header: React.FC = () => {
       console.log(error, "Logout");
     }
   };
+  const currentYear = new Date().getFullYear();
 
   return (
     <div className={`header ${menuIsOpen ? "menu-open" : ""}`}>
-      <Link to="/" className="logo">
+      <Link to={`/events/${localStorage.getItem("userId")}`} className="logo">
         <img src={Logo} alt="logo" />
       </Link>
 
@@ -86,27 +71,28 @@ const Header: React.FC = () => {
               Mes événements
             </Link>
           </li>
-          <li>
-            <Link to={`/join-an-event`} onClick={handleMenuToggle}>
-              Rejoindre un événement
-            </Link>
-          </li>
-          <li>
-            <Link to={`/register-new-event`} onClick={handleMenuToggle}>
-              Créer un nouvel événement
-            </Link>
-          </li>
           {userIsConnected && (
             <li
               onClick={() => {
                 handleMenuToggle();
                 handleLogout();
               }}
-              
             >
-             <span className='header__logout'>Déconnexion</span> 
+              <li>
+                <Link to="/contact" onClick={handleMenuToggle}>
+                  Contact
+                </Link>
+              </li>
+              <span className="header__logout">Déconnexion</span>
             </li>
           )}
+          {/* Ajout du texte "Westiti2024" en bas du menu */}
+          <li className="nav__footer">
+            <span>
+              Westiti©
+              {currentYear}
+            </span>
+          </li>
         </ul>
       </nav>
     </div>

@@ -74,8 +74,31 @@ const EventsPage: React.FC = () => {
   return (
     <Layout>
       <div className="dashboard">
+        <div className="dashboard__buttons">
+          <Button
+            onClick={() => setIsCreateEventModalOpen(true)}
+            className="btn"
+          >
+            Créer un événement
+          </Button>
+          <Button onClick={() => setIsJoinEventModalOpen(true)} className="btn">
+            Rejoindre un événement
+          </Button>
+        </div>
         <h1 className="dashboard__title">Voici vos événements</h1>
         <div className="dashboard__container">
+          <Card
+            dataImage="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+            "
+            header="Mariage"
+            content="Ceci est une description statique pour tester la carte."
+          />
+          <Card
+            dataImage="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+            "
+            header="Mariage"
+            content="Ceci est une description statique pour tester la carte."
+          />
           {eventsList &&
             eventsList.map((event: EventProps) => (
               <Link
@@ -90,17 +113,6 @@ const EventsPage: React.FC = () => {
                 />
               </Link>
             ))}
-        </div>
-        <div className="dashboard__buttons">
-          <Button
-            onClick={() => setIsCreateEventModalOpen(true)}
-            className="btn"
-          >
-            Créer un événement
-          </Button>
-          <Button onClick={() => setIsJoinEventModalOpen(true)} className="btn">
-            Rejoindre un événement
-          </Button>
         </div>
 
         {/* Modale pour créer un événement */}
@@ -122,7 +134,6 @@ const EventsPage: React.FC = () => {
               )
             }
           >
-            {/* Nom de l'événement */}
             <Input
               type="text"
               name="name"
@@ -133,7 +144,6 @@ const EventsPage: React.FC = () => {
               }
               required
             />
-            {/* Date et heure de début */}
             <Input
               type="datetime-local"
               name="started_at"
@@ -144,7 +154,6 @@ const EventsPage: React.FC = () => {
               }
               required
             />
-            {/* Date et heure de fin */}
             <Input
               type="datetime-local"
               name="ended_at"
@@ -155,7 +164,6 @@ const EventsPage: React.FC = () => {
               }
               required
             />
-
             <AutoCompleteInput
               value={createEventForm.address}
               onChange={(value) =>
@@ -163,7 +171,6 @@ const EventsPage: React.FC = () => {
               }
               label="Lieu de l'événement"
             />
-            {/* Description de l'événement */}
             <div className="user__box">
               <textarea
                 name="content"
@@ -213,5 +220,4 @@ const EventsPage: React.FC = () => {
     </Layout>
   );
 };
-
 export default EventsPage;
