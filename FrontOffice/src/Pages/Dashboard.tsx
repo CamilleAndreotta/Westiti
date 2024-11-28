@@ -110,7 +110,7 @@ const EventsPage: React.FC = () => {
                   dataImage={event.picture}
                   header={event.name}
                   content={event.content}
-                  key={index +1}
+                  key={index + 1}
                 />
               </Link>
             ))}
@@ -201,7 +201,14 @@ const EventsPage: React.FC = () => {
           <h2 className="modale__title">Rejoindre un événement</h2>
           <form
             onSubmit={(e) =>
-              handleJoinEventSubmit(e, setIsJoinEventModalOpen, setEventCode)
+              handleJoinEventSubmit(
+                e,
+                setIsJoinEventModalOpen,
+                setEventCode,
+                eventCode,
+                onSuccess,
+                onError
+              )
             }
           >
             <Input

@@ -8,7 +8,6 @@ import Logo from "../assets/img/logo.webp";
 
 import "../styles/header.scss";
 
-
 const Header: React.FC = () => {
   const { onError, onSuccess } = useToast();
   const [menuIsOpen, setMenuIsOpen] = useState(false);

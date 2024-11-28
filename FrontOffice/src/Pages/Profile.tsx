@@ -119,21 +119,22 @@ const Profile: FC = () => {
           </Button>
         </Modale>
       </div>
-   {/*    {modalIsOpen && ( */}
-        <Modale className="modale__overlay" modalIsOpen={modalIsOpen}>
-          <div className="modale__box">
-            <Button
-              className="btn"
-              onClick={() => handleDeleteUser(onSuccess, onError, navigate)}
-            >
-              Oui
-            </Button>
-            <Button className="btn" onClick={() => setModalIsOpen(false)}>
-              Non
-            </Button>
-          </div>
-        </Modale>
-   {/*   )}  */}
+      {/*    {modalIsOpen && ( */}
+       {/* @ts-ignore */}
+      <Modale className="modale__overlay" modalIsOpen={modalIsOpen}>
+        <div className="modale__box">
+          <Button
+            className="btn"
+            onClick={() => handleDeleteUser(onSuccess, onError, navigate)}
+          >
+            Oui
+          </Button>
+          <Button className="btn" onClick={() => setModalIsOpen(false)}>
+            Non
+          </Button>
+        </div>
+      </Modale>
+      {/*   )}  */}
     </Layout>
   );
 };
