@@ -9,16 +9,15 @@ import {
   UnauthorizedException,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { fileURLToPath } from 'url';
-import { diskStorage } from 'multer';
-import { existsSync, mkdirSync } from 'fs';
-import { extname } from 'path';
+import { JoinEventDto } from './dto/joint-event.dto';
+import { LeaveEventDto } from './dto/leave-event.dto';
 
 @Controller('/api/event')
 export class EventController {
@@ -33,8 +32,17 @@ export class EventController {
   }
 
   @Get()
-  findAll() {
-    return this.eventService.findAll();
+  public async findAll(@Query() query: { userId: string }) {
+    const userId = query.userId;
+
+    return await this.prismaService.userevent.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        event_id: true,
+      },
+    });
   }
 
   @Get(':id')
@@ -85,4 +93,68 @@ export class EventController {
     }
     return this.eventService.uploadPhotos(id, userId, file);
   }
+
+  @Post('/join')
+  public async joinEvent(@Body() joinEventDto: JoinEventDto) {
+    const event = await this.prismaService.event.findFirst({
+      where: {
+        access_code: joinEventDto.access_code,
+      },
+    });
+
+    if (!event) {
+      throw new UnauthorizedException({
+        message: "Cet événememt n'existe pas",
+      });
+    }
+
+    return await this.prismaService.userevent.create({
+      data: {
+        user_id: {
+          connect: {
+            id: joinEventDto.userId,
+          },
+        },
+        event_id: {
+          connect: {
+            id: event.id,
+          },
+        },
+      },
+    });
+  }
+
+  @Post('/leave')
+  public async leaveEvent(@Body() leaveEventDto: LeaveEventDto) {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        id: leaveEventDto.userId,
+      },
+      include: {
+        participations: true,
+      },
+    });
+
+    let eventInDb = null;
+    user.participations.map((event) => {
+      if (event.eventId === leaveEventDto.eventId) {
+        return (eventInDb = event);
+      }
+    });
+
+    return await this.prismaService.userevent.delete({
+      where: {
+        id: eventInDb.id,
+      },
+    });
+  }
 }
+/* 
+  // vérifier si l'utilisateur a uploadé des photos
+    return await this.prismaService.userevent.delete({
+      where: {
+        user_id: user,
+        event_id: event,
+      }
+})
+ */
