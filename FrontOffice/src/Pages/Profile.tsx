@@ -2,14 +2,13 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Layout from "../Components/Layout";
-//import Modale from "../Components/Modale";
-
-import "../styles/profile.css";
-import "../styles/modale.css";
 import Button from "../Components/Button";
+import Modale from "../Components/Modale"; // Import de votre composant Modale
 import useToast from "../Hooks/useToast";
 
 import axios from "axios";
+
+import "../styles/profile.scss";
 
 const Profile: FC = () => {
   type UserProps = {
@@ -18,6 +17,7 @@ const Profile: FC = () => {
     email: null | string;
     avatar: string | undefined;
   };
+
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [user, setUser] = useState<UserProps>({
@@ -26,15 +26,14 @@ const Profile: FC = () => {
     email: null,
     avatar: undefined,
   });
+
   const { onError, onSuccess } = useToast();
+
   useEffect(() => {
     const isConnected = localStorage.getItem("isConnected");
-
     const userId = localStorage.getItem("userId");
     const name = localStorage.getItem("username");
     const email = localStorage.getItem("email");
-
-    console.log(isConnected);
 
     setUser({
       ...user,
@@ -44,15 +43,18 @@ const Profile: FC = () => {
       avatar:
         "https://t3.ftcdn.net/jpg/01/26/91/78/360_F_126917812_XlWgkaV9f81Hde4wvmvJWM3huJRvy5EM.webp",
     });
-    //vérifier si l'utilisateur est connecté
+
     if (isConnected === "false") {
       navigate("/");
     }
   }, []);
 
-  const openModale = (e: any): void => {
-    e.preventDefault();
-    setModalIsOpen(!modalIsOpen);
+  const openModal = (): void => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = (): void => {
+    setModalIsOpen(false);
   };
 
   const handleDeleteUser = async () => {
@@ -66,52 +68,48 @@ const Profile: FC = () => {
           },
         }
       );
-      console.log(response);
       if (response.status === 200) {
         onSuccess("Compte supprimé avec succès");
         localStorage.clear();
         navigate("/");
       }
     } catch (error) {
-      onError("Une erreur c'est produite pendant la suppression de votre compte");
+      onError(
+        "Une erreur s'est produite pendant la suppression de votre compte"
+      );
     }
   };
+
   return (
     <Layout>
       <div className="profile">
-        <div className="profile__container">
-          <img src={user.avatar} alt="user avatar" />
-          <div className="profile__user-info">
-            <div>
-              Nom de l'utilisateur:
-              <span className="profile__user-info__name">{user?.name}</span>
-            </div>
-            <div>
-              Email:
-              <span className="profile__user-info__email">{user?.email}</span>
-            </div>
+        <div className="profile__box">
+          <div className="profile__image">
+            <img src={user.avatar} alt="user avatar" />
           </div>
+          <div className="profile__info">
+            <h2 className="profile__name">{user?.name}</h2>
+            <p className="profile__email">{user?.email}</p>
+          </div>
+          <Button
+            type="button"
+            className="btn profile__delete-button"
+            onClick={openModal}
+          >
+            Supprimer mon compte
+          </Button>
         </div>
-        <Button
-          type="button"
-          className="btn profile__delete-account"
-          onClick={(e) => openModale(e)}
-        >
-          Supprimer mon compte ?
-        </Button>
+
+        <Modale isOpen={modalIsOpen} onClose={closeModal}>
+          <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
+          <Button className="btn modale__btn" onClick={handleDeleteUser}>
+            Oui
+          </Button>
+          <Button className="btn modale__btn" onClick={closeModal}>
+            Non
+          </Button>
+        </Modale>
       </div>
-      {modalIsOpen && (
-        <div className="modale__delete-account">
-          <div className="modale__container">
-            <Button className="btn" onClick={handleDeleteUser}>
-              Oui
-            </Button>
-            <Button className="btn" onClick={() => setModalIsOpen(false)}>
-              Non
-            </Button>
-          </div>
-        </div>
-      )}
     </Layout>
   );
 };

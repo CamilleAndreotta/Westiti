@@ -1,6 +1,5 @@
 import React from "react";
 import image from "../assets/img/loadingscreen.webp";
-import Logo from "../assets/img/logo.webp";
 import Button from "../Components/Button";
 import { Link } from "react-router-dom";
 
@@ -12,7 +11,6 @@ const Homepage: React.FC = () => {
     <div className="homepage">
       <div className="homepage__box">
         <div className="left__section">
-          <img src={Logo} alt="Logo" className="logo" />
           <h1>Bienvenue sur Westiti</h1>
           <div className="buttons">
             <Link to="/signup">
@@ -34,7 +32,5 @@ const Homepage: React.FC = () => {
     </div>
   );
 };
-
-
 
 export default Homepage;

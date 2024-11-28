@@ -36,6 +36,7 @@
 
 .modale__content {
   padding: 40px;
+  text-align: center;
 }
 
 .modale__title {
@@ -55,14 +56,13 @@
   position: absolute;
   top: 60px;
   left: 0;
-  
 }
 .modale__container {
   width: 80%;
   height: calc(100% - 99px);
   margin: auto;
   display: flex;
-  background-color:#636374 ;
+  background-color: #636374;
   flex-direction: column;
   align-items: center;
   justify-content: center;
