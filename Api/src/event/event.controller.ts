@@ -13,9 +13,12 @@ import {
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { Photos, UploadPhotosDto } from 'src/photo/dto/upload-photos.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { fileURLToPath } from 'url';
+import { diskStorage } from 'multer';
+import { existsSync, mkdirSync } from 'fs';
+import { extname } from 'path';
 
 @Controller('/api/event')
 export class EventController {
@@ -49,14 +52,16 @@ export class EventController {
     return this.eventService.remove(id);
   }
 
-  @Post(':id/upload')
+  @Post(':id/user/:userId/upload')
+  @UseInterceptors(FilesInterceptor('file'))
   public async uploadPhotos(
+    @UploadedFiles() file,
     @Param('id') id: string,
-    @Body() uploadPhotosDto: UploadPhotosDto,
+    @Param('userId') userId: string,
   ) {
     const user = await this.prismaService.user.findFirst({
       where: {
-        id: uploadPhotosDto.userId,
+        id: userId,
       },
       include: {
         participations: true,
@@ -73,23 +78,11 @@ export class EventController {
       });
     }
 
-    const havePhotosSubmitted = !(
-      Object.values(uploadPhotosDto.photos).length === 0
-    )
-      ? true
-      : false;
-
-    if (!havePhotosSubmitted) {
+    if (!file) {
       throw new UnauthorizedException({
-        message: "Aucune photo n'a été soumise",
+        message: "Aucune photo n'a été envoyée",
       });
     }
-
-    // Si oui on lance multer pour sauvegarder les photos et récupérer les urls
-
-    // On fait muter le uploadPhotoDto pour affecter l'url de la photo à la bonne photo
-
-    // On sauvegarder les informations en BDD
-    //return this.eventService.uploadPhotos(id, uploadPhotosDto);
+    return this.eventService.uploadPhotos(id, userId, file);
   }
 }
