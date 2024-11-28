@@ -45,6 +45,7 @@ export class UserService {
       name: data.name,
       email: data.email,
       avatar: data.avatar,
+      id: data.id,
     };
     return result;
   }

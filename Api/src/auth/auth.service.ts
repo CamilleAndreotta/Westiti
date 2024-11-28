@@ -49,13 +49,13 @@ export class AuthService {
 
   async signIn(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
-    if (!user) {
-      throw new UnauthorizedException({ message: 'Email inexistant' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      throw new UnauthorizedException({ message: 'Mot de passe incorrect' });
+    const isMatch = user
+      ? await bcrypt.compare(password, user.password)
+      : false;
+    if (!user || !isMatch) {
+      throw new UnauthorizedException({
+        message: 'Email et/ou mot de passe incorrect',
+      });
     }
 
     const payload = { id: user.id, email: user.email };
