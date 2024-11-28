@@ -7,6 +7,7 @@ import Signup from "./Pages/Signup";
 import EventsPage from "./Pages/Dashboard";
 import Profile from "./Pages/Profile";
 import Event from "./Pages/Event";
+import Contact from "./Pages/Contact";
 
 import "aos/dist/aos.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/events/:userId" element={<EventsPage />} />
         <Route path="/event/:eventId" element={<Event />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       <ToastContainer />
     </BrowserRouter>
