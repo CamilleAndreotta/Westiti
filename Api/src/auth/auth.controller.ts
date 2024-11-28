@@ -22,9 +22,13 @@ export class AuthController {
   @Post('login')
   @ApiResponse({ status: 201, description: 'Authentification réussie' })
   @ApiForbiddenResponse({
-    description: 'Email inexistant | Mot de passe incorrect',
+    description: 'Email et/ou mot de passe incorrect',
   })
-  signIn(@Body() loginDto: LoginDto) {
-    return this.authService.signIn(loginDto.email, loginDto.password);
+  async signIn(@Body() loginDto: LoginDto) {
+    try {
+      return await this.authService.signIn(loginDto.email, loginDto.password);
+    } catch (error) {
+      throw error;
+    }
   }
 }
