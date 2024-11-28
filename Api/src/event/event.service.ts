@@ -49,7 +49,7 @@ export class EventService {
             id: createEventDto.creator_id,
           },
         },
-      },
+      },      
     });
 
     return await this.prismaService.userevent.create({

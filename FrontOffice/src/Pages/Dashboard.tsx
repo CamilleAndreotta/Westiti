@@ -100,8 +100,9 @@ const EventsPage: React.FC = () => {
             content="Ceci est une description statique pour tester la carte."
           />
           {eventsList &&
-            eventsList.map((event: EventProps) => (
+            eventsList.map((event: EventProps, index: number) => (
               <Link
+                key={event.id}
                 to={`/event/${event.id}`}
                 onClick={() => localStorage.setItem("eventName", event.name)}
               >
@@ -109,7 +110,7 @@ const EventsPage: React.FC = () => {
                   dataImage={event.picture}
                   header={event.name}
                   content={event.content}
-                  key={event.id}
+                  key={index + 1}
                 />
               </Link>
             ))}
@@ -200,7 +201,14 @@ const EventsPage: React.FC = () => {
           <h2 className="modale__title">Rejoindre un événement</h2>
           <form
             onSubmit={(e) =>
-              handleJoinEventSubmit(e, setIsJoinEventModalOpen, setEventCode)
+              handleJoinEventSubmit(
+                e,
+                setIsJoinEventModalOpen,
+                setEventCode,
+                eventCode,
+                onSuccess,
+                onError
+              )
             }
           >
             <Input

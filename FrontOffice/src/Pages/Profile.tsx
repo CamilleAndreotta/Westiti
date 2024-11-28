@@ -1,12 +1,21 @@
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import useToast from "../Hooks/useToast";
+import { UserProps } from "../Components/UserProps";
+
 import Layout from "../Components/Layout";
 import Button from "../Components/Button";
 import Modale from "../Components/Modale"; // Import de votre composant Modale
-import useToast from "../Hooks/useToast";
+
 
 import axios from "axios";
+
+import { handleDeleteUser } from "../Utils/user.fonction";
+
+
+import "../styles/profile.css";
+import "../styles/modale.css";
 
 import "../styles/profile.scss";
 
@@ -110,6 +119,22 @@ const Profile: FC = () => {
           </Button>
         </Modale>
       </div>
+      {/*    {modalIsOpen && ( */}
+       {/* @ts-ignore */}
+      <Modale className="modale__overlay" modalIsOpen={modalIsOpen}>
+        <div className="modale__box">
+          <Button
+            className="btn"
+            onClick={() => handleDeleteUser(onSuccess, onError, navigate)}
+          >
+            Oui
+          </Button>
+          <Button className="btn" onClick={() => setModalIsOpen(false)}>
+            Non
+          </Button>
+        </div>
+      </Modale>
+      {/*   )}  */}
     </Layout>
   );
 };

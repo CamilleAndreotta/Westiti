@@ -18,6 +18,7 @@ services:
       - /usr/src/api/node_modules
     ports:
       - "3000:3000"
+      # - "5555:5555"
     depends_on:
       - postgres-westiti
     env_file:
@@ -26,8 +27,7 @@ services:
   postgres-westiti:
     container_name: postgres-westiti
     image: postgres:latest
-    ports:
-      - "5432:5432"
+    
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
     env_file:
@@ -45,3 +45,11 @@ services:
   #     - ./nginx/local.conf:/etc/nginx/nginx.conf
   #   ports:
   #     - 80:80
+  
+  # prisma-studio:
+  #   container_name: prisma-studio
+  #   image: timothyjmiller/prisma-studio:latest
+  #   restart: unless-stopped
+  #   env_file:
+  #    - .api.env
+    

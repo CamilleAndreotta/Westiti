@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import "../styles/autocomplete.css";
-
-interface AutoCompleteInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  label: string;
-}
+import { AutoCompleteInputProps } from "../@types/AutoCompleteInputProps";
 
 const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   value,
