@@ -68,8 +68,8 @@ const Signup = () => {
 
   const submit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    
-    const testUserPassword : boolean = testPasswordSecurity(signup.password);
+
+    const testUserPassword: boolean = testPasswordSecurity(signup.password);
     if (!testUserPassword) {
       onError("Le mot de passe ne correspond pas aux prérequis de sécurité");
       throw new Error(
@@ -114,6 +114,7 @@ const Signup = () => {
         }
       );
       const data = await response.json();
+
       if (!response.ok) {
         onError(data.message);
         return;

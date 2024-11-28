@@ -1,25 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import { validFileSize } from "../Utils/event.function";
-
 import { FileProps } from "../@types/FileProps";
+import { EventProps } from "../@types/EventProps";
 
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
+import { validFileSize } from "../Utils/event.function";
 import { acceptedFormats } from "../Utils/acceptedFormats";
 
 import "../styles/event.scss";
 
 const Event = () => {
+  const { onError, onSuccess } = useToast();
   const { eventId } = useParams();
   const [_file, setFile] = useState<FileProps | null>(null);
   const [files, setFiles] = useState<FileProps[] | null>([]);
-  const { onError, onSuccess } = useToast();
+  const [event, setEvent] = useState<EventProps | null>();
+  
+  const maxSize = 5000000;
 
-  const maxSize = 2900000;
+  useEffect(() => {
+    const fetchData = async () => {
+      await getEventByEventId();
+    };
+    fetchData();
+  }, []);
+
+  const getEventByEventId = async () => {
+    try {
+      const response = await axios.get(`
+        ${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/`);
+      console.log(response);
+      setEvent(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -27,15 +46,16 @@ const Event = () => {
     if (!files) {
       return;
     }
+    const fileSelected: any = files[0];
     const formData = new FormData();
-    formData.append("photo", files[0]);
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`); // Doit afficher "photo: [object File]"
-    }
+    formData.append("file", fileSelected);
+
     try {
-      const userId = localStorage.getItem('userId')
+      const userId = localStorage.getItem("userId");
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/user/${userId}/upload`,
+        `${
+          import.meta.env.VITE_DEV_API_URL
+        }/api/event/${eventId}/user/${userId}/upload`,
         formData,
         {
           headers: {
@@ -61,27 +81,6 @@ const Event = () => {
     }
   };
 
-  /*  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file: any = e.target.files?.[0];
-    console.log("file", file);
-    const data = new FormData();
-    data.append("file", file);
-
-    for (let [key, value] of data.entries()) {
-      console.log(key, value);
-    }
-
-    if (!acceptedFormats.includes(file.type)) {
-      console.log("Le format de fichier n'est pas accepté");
-      return;
-    }
-    if (file.size > maxSize) {
-      console.log("Le fichier est trop lourd, merci de le compresser");
-      return;
-    }
-    setFile(file);
-  };
- */
   const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.files);
 
@@ -96,7 +95,9 @@ const Event = () => {
   };
 
   const deleteImageFromFiles = (index: number | string) => {
-    console.log(typeof index);
+    //e.preventDefault()
+    console.log(index);
+
     if (typeof index === "string") {
       console.log(index);
       return;
@@ -119,9 +120,43 @@ const Event = () => {
     <Layout>
       <div className="event__page">
         <div className="event__box">
-          <h1 className="event__title">
-            Événement {localStorage.getItem("eventName")}
-          </h1>
+          <h1 className="event__title">Événement {event?.name}</h1>
+          <div className="event__informations">
+            <div className="event__img">
+              {" "}
+              <img
+                src={event?.picture}
+                alt=""
+                style={{ width: "250px", height: "130px" }}
+              />
+            </div>
+
+            <div className="event__text">
+              <div>Code: {event?.access_code}</div>
+              <div>Description: {event?.content}</div>
+              {event?.started_at ? (
+                <div>
+                  Date de début :
+                  {new Date(event?.started_at).toLocaleDateString("Fr-fr")}
+                </div>
+              ) : null}
+              {event?.ended_at ? (
+                <div>
+                  Date de fin :
+                  {new Date(event?.ended_at).toLocaleDateString("Fr-fr")}
+                </div>
+              ) : null}
+              {event?.address ? <div>Adresse :{event.address}</div> : null}
+              <div>
+                Status d'upload:
+                {!event?.upload_status
+                  ? "Inconnu"
+                  : event?.upload_status === true
+                  ? "Ouvert"
+                  : "Fermé"}
+              </div>
+            </div>
+          </div>
           <form className="event__form">
             <label htmlFor="images" className="event__label">
               Ajouter des images
@@ -142,27 +177,28 @@ const Event = () => {
                 Partager les images
               </button>
             )}
-          </form>
-          <div className="event__files-section">
-            {files &&
-              files.map((file: any, index) => (
-                <div key={index} className="img-div">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt={file.name}
-                    className="image"
-                  />
-                  <div className="middle">
-                    <button
-                      className="event__delete-button"
-                      onClick={() => deleteImageFromFiles(index)}
-                    >
-                      &times;
-                    </button>
+            <div className="event__files-section">
+              {files &&
+                files.map((file: any, index) => (
+                  <div key={index} className="img-div">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      className="image"
+                    />
+                    <div className="middle">
+                      <button
+                        type="button"
+                        className="event__delete-button"
+                        onClick={() => deleteImageFromFiles(index)}
+                      >
+                        &times;
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-          </div>
+                ))}
+            </div>
+          </form>
         </div>
       </div>
     </Layout>

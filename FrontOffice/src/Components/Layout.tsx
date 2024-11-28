@@ -1,6 +1,4 @@
-import Footer from "./Footer";
 import Header from "./Header";
-
 
 import '../styles/layout.css'
 
@@ -9,7 +7,7 @@ const Layout = ({ children } : any) => {
     <div className="layout">
       <Header/>
       {children}
-      <Footer />
+   
     </div>
   );
 };
