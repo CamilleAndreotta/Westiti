@@ -12,26 +12,32 @@ import Layout from "../Components/Layout";
 import { acceptedFormats } from "../Utils/acceptedFormats";
 
 import "../styles/event.scss";
-import { log } from "node:console";
 
 const Event = () => {
   const { eventId } = useParams();
   const [_file, setFile] = useState<FileProps | null>(null);
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const { onError, onSuccess } = useToast();
-  const userId = localStorage.getItem("userId");
+
   const maxSize = 2900000;
 
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log(files);
-
+    if (!files) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("photo", files[0]);
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`); // Doit afficher "photo: [object File]"
+    }
     try {
+      const userId = localStorage.getItem('userId')
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/upload`,
+        `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/user/${userId}/upload`,
+        formData,
         {
-          /* body: files, */
-          userId,
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
