@@ -3,14 +3,16 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import ShortUniqueId from 'short-unique-id';
-import { UploadPhotosDto } from 'src/photo/dto/upload-photos.dto';
+import { PhotoDto, UploadFileDto } from 'src/photo/dto/upload-photos.dto';
+import { Photo } from 'src/photo/entities/photo.entity';
+import { PhotoService } from 'src/photo/photo.service';
+import { eventNames } from 'process';
 
 @Injectable()
 export class EventService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(createEventDto: CreateEventDto) {
     // traitement la photo
-console.log(createEventDto)
     const formattedStartedDate = new Date(
       createEventDto.started_at.toString().replace('T', ' '),
     );
@@ -133,25 +135,34 @@ console.log(createEventDto)
     });
   }
 
-  public async uploadPhotos(id: string, uploadPhotosDto: UploadPhotosDto) {
+  public async uploadPhotos(id: string, userId: string, file: UploadFileDto) {
     const currentDate = new Date().toISOString();
+    const files = Object.values(file);
 
-    const photos = Object.values(uploadPhotosDto.photos);
-    photos.map((photo) => {
-      delete photo.name;
-      delete photo.size;
-      delete photo.type;
-      photo.userId = uploadPhotosDto.userId;
+    const photos = [];
+    files.map((file) => {
+      const photo = new PhotoDto();
+      photo.userId = userId;
       photo.eventId = id;
       photo.uploaded_at = currentDate;
-      photo.url = 'test';
+      photo.url = file.path;
       photo.status = false;
+
+      photos.push(photo);
     });
-    console.log(photos);
 
     await this.prismaService.photo.createMany({
       data: photos,
       skipDuplicates: true,
     });
+
+    const userEventPhoto = await this.prismaService.photo.findMany({
+      where: {
+        userId: userId,
+        eventId: id,
+      },
+    });
+
+    return userEventPhoto;
   }
 }

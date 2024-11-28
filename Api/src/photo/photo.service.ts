@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
-import { UploadPhotosDto } from './dto/upload-photos.dto';
+import { UploadFileDto } from './dto/upload-photos.dto';
 
 @Injectable()
 export class PhotoService {
@@ -25,7 +25,7 @@ export class PhotoService {
     return `This action removes a #${id} photo`;
   }
 
-  createMany(eventId: string, uploadPhotosDto: UploadPhotosDto) {
+  createMany(eventId: string, uploadPhotosDto: UploadFileDto) {
     return;
   }
 }
