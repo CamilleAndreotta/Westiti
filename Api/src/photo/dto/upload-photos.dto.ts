@@ -1,25 +1,15 @@
-export class UploadPhotosDto {
-  photos: Photo[];
-  userId: string;
-}
-
-export class Photos {
-  photos: Test[];
-}
-
-interface Test {
-  name: string;
-  size: string;
-  type: string;
-}
-
-interface Photo {
-  name: string;
-  size: string;
-  type: string;
-  userId: string;
+export class PhotoDto {
   eventId: string;
-  uploaded_at: string;
+  userId: string;
   url: string;
+  uploaded_at: string;
   status: boolean;
+}
+
+export class UploadFileDto {
+  files: File[];
+}
+
+interface File {
+  path: string;
 }
