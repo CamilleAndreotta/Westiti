@@ -11,7 +11,7 @@ import Contact from "./Pages/Contact";
 
 import "aos/dist/aos.css";
 import "react-toastify/dist/ReactToastify.css";
-import { StrictMode } from "react";
+
 
 const App = () => {
   AOS.init();
