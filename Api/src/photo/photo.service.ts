@@ -43,14 +43,21 @@ export class PhotoService {
     });
   }
 
+  async deletPhotosInEvent(userId: string, eventId: string) {
+    return await this.prismaService.photo.deleteMany({
+      where : {
+        userId : userId,
+        eventId: eventId,
+      }
+    });
+  }
+
   async findUserPhotos(userId: string){
     return await this.prismaService.photo.findMany({
       where: {
         userId : userId
       }
     })
-    }
   }
-
-
 }
+

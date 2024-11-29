@@ -130,6 +130,8 @@ export class EventController {
     
     this.multerService.deleteFiles(userPhotosEvent);
 
+    await this.photoService.deletPhotosInEvent(user.id, event.id);
+
     return this.userEventService.leaveEvent(eventToLeave);
   }
 }
