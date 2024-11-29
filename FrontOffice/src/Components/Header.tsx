@@ -73,6 +73,11 @@ const Header: React.FC = () => {
               Mes événements
             </Link>
           </li>
+          <li>
+                <Link to="/contact" onClick={handleMenuToggle}>
+                  Contact
+                </Link>
+              </li>
           {userIsConnected && (
             <li
               onClick={() => {
@@ -80,11 +85,7 @@ const Header: React.FC = () => {
                 handleLogout();
               }}
             >
-              <li>
-                <Link to="/contact" onClick={handleMenuToggle}>
-                  Contact
-                </Link>
-              </li>
+              
               <span className="header__logout">Déconnexion</span>
             </li>
           )}

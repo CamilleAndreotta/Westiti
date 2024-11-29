@@ -67,7 +67,7 @@ export class EventService {
       },
     });
   }
-
+  
   findAll() {
     return this.prismaService.event.findMany();
   }
