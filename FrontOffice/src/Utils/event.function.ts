@@ -1,3 +1,4 @@
+import axios from "axios";
 import { FileProps } from "../@types/FileProps";
 import { acceptedFormats } from "./acceptedFormats";
 
@@ -23,4 +24,20 @@ export const validFileSize = (
     console.log("true");
     return true;
   });
+};
+
+export const getEventByEventId = async (
+  eventId: string | undefined,
+  setEvent: any,
+  onSuccess: any
+) => {
+  try {
+    const response = await axios.get(`
+      ${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/`);
+    console.log(response);
+    setEvent(response.data);
+    onSuccess("Événement récupéré");
+  } catch (error) {
+    console.log(error);
+  }
 };

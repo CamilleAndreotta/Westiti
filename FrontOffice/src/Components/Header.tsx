@@ -43,7 +43,6 @@ const Header: React.FC = () => {
       <div className="menu-icon" onClick={handleMenuToggle}>
         {/* L'icône du menu sera stylisée avec CSS */}
       </div>
-
       <nav className="nav">
         <ul className="pt-5">
           {userIsConnected ? (

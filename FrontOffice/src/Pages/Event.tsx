@@ -3,27 +3,23 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 import { FileProps } from "../@types/FileProps";
-import { EventProps } from "../@types/EventProps";
 
+import { PhotoProps } from "../@types/PhotoProps";
+import type { Event } from "../@types/Event";
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
-import { validFileSize } from "../Utils/event.function";
+import { getEventByEventId, validFileSize } from "../Utils/event.function";
 import { acceptedFormats } from "../Utils/acceptedFormats";
 
 import "../styles/event.scss";
+import { stringify } from "querystring";
 
-interface PhotoProps {
-  id: number;
-  name: string;
-  type: string;
-  size: number;
-}
 const Event = () => {
   const { onError, onSuccess } = useToast();
   const { eventId } = useParams();
   const [files, setFiles] = useState<FileProps[] | null>([]);
-  const [event, setEvent] = useState<EventProps | null>();
+  const [event, setEvent] = useState<Event | null>();
   const [_photos, setPhotos] = useState<PhotoProps[] | null>([]);
   const maxSize = 5000000;
 
@@ -31,8 +27,8 @@ const Event = () => {
     try {
       const fetchData = async () => {
         Promise.all([
-          await getEventByEventId(),
-          await getAllEventPhotosByUsertId(),
+          await getEventByEventId(eventId, setEvent, onSuccess),
+       //   console.log(await getAllEventPhotosByUsertId()),
         ]);
       };
       fetchData();
@@ -41,19 +37,6 @@ const Event = () => {
       console.log(error);
     }
   }, []);
-
-  const getEventByEventId = async () => {
-    try {
-      const response = await axios.get(`
-        ${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/`);
-
-      console.log(response);
-      setEvent(response.data);
-      onSuccess("événement récupéré");
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // récupérer tout les photos de l'user lié à un event
   const getAllEventPhotosByUsertId = async () => {
@@ -148,7 +131,7 @@ const Event = () => {
     });
     console.log("Fichiers restants :", files);
   };
-
+  console.log(JSON.parse(localStorage.getItem("eventsList")) );
   return (
     <Layout>
       <div className="event__page">
