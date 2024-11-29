@@ -8,7 +8,7 @@ interface ModaleProps {
   onClose: () => void;
 }
 
-const Modale: React.FC<ModaleProps> = ({ children, isOpen, onClose }) => {
+const Modale: React.FC<ModaleProps> = ({ children, isOpen, onClose },) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

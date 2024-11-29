@@ -5,17 +5,16 @@ import { CreateEventFormProps } from "../@types/CreateEventFormProps";
 
 export const getAllEventsUser = async (
   userId: string | null,
-  setEventsList: Dispatch<SetStateAction<EventProps[]>>
+  setEventsList: Dispatch<SetStateAction<EventProps[] | null>>
 ) => {
-  const accessToken = localStorage.getItem("access_token");
+  const accessToken :string | null = localStorage.getItem("access_token");
   const response = await axios.get(`http://localhost:3000/api/event`, {
     params: { userId },
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  
-  console.log(response.data);
+  console.log(response);
   setEventsList(response.data);
   return;
 };
@@ -25,12 +24,12 @@ export const handleCreateEventSubmit = async (
   createEventForm: CreateEventFormProps,
   onError: (error: string) => void,
   onSuccess: (message: string) => void,
-  setEventsList: Dispatch<SetStateAction<EventProps[]>>,
+  setEventsList: Dispatch<SetStateAction<EventProps[] | null>>,
   setCreateEventForm: Dispatch<SetStateAction<CreateEventFormProps>>,
-  setIsCreateEventModalOpen: Dispatch<SetStateAction<boolean>>,
+  setIsCreateEventModalOpen: Dispatch<SetStateAction<boolean>>
 ): Promise<void> => {
   e.preventDefault();
-  
+
   const accessToken = localStorage.getItem("access_token");
   const userId = localStorage.getItem("user_id");
 
@@ -45,7 +44,7 @@ export const handleCreateEventSubmit = async (
         },
       }
     );
-    setEventsList(null)
+    setEventsList(null);
     console.log(response);
     if (response.status !== 201) {
       onError("Erreur lors de la création de l'événement");
@@ -91,8 +90,8 @@ export const handleCreateEventChange = (
 export const handleJoinEventSubmit = async (
   e: React.FormEvent<HTMLFormElement>,
   setIsJoinEventModalOpen: Dispatch<SetStateAction<boolean>>,
-  setEventCode: Dispatch<SetStateAction<string>>,
-  eventCode: string,
+  setEventCode: Dispatch<SetStateAction<string | null>>,
+  eventCode: string | null,
   onSuccess: (message: string) => void,
   onError: (message: string) => void
 ) => {
@@ -102,7 +101,7 @@ export const handleJoinEventSubmit = async (
     const userId: string | null = localStorage.getItem("userId");
     const data: {
       userId: string | null;
-      access_code: string;
+      access_code: string | null;
     } = {
       userId,
       access_code: eventCode,

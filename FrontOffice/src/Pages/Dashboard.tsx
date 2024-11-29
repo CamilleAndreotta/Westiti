@@ -1,11 +1,11 @@
 // EventsPage.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
 import Layout from "../Components/Layout";
 import Card from "../Components/Card";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
-
 import Modale from "../Components/Modale";
 import AutoCompleteInput from "../Components/AutoCompleteInput";
 
@@ -19,8 +19,8 @@ import {
   handleJoinEventSubmit,
 } from "../Utils/dashboard.functions";
 
-import { EventProps } from "../@types/EventProps";
 import { CreateEventFormProps } from "../@types/CreateEventFormProps";
+import { EventProps } from "../@types/EventProps";
 
 import "../styles/modale.css";
 import "../styles/button.css";
@@ -46,24 +46,18 @@ const EventsPage: React.FC = () => {
     creator_id: localStorage.getItem("userId"),
   });
 
-  // Récupération de l'utilisateur connecté
-  const userId = localStorage.getItem("userId");
-  const accessToken = localStorage.getItem("access_token");
-
-  // Vérification si l'utilisateur est connecté
-  useEffect(() => {
-    if (!accessToken || !userId) {
-      navigate("/signin");
-    }
-  }, [accessToken, userId, navigate]);
+  const accessToken : string | null = localStorage.getItem("access_token");
+  const userId: string | null = localStorage.getItem("userId");
 
   // Récupération des événements de l'utilisateur
   useEffect(() => {
     // get all user events
-    const userId: string | null = localStorage.getItem("userId");
+    if (!accessToken || !userId) {
+      navigate("/signin");
+    }
     const fetchData = async (): Promise<void> => {
       try {
-        getAllEventsUser(userId, setEventsList);
+        await getAllEventsUser(userId, setEventsList);
       } catch (error) {
         console.log(error);
       }
@@ -87,29 +81,30 @@ const EventsPage: React.FC = () => {
         </div>
         <h1 className="dashboard__title">Voici vos événements</h1>
         <div className="dashboard__container">
-         
           {eventsList &&
-            eventsList.map((event: EventProps, index: number) => (
+            eventsList.map((event: EventProps) => (
               <Link
-                key={event.id}
-                to={`/event/${event.id}`}
-                onClick={() => localStorage.setItem("eventName", event.name)}
+                key={event.event_id.id}
+                to={`/event/${event.event_id.id}`}
+                onClick={() =>
+                  localStorage.setItem("eventName", event.event_id.name)
+                }
               >
                 <Card
-                  dataImage={event.picture}
-                  header={event.name}
-                  content={event.content}
-                  key={index + 1}
+                  dataImage={event.event_id.picture}
+                  header={event.event_id.name}
+                  content={event.event_id.content}
+                  key={event.event_id.id}
                 />
               </Link>
             ))}
         </div>
-
+      
         {/* Modale pour créer un événement */}
         <Modale
-          
           isOpen={isCreateEventModalOpen}
           onClose={() => setIsCreateEventModalOpen(false)}
+         
         >
           <h2 className="modale__title">Créer un événement</h2>
           <form
