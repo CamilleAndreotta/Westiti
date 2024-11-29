@@ -13,7 +13,6 @@ import { getEventByEventId, validFileSize } from "../Utils/event.function";
 import { acceptedFormats } from "../Utils/acceptedFormats";
 
 import "../styles/event.scss";
-import { stringify } from "querystring";
 
 const Event = () => {
   const { onError, onSuccess } = useToast();
@@ -21,6 +20,7 @@ const Event = () => {
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const [event, setEvent] = useState<Event | null>();
   const [_photos, setPhotos] = useState<PhotoProps[] | null>([]);
+  const [photosList, setPhotosList] = useState([]);
   const maxSize = 5000000;
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const Event = () => {
       const fetchData = async () => {
         Promise.all([
           await getEventByEventId(eventId, setEvent, onSuccess),
-       //   console.log(await getAllEventPhotosByUsertId()),
+          await getAllEventPhotosByUsertId(),
         ]);
       };
       fetchData();
@@ -80,14 +80,13 @@ const Event = () => {
           },
         }
       );
-      console.log(response);
-
       if (response.status !== 201) {
         onError("Une erreur c'est produite pendant l'envoi des photos");
         return;
       }
+      console.log(response.data);
+      setPhotosList(response.data);
 
-      console.log(response);
       setFiles(null);
       onSuccess("Photos envoyées");
       return;
@@ -131,11 +130,11 @@ const Event = () => {
     });
     console.log("Fichiers restants :", files);
   };
-  console.log(JSON.parse(localStorage.getItem("eventsList")) );
+
   return (
     <Layout>
       <div className="event__page">
-        <div className="event__box">
+        <div className="event__box" >
           <h1 className="event__title">Événement {event?.name}</h1>
           <div className="event__informations">
             <div className="event__img">
@@ -214,7 +213,20 @@ const Event = () => {
                 ))}
             </div>
           </form>
+          <div
+          className="event__photoslist"
+          style={{ display:"flex", flexWrap:"wrap",width:"100%", height: "200px",justifyContent:'space-around'  }}
+        >
+          {photosList &&
+            photosList.map((photo: any) => (
+              <div key={photo.id}className="event__photoslist-photo">
+                <img src={"http://localhost:3000/" + photo.url} alt={"photo" + (photo.url).replace('public/uploads/photos/', '')}
+                style={{ width: "300px", height: "300px" }}/>
+              </div>
+            ))}
         </div>
+        </div>
+        
       </div>
     </Layout>
   );
