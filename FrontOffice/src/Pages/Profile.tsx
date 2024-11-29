@@ -14,7 +14,6 @@ import axios from "axios";
 import { handleDeleteUser } from "../Utils/user.fonction";
 
 
-import "../styles/profile.css";
 import "../styles/modale.css";
 
 import "../styles/profile.scss";

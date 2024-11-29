@@ -87,18 +87,7 @@ const EventsPage: React.FC = () => {
         </div>
         <h1 className="dashboard__title">Voici vos événements</h1>
         <div className="dashboard__container">
-          <Card
-            dataImage="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
-            "
-            header="Mariage"
-            content="Ceci est une description statique pour tester la carte."
-          />
-          <Card
-            dataImage="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
-            "
-            header="Mariage"
-            content="Ceci est une description statique pour tester la carte."
-          />
+         
           {eventsList &&
             eventsList.map((event: EventProps, index: number) => (
               <Link
@@ -118,6 +107,7 @@ const EventsPage: React.FC = () => {
 
         {/* Modale pour créer un événement */}
         <Modale
+          
           isOpen={isCreateEventModalOpen}
           onClose={() => setIsCreateEventModalOpen(false)}
         >
