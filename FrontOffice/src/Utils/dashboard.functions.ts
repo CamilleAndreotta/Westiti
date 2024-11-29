@@ -14,6 +14,7 @@ export const getAllEventsUser = async (
       Authorization: `Bearer ${accessToken}`,
     },
   });
+  
   console.log(response.data);
   setEventsList(response.data);
   return;
@@ -26,10 +27,10 @@ export const handleCreateEventSubmit = async (
   onSuccess: (message: string) => void,
   setEventsList: Dispatch<SetStateAction<EventProps[]>>,
   setCreateEventForm: Dispatch<SetStateAction<CreateEventFormProps>>,
-  setIsCreateEventModalOpen: Dispatch<SetStateAction<boolean>>
+  setIsCreateEventModalOpen: Dispatch<SetStateAction<boolean>>,
 ): Promise<void> => {
   e.preventDefault();
-
+  
   const accessToken = localStorage.getItem("access_token");
   const userId = localStorage.getItem("user_id");
 
@@ -44,6 +45,7 @@ export const handleCreateEventSubmit = async (
         },
       }
     );
+    setEventsList(null)
     console.log(response);
     if (response.status !== 201) {
       onError("Erreur lors de la création de l'événement");
