@@ -39,7 +39,7 @@ model event {
   picture String
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
-  creator_id user @relation(fields: [userId], references: [id])
+  creator_id user @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   participants userevent[]
   photos photo[]
@@ -47,9 +47,9 @@ model event {
 
 model userevent {
   id Int @id @default(autoincrement())
-  user_id user @relation(fields: [userId], references: [id])
+  user_id user @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  event_id event @relation(fields: [eventId], references: [id])
+  event_id event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId String
 }
 
@@ -58,8 +58,8 @@ model photo {
   url String
   uploaded_at DateTime @default(now()) @db.Timestamp(6)
   status Boolean
-  event_id event @relation(fields: [eventId], references: [id])
+  event_id event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId String
-  user_id user @relation(fields: [userId], references: [id])
+  user_id user @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
