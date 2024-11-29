@@ -118,4 +118,18 @@ export class UserService {
       where: { id },
     });
   }
+
+  async findUserWithParticipations(userId: string){
+    return await this.prismaService.user.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        participations: true,
+      },
+    });
+  }
+
+
+
 }
