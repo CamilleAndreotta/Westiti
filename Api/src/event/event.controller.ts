@@ -18,11 +18,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { JoinEventDto } from './dto/joint-event.dto';
 import { LeaveEventDto } from './dto/leave-event.dto';
+import { UserEventService } from 'src/userevent/userevent.service';
+import { UserService } from 'src/user/user.service';
 
 @Controller('/api/event')
 export class EventController {
   constructor(
     private readonly eventService: EventService,
+    private readonly userService: UserService,
+    private readonly userEventService: UserEventService,
     private readonly prismaService: PrismaService,
   ) {}
 
@@ -34,15 +38,7 @@ export class EventController {
   @Get()
   public async findAll(@Query() query: { userId: string }) {
     const userId = query.userId;
-
-    return await this.prismaService.userevent.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        event_id: true,
-      },
-    });
+    return this.userEventService.findUserEvents(userId);
   }
 
   @Get(':id')
@@ -67,14 +63,8 @@ export class EventController {
     @Param('id') id: string,
     @Param('userId') userId: string,
   ) {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        id: userId,
-      },
-      include: {
-        participations: true,
-      },
-    });
+
+    const user = await this.userService.findUserWithParticipations(userId);
 
     const isEventParticipant = user?.participations.some(
       (event) => event.eventId === id,
@@ -108,32 +98,17 @@ export class EventController {
       });
     }
 
-    return await this.prismaService.userevent.create({
-      data: {
-        user_id: {
-          connect: {
-            id: joinEventDto.userId,
-          },
-        },
-        event_id: {
-          connect: {
-            id: event.id,
-          },
-        },
-      },
-    });
+    const eventId = event.id;
+    await this.userEventService.jointEvent(joinEventDto, eventId);
+
+    return this.userEventService.findUserEvents(joinEventDto.userId);
   }
 
   @Post('/leave')
   public async leaveEvent(@Body() leaveEventDto: LeaveEventDto) {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        id: leaveEventDto.userId,
-      },
-      include: {
-        participations: true,
-      },
-    });
+
+    const userId = leaveEventDto.userId;
+    const user = await this.userService.findUserWithParticipations(userId);
 
     let eventInDb = null;
     user.participations.map((event) => {
@@ -142,19 +117,8 @@ export class EventController {
       }
     });
 
-    return await this.prismaService.userevent.delete({
-      where: {
-        id: eventInDb.id,
-      },
-    });
+    const eventToLeave = eventInDb.id;
+    return this.userEventService.leaveEvent(eventToLeave);
   }
 }
-/* 
-  // vérifier si l'utilisateur a uploadé des photos
-    return await this.prismaService.userevent.delete({
-      where: {
-        user_id: user,
-        event_id: event,
-      }
-})
- */
+

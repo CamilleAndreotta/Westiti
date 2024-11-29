@@ -6,6 +6,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { existsSync, mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { UserEventService } from 'src/userevent/userevent.service';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { extname } from 'path';
     }),
   ],
   controllers: [EventController],
-  providers: [EventService],
+  providers: [EventService, UserEventService, UserService],
   exports: [EventService],
 })
 export class EventModule {}

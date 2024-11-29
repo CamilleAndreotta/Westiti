@@ -114,8 +114,27 @@ export class UserService {
   }
 
   remove(id: string) {
+
+    this.prismaService.photo.deleteMany({
+      where: {userId: id}
+    });
+
     return this.prismaService.user.delete({
       where: { id },
     });
   }
+
+  async findUserWithParticipations(userId: string){
+    return await this.prismaService.user.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        participations: true,
+      },
+    });
+  }
+
+
+
 }
