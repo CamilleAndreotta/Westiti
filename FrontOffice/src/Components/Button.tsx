@@ -1,6 +1,6 @@
 import React from "react";
 //import "../styles/button.css";
-import { ButtonProps } from "../../src/@types/ButtonProps";
+import { ButtonProps } from "../@types/ButtonProps";
 
 const Button: React.FC<ButtonProps> = ({
   onClick,
