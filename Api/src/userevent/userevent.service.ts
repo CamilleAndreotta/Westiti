@@ -37,7 +37,7 @@ export class UserEventService {
     async leaveEvent(eventToLeave: number){
         return await this.prismaService.userevent.delete({
             where: {
-              id: eventInDb.id,
+              id: eventToLeave,
             },
           });
     }
