@@ -20,6 +20,8 @@ import { JoinEventDto } from './dto/joint-event.dto';
 import { LeaveEventDto } from './dto/leave-event.dto';
 import { UserEventService } from 'src/userevent/userevent.service';
 import { UserService } from 'src/user/user.service';
+import { MulterService } from 'src/multer/multer.service';
+import { PhotoService } from 'src/photo/photo.service';
 
 @Controller('/api/event')
 export class EventController {
@@ -28,6 +30,8 @@ export class EventController {
     private readonly userService: UserService,
     private readonly userEventService: UserEventService,
     private readonly prismaService: PrismaService,
+    private readonly multerService: MulterService,
+    private readonly photoService: PhotoService,
   ) {}
 
   @Post()
@@ -52,7 +56,9 @@ export class EventController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
+    const userPhotosEvent = await this.photoService.findUserPhotos(id);
+    this.multerService.deleteFiles(userPhotosEvent);
     return this.eventService.remove(id);
   }
 
@@ -107,8 +113,7 @@ export class EventController {
   @Post('/leave')
   public async leaveEvent(@Body() leaveEventDto: LeaveEventDto) {
 
-    const userId = leaveEventDto.userId;
-    const user = await this.userService.findUserWithParticipations(userId);
+    const user = await this.userService.findUserWithParticipations(leaveEventDto.userId);
 
     let eventInDb = null;
     user.participations.map((event) => {
@@ -118,6 +123,13 @@ export class EventController {
     });
 
     const eventToLeave = eventInDb.id;
+
+    const event = await this.eventService.findOne(eventInDb.eventId);
+    
+    const userPhotosEvent = await this.photoService.findPhotosInEvent(user.id, event.id);
+    
+    this.multerService.deleteFiles(userPhotosEvent);
+
     return this.userEventService.leaveEvent(eventToLeave);
   }
 }

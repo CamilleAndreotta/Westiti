@@ -8,6 +8,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { UserEventService } from 'src/userevent/userevent.service';
 import { UserService } from 'src/user/user.service';
+import { MulterService } from 'src/multer/multer.service';
+import { PhotoService } from 'src/photo/photo.service';
 
 @Module({
   imports: [
@@ -39,7 +41,7 @@ import { UserService } from 'src/user/user.service';
     }),
   ],
   controllers: [EventController],
-  providers: [EventService, UserEventService, UserService],
+  providers: [EventService, UserEventService, UserService, MulterService, PhotoService],
   exports: [EventService],
 })
 export class EventModule {}
