@@ -3,12 +3,14 @@ import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { ApiForbiddenResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from './decorators/public.decorators';
 
 @ApiTags('Authentification')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('register')
   @ApiResponse({ status: 201, description: 'Inscription réussie' })
   @ApiForbiddenResponse({
@@ -19,6 +21,7 @@ export class AuthController {
     return this.authService.signUp(registerDto);
   }
 
+  @Public()
   @Post('login')
   @ApiResponse({ status: 201, description: 'Authentification réussie' })
   @ApiForbiddenResponse({
