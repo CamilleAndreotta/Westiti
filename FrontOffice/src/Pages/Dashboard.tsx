@@ -27,7 +27,7 @@ import "../styles/button.css";
 import "../styles/input.css";
 import "../styles/dashboard.scss";
 
-const EventsPage: React.FC = () => {
+const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { onError, onSuccess } = useToast();
 
@@ -46,7 +46,7 @@ const EventsPage: React.FC = () => {
     creator_id: localStorage.getItem("userId"),
   });
 
-  const accessToken : string | null = localStorage.getItem("access_token");
+  const accessToken: string | null = localStorage.getItem("access_token");
   const userId: string | null = localStorage.getItem("userId");
 
   // Récupération des événements de l'utilisateur
@@ -57,7 +57,8 @@ const EventsPage: React.FC = () => {
     }
     const fetchData = async (): Promise<void> => {
       try {
-        await getAllEventsUser(userId, setEventsList);
+        const eventsUser = await getAllEventsUser(userId);
+        setEventsList(eventsUser);
       } catch (error) {
         console.log(error);
       }
@@ -65,6 +66,51 @@ const EventsPage: React.FC = () => {
     fetchData();
   }, [userId, accessToken]);
 
+  const submitEvent = async (e: any) => {
+    e.preventDefault();
+    try {
+      const response = await handleCreateEventSubmit(e, createEventForm);
+      if (response.createdEvent.status === 201) {
+        setIsCreateEventModalOpen(false);
+        setCreateEventForm({
+          name: "",
+          started_at: "",
+          ended_at: "",
+          address: "",
+          content: "",
+          picture:
+            "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          creator_id: localStorage.getItem("userId"),
+        });
+        const eventsUser = await getAllEventsUser(userId);
+        setEventsList(eventsUser);
+        onSuccess("2vénement crée");
+      }
+    } catch (error) {
+      onError("Erreur pendant la création, de l'évent");
+      console.log(error);
+    }
+  };
+
+  const joinEvent = async (e: any) => {
+    try {
+      const response = await handleJoinEventSubmit(e, eventCode);
+      if (response && response.status === 201) {
+        setIsJoinEventModalOpen(false);
+        setEventCode("");
+        onSuccess(
+          `Vous êtes maintenant membre de cet l'événement ${
+            response.data[response.data.length - 1].event_id.name
+          }`
+        );
+        const eventsUser = await getAllEventsUser();
+        setEventsList(eventsUser);
+      }
+    } catch (error) {
+      onError("Erreur pendant la création, de l'évent");
+      console.log(error);
+    }
+  };
   return (
     <Layout>
       <div className="dashboard">
@@ -81,7 +127,7 @@ const EventsPage: React.FC = () => {
         </div>
         <h1 className="dashboard__title">Voici vos événements</h1>
         <div className="dashboard__container">
-          {eventsList &&
+          {eventsList.length > 0 &&
             eventsList.map((event: EventProps) => (
               <Link
                 key={event.event_id.id}
@@ -99,27 +145,14 @@ const EventsPage: React.FC = () => {
               </Link>
             ))}
         </div>
-      
+
         {/* Modale pour créer un événement */}
         <Modale
           isOpen={isCreateEventModalOpen}
           onClose={() => setIsCreateEventModalOpen(false)}
-         
         >
           <h2 className="modale__title">Créer un événement</h2>
-          <form
-            onSubmit={(e) =>
-              handleCreateEventSubmit(
-                e,
-                createEventForm,
-                onError,
-                onSuccess,
-                setEventsList,
-                setCreateEventForm,
-                setIsCreateEventModalOpen
-              )
-            }
-          >
+          <form onSubmit={(e) => submitEvent(e)}>
             <Input
               type="text"
               name="name"
@@ -184,18 +217,7 @@ const EventsPage: React.FC = () => {
           onClose={() => setIsJoinEventModalOpen(false)}
         >
           <h2 className="modale__title">Rejoindre un événement</h2>
-          <form
-            onSubmit={(e) =>
-              handleJoinEventSubmit(
-                e,
-                setIsJoinEventModalOpen,
-                setEventCode,
-                eventCode,
-                onSuccess,
-                onError
-              )
-            }
-          >
+          <form onSubmit={(e: any) => joinEvent(e)}>
             <Input
               type="text"
               name="eventCode"
@@ -213,4 +235,4 @@ const EventsPage: React.FC = () => {
     </Layout>
   );
 };
-export default EventsPage;
+export default Dashboard;

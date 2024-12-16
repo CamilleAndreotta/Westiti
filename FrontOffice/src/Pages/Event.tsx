@@ -9,10 +9,11 @@ import type { Event } from "../@types/Event";
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
-import { getEventByEventId, validFileSize } from "../Utils/event.function";
+import { getAllEventPhotosByUsertId, getEventByEventId, validFileSize } from "../Utils/event.function";
 import { acceptedFormats } from "../Utils/acceptedFormats";
 
 import "../styles/event.scss";
+import { axiosInstance } from "../Utils/axiosInstance";
 
 const Event = () => {
   const { onError, onSuccess } = useToast();
@@ -26,10 +27,10 @@ const Event = () => {
   useEffect(() => {
     try {
       const fetchData = async () => {
-        Promise.all([
-          await getEventByEventId(eventId, setEvent, onSuccess),
-          await getAllEventPhotosByUsertId(),
-        ]);
+        const event = await getEventByEventId(eventId);
+        setEvent(event);
+        const photos = await getAllEventPhotosByUsertId(eventId);
+        setPhotos(photos);
       };
       fetchData();
     } catch (error) {
@@ -38,61 +39,28 @@ const Event = () => {
     }
   }, []);
 
-  // récupérer tout les photos de l'user lié à un event
-  const getAllEventPhotosByUsertId = async () => {
-    try {
-      const userId = localStorage.getItem("userId");
-      const response = await axios.get(`
-      ${
-        import.meta.env.VITE_DEV_API_URL
-      }/api/photo/event/${eventId}/user/${userId}`);
-      console.log(response);
-      setPhotos(response.data);
-      onSuccess("Photos récupérées");
-    } catch (error) {
-      onError("Une erreur c'est produite lors de la récupération des photos");
-      console.log(error);
-    }
-  };
-
+  
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!files) {
       return;
     }
     const formData = new FormData();
-    /*  const fileSelected: any = files[0]; */
     files.forEach((file: any) => {
       formData.append("file", file);
     });
-
     try {
       const userId = localStorage.getItem("userId");
-      const response = await axios.post(
-        `${
-          import.meta.env.VITE_DEV_API_URL
-        }/api/event/${eventId}/user/${userId}/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
+      const response = await axiosInstance.post(
+        `event/${eventId}/user/${userId}/upload`,
+        formData
       );
       if (response.status !== 201) {
-        onError("Une erreur c'est produite pendant l'envoi des photos");
-        return;
+        return response.data.message;
       }
-      console.log(response.data);
-      setPhotosList(response.data);
-
-      setFiles(null);
-      onSuccess("Photos envoyées");
-      return;
-    } catch (error) {
-      onError("Une erreur c'est produite pendant l'envoi des photos");
-      console.log(error);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error);
     }
   };
 
@@ -134,7 +102,7 @@ const Event = () => {
   return (
     <Layout>
       <div className="event__page">
-        <div className="event__box" >
+        <div className="event__box">
           <h1 className="event__title">Événement {event?.name}</h1>
           <div className="event__informations">
             <div className="event__img">
@@ -214,19 +182,29 @@ const Event = () => {
             </div>
           </form>
           <div
-          className="event__photoslist"
-          style={{ display:"flex", flexWrap:"wrap",width:"100%", height: "200px",justifyContent:'space-around'  }}
-        >
-          {photosList &&
-            photosList.map((photo: any) => (
-              <div key={photo.id}className="event__photoslist-photo">
-                <img src={"http://localhost:3000/" + photo.url} alt={"photo" + (photo.url).replace('public/uploads/photos/', '')}
-                style={{ width: "300px", height: "300px" }}/>
-              </div>
-            ))}
+            className="event__photoslist"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              width: "100%",
+              height: "200px",
+              justifyContent: "space-around",
+            }}
+          >
+            {photosList &&
+              photosList.map((photo: any) => (
+                <div key={photo.id} className="event__photoslist-photo">
+                  <img
+                    src={"http://localhost:3000/" + photo.url}
+                    alt={
+                      "photo" + photo.url.replace("public/uploads/photos/", "")
+                    }
+                    style={{ width: "300px", height: "300px" }}
+                  />
+                </div>
+              ))}
+          </div>
         </div>
-        </div>
-        
       </div>
     </Layout>
   );
