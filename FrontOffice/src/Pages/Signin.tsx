@@ -37,7 +37,7 @@ const Signin: React.FC = () => {
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("isConnected", "true");
       localStorage.setItem("userId", data.id);
-      localStorage.setItem("email", email);
+      localStorage.setItem("username", data.username);
 
       toast.success("Connexion réussie", {
         autoClose: 2000,

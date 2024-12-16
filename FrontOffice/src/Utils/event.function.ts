@@ -1,6 +1,6 @@
-import axios from "axios";
 import { FileProps } from "../@types/FileProps";
 import { acceptedFormats } from "./acceptedFormats";
+import { axiosInstance } from "./axiosInstance";
 
 export const validFileSize = (
   arrayOfFiles: [] | Array<FileProps>,
@@ -28,16 +28,25 @@ export const validFileSize = (
 
 export const getEventByEventId = async (
   eventId: string | undefined,
-  setEvent: any,
-  onSuccess: any
-) => {
+) : Promise<any> => {
   try {
-    const response = await axios.get(`
-      ${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/`);
-    console.log(response);
-    setEvent(response.data);
-    onSuccess("Événement récupéré");
-  } catch (error) {
-    console.log(error);
+    const response = await axiosInstance.get(`event/${eventId}/`);
+    return response;
+
+  } catch (error : any) {
+    throw new Error(error);
   }
 };
+
+// récupérer tout les photos de l'user lié à un event
+export const getAllEventPhotosByUsertId = async (eventId: string | null): Promise<any> => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await axiosInstance.get(`
+      photo/event/${eventId}/user/${userId}`);
+      console.log(response);
+      return response;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };

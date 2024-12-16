@@ -11,7 +11,7 @@ import Modale from "../Components/Modale"; // Import de votre composant Modale
 
 import axios from "axios";
 
-import { handleDeleteUser } from "../Utils/user.fonction";
+
 
 
 import "../styles/modale.css";
