@@ -41,7 +41,13 @@ import { PhotoService } from 'src/photo/photo.service';
     }),
   ],
   controllers: [EventController],
-  providers: [EventService, UserEventService, UserService, MulterService, PhotoService],
+  providers: [
+    EventService,
+    UserEventService,
+    UserService,
+    MulterService,
+    PhotoService,
+  ],
   exports: [EventService],
 })
 export class EventModule {}
