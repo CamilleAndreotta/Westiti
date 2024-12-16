@@ -8,4 +8,7 @@ export type Event = {
   access_code: string | null;
   address: string | null;
   name: string | null;
+  creator?: {
+    name: string;
+  };
 };
