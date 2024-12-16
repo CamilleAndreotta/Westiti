@@ -11,6 +11,8 @@ import "../styles/signup.scss";
 import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
+import { log } from "node:console";
+import axios from "axios";
 
 type UserSignupProps = {
   email: string;
@@ -98,51 +100,40 @@ const Signup = () => {
     }
 
     try {
-      const response: Response = await fetch(
-        /* `http://localhost:3000/auth/register`, */
+      const body = {
+        password: signup.password,
+        email: signup.email,
+        name: signup.username,
+      };
+      const response = await axios.post(
         `${import.meta.env.VITE_DEV_API_URL}/auth/register`,
+        body,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            password: signup.password,
-            email: signup.email,
-            name: signup.username,
-          }),
         }
       );
-      const data = await response.json();
 
-      if (!response.ok) {
-        onError(data.message);
+      if (response.status !== 201) {
+        console.log(response);        
+        onError('Erreur lors de la création du compte');
         return;
       }
+
       localStorage.setItem("isConnected", "true");
-      localStorage.setItem("userId", data.id);
-      localStorage.setItem("username", data.name);
-      localStorage.setItem("email", data.email);
-      localStorage.setItem("avatar", data.avatar);
+      localStorage.setItem("userId", response.data.id);
+      localStorage.setItem("username", response.data.name);
+      localStorage.setItem("email", response.data.email);
+      localStorage.setItem("avatar", response.data.avatar);
       onSuccess("Compte crée");
-      navigate(`/events/${data.id}`);
+      navigate(`/events/${response.data.id}`);
     } catch (error) {
       onError("Erreur:" + error);
       console.log("Erreur:", error);
     }
   };
 
-  /* const userInfoAreOk = () => {
-    if (
-      !signup.email ||
-      !signup.password ||
-      !signup.password_confirmation ||
-      !signup.username
-    ) {
-      return false;
-    }
-    return true;
-  }; */
   return (
     <AuthLayout title="Inscription">
       <form onSubmit={(e) => submit(e)}>
