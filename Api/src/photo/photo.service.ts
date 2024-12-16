@@ -9,7 +9,7 @@ import { Event } from 'src/event/entities/event.entity';
 @Injectable()
 export class PhotoService {
   constructor(private readonly prismaService: PrismaService) {}
-  
+
   create(createPhotoDto: CreatePhotoDto) {
     return 'This action adds a new photo';
   }
@@ -36,28 +36,36 @@ export class PhotoService {
 
   async findPhotosInEvent(userId: string, eventId: string) {
     return await this.prismaService.photo.findMany({
-      where : {
-        userId : userId,
+      where: {
+        userId: userId,
         eventId: eventId,
-      }
+      },
     });
   }
 
   async deletPhotosInEvent(userId: string, eventId: string) {
     return await this.prismaService.photo.deleteMany({
-      where : {
-        userId : userId,
+      where: {
+        userId: userId,
         eventId: eventId,
-      }
+      },
     });
   }
 
-  async findUserPhotos(userId: string){
+  async findUserPhotos(userId: string) {
     return await this.prismaService.photo.findMany({
       where: {
-        userId : userId
-      }
-    })
+        userId: userId,
+      },
+    });
+  }
+
+  async findUserEventPhotos(eventId: string, userId: string) {
+    return await this.prismaService.photo.findMany({
+      where: {
+        userId: userId,
+        eventId: eventId,
+      },
+    });
   }
 }
-

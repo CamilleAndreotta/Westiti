@@ -33,7 +33,6 @@ export class EventController {
     private readonly multerService: MulterService,
     private readonly photoService: PhotoService,
   ) {}
-
   @Post()
   create(@Body() createEventDto: CreateEventDto) {
     return this.eventService.create(createEventDto);
@@ -42,6 +41,11 @@ export class EventController {
   @Get()
   public async findAll(@Query() query: { userId: string }) {
     const userId = query.userId;
+    if (userId === undefined) {
+      throw new UnauthorizedException({
+        message: 'Vous ne pouvez pas effectuer cette opération.',
+      });
+    }
     return this.userEventService.findUserEvents(userId);
   }
 
@@ -69,7 +73,6 @@ export class EventController {
     @Param('id') id: string,
     @Param('userId') userId: string,
   ) {
-
     const user = await this.userService.findUserWithParticipations(userId);
 
     const isEventParticipant = user?.participations.some(
@@ -112,8 +115,9 @@ export class EventController {
 
   @Post('/leave')
   public async leaveEvent(@Body() leaveEventDto: LeaveEventDto) {
-
-    const user = await this.userService.findUserWithParticipations(leaveEventDto.userId);
+    const user = await this.userService.findUserWithParticipations(
+      leaveEventDto.userId,
+    );
 
     let eventInDb = null;
     user.participations.map((event) => {
@@ -125,14 +129,24 @@ export class EventController {
     const eventToLeave = eventInDb.id;
 
     const event = await this.eventService.findOne(eventInDb.eventId);
-    
-    const userPhotosEvent = await this.photoService.findPhotosInEvent(user.id, event.id);
-    
+
+    const userPhotosEvent = await this.photoService.findPhotosInEvent(
+      user.id,
+      event.id,
+    );
+
     this.multerService.deleteFiles(userPhotosEvent);
 
     await this.photoService.deletPhotosInEvent(user.id, event.id);
 
     return this.userEventService.leaveEvent(eventToLeave);
   }
-}
 
+  @Get(':id/user/:userId')
+  public async findUserEventPhotos(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.photoService.findUserEventPhotos(id, userId);
+  }
+}
