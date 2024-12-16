@@ -49,7 +49,7 @@ export class EventService {
             id: createEventDto.creator_id,
           },
         },
-      },      
+      },
     });
 
     return await this.prismaService.userevent.create({
@@ -67,7 +67,7 @@ export class EventService {
       },
     });
   }
-  
+
   findAll() {
     return this.prismaService.event.findMany();
   }
@@ -76,6 +76,13 @@ export class EventService {
     return this.prismaService.event.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        creator_id: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
   }

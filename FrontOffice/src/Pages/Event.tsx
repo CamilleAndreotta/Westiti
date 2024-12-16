@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 import { FileProps } from "../@types/FileProps";
 
@@ -14,6 +15,8 @@ import { acceptedFormats } from "../Utils/acceptedFormats";
 
 import "../styles/event.scss";
 import { axiosInstance } from "../Utils/axiosInstance";
+
+import BackArrowIcon from "../assets/img/back-arrow.svg";
 
 const Event = () => {
   const { onError, onSuccess } = useToast();
@@ -39,6 +42,7 @@ const Event = () => {
     }
   }, []);
 
+  const userId = localStorage.getItem("userId"); // Récupère l'ID utilisateur
   
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -103,6 +107,11 @@ const Event = () => {
     <Layout>
       <div className="event__page">
         <div className="event__box">
+          <div className="back__arrow">
+            <Link to={`/events/${userId}`}>
+              <img src={BackArrowIcon} alt="Retour aux événements" />
+            </Link>
+          </div>
           <h1 className="event__title">Événement {event?.name}</h1>
           <div className="event__informations">
             <div className="event__img">
@@ -114,28 +123,27 @@ const Event = () => {
             </div>
 
             <div className="event__text">
-              <div>Code: {event?.access_code}</div>
-              <div>Description: {event?.content}</div>
+              <div>Code : {event?.access_code}</div>
+              <div>Description : {event?.content}</div>
               {event?.started_at ? (
                 <div>
-                  Date de début :
+                  Date de début :{" "}
                   {new Date(event?.started_at).toLocaleDateString("Fr-fr")}
                 </div>
               ) : null}
               {event?.ended_at ? (
                 <div>
-                  Date de fin :
+                  Date de fin :{" "}
                   {new Date(event?.ended_at).toLocaleDateString("Fr-fr")}
                 </div>
               ) : null}
-              {event?.address ? <div>Adresse :{event.address}</div> : null}
+              {event?.address ? <div>Adresse : {event.address}</div> : null}
+              <div>Créé par : {event?.creator_id?.name || "Inconnu"}</div>
               <div>
-                Status d'upload:
-                {!event?.upload_status
-                  ? "Inconnu"
-                  : event?.upload_status === true
-                  ? "Ouvert"
-                  : "Fermé"}
+                Status d'upload :{" "}
+                <span className={event?.upload_status ? "open" : "closed"}>
+                  {event?.upload_status ? "Ouvert" : "Fermé"}
+                </span>
               </div>
             </div>
           </div>
