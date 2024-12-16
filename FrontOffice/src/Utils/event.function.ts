@@ -39,7 +39,7 @@ export const getEventByEventId = async (
 };
 
 // récupérer tout les photos de l'user lié à un event
-export const getAllEventPhotosByUsertId = async (eventId: string | null): Promise<any> => {
+export const getAllEventPhotosByUsertId = async (eventId: string |undefined): Promise<any> => {
     try {
       const userId = localStorage.getItem("userId");
       const response = await axiosInstance.get(`

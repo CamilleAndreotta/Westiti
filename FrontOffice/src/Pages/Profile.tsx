@@ -2,17 +2,12 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import useToast from "../Hooks/useToast";
-import { UserProps } from "../Components/UserProps";
 
 import Layout from "../Components/Layout";
 import Button from "../Components/Button";
 import Modale from "../Components/Modale"; // Import de votre composant Modale
 
-
 import axios from "axios";
-
-
-
 
 import "../styles/modale.css";
 
@@ -68,7 +63,7 @@ const Profile: FC = () => {
   const handleDeleteUser = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/user/${localStorage.getItem("userId")}`,
+        `${import.meta.env.VITE_DEV_API_URL}/user/${localStorage.getItem("userId")}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -76,11 +71,12 @@ const Profile: FC = () => {
           },
         }
       );
-      if (response.status === 200) {
-        onSuccess("Compte supprimé avec succès");
-        localStorage.clear();
-        navigate("/");
-      }
+      // if (response.status === 200) {
+      //   onSuccess("Compte supprimé avec succès");
+      //   localStorage.clear();
+      //   navigate("/");
+      // }
+      return response
     } catch (error) {
       onError(
         "Une erreur s'est produite pendant la suppression de votre compte"
@@ -124,7 +120,11 @@ const Profile: FC = () => {
         <div className="modale__box">
           <Button
             className="btn"
-            onClick={() => handleDeleteUser(onSuccess, onError, navigate)}
+            onClick={async () => {
+              const response = await handleDeleteUser()
+              console.log(response)
+            }}
+            
           >
             Oui
           </Button>

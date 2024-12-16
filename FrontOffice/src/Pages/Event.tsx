@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { FileProps } from "../@types/FileProps";
@@ -19,7 +18,7 @@ import { axiosInstance } from "../Utils/axiosInstance";
 import BackArrowIcon from "../assets/img/back-arrow.svg";
 
 const Event = () => {
-  const { onError, onSuccess } = useToast();
+  const { onError } = useToast();
   const { eventId } = useParams();
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const [event, setEvent] = useState<Event | null>();
@@ -203,7 +202,7 @@ const Event = () => {
               photosList.map((photo: any) => (
                 <div key={photo.id} className="event__photoslist-photo">
                   <img
-                    src={"http://localhost:3000/" + photo.url}
+                    src={`${import.meta.env.VITE_DEV_API_URL}/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }
