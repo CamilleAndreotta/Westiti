@@ -68,4 +68,12 @@ export class PhotoService {
       },
     });
   }
+
+  async findCreatorEventPhotos(eventId: string) {
+    return await this.prismaService.photo.findMany({
+      where: {
+        eventId: eventId,
+      },
+    });
+  }
 }
