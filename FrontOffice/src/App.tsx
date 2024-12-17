@@ -12,22 +12,21 @@ import "aos/dist/aos.css";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./Pages/Dashboard";
 
-
 const App = () => {
   AOS.init();
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/profile/:userId" element={<Profile />} />
-          <Route path="/signin" element={<Signin />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard/:userId" element={<Dashboard />} />
-          <Route path="/event/:eventId" element={<Event />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-        <ToastContainer />
-      </BrowserRouter>  
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/profile/:userId" element={<Profile />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard/:userId" element={<Dashboard />} />
+        <Route path="/event/:eventId" element={<Event />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+      <ToastContainer />
+    </BrowserRouter>
   );
 };
 

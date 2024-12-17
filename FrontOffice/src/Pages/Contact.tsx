@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Layout from "../Components/Layout";
 import Input from "../Components/Input";
 import Button from "../Components/Button";
+import { useLoader } from "../contexts/LoaderContext"; // Import du contexte Loader
+
 import "../styles/contact.scss";
 
 const ContactPage: React.FC = () => {
@@ -10,6 +12,8 @@ const ContactPage: React.FC = () => {
     email: "",
     message: "",
   });
+
+  const { showLoader, hideLoader } = useLoader(); // Utilisation du Loader
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,7 +27,11 @@ const ContactPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    showLoader(); // Affiche le loader
+
     console.log("Form Data Submitted:", formData);
+    hideLoader(); // Cache le loader après le délai
+
     // Vous pouvez ajouter ici un appel API ou une autre logique pour traiter les données du formulaire.
   };
 

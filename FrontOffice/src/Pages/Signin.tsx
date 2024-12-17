@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
+import { useLoader } from "../contexts/LoaderContext";
 
 import Button from "../Components/Button";
 import Input from "../Components/Input";
@@ -14,26 +15,32 @@ const Signin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
+  const { showLoader, hideLoader } = useLoader(); // Utilisation du hook Loader
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    showLoader(); // Affiche le loader avant la requête
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_DEV_API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password: password,
-          email: email,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_DEV_API_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            password: password,
+            email: email,
+          }),
+        }
+      );
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       if (response.status !== 201) {
         return;
       }
 
-      
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("isConnected", "true");
       localStorage.setItem("userId", data.id);
@@ -46,6 +53,8 @@ const Signin: React.FC = () => {
       navigate(`/dashboard/${localStorage.getItem("userId")}`);
     } catch (error) {
       console.log("Erreur:", error);
+    } finally {
+      setTimeout(() => hideLoader(), 2000); // Cache le loader après la requête
     }
   };
 
