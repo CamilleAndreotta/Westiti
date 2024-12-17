@@ -6,6 +6,7 @@ import validator from "validator";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import AuthLayout from "../Components/AuthLayout";
+import { useLoader } from "../contexts/LoaderContext";
 
 import "../styles/signup.scss";
 import "../styles/input.css";
@@ -23,6 +24,7 @@ type UserSignupProps = {
 const Signup = () => {
   const { onSuccess, onError } = useToast();
   const navigate = useNavigate();
+  const { showLoader, hideLoader } = useLoader(); // Utilisation du hook LoaderContext
   const [signup, setSignup] = useState<UserSignupProps>({
     email: "",
     password: "",
@@ -100,6 +102,7 @@ const Signup = () => {
     }
 
     try {
+      showLoader(); // Active le loader
       const body = {
         password: signup.password,
         email: signup.email,
@@ -116,8 +119,8 @@ const Signup = () => {
       );
 
       if (response.status !== 201) {
-        console.log(response);        
-        onError('Erreur lors de la création du compte');
+        console.log(response);
+        onError("Erreur lors de la création du compte");
         return;
       }
 
@@ -131,6 +134,8 @@ const Signup = () => {
     } catch (error) {
       onError("Erreur:" + error);
       console.log("Erreur:", error);
+    } finally {
+      setTimeout(() => hideLoader(), 2000); // Désactive le loader
     }
   };
 
