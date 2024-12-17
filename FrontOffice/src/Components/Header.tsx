@@ -38,7 +38,7 @@ const Header: React.FC = () => {
 
   return (
     <div className={`header ${menuIsOpen ? "menu-open" : ""}`}>
-      <Link to={`/events/${localStorage.getItem("userId")}`} className="logo">
+      <Link to={`/dashboard/${localStorage.getItem("userId")}`} className="logo">
         <img src={Logo} alt="logo" />
       </Link>
 
@@ -66,7 +66,7 @@ const Header: React.FC = () => {
 
           <li>
             <Link
-              to={`/events/${localStorage.getItem("userId")}`}
+              to={`/dashboard/${localStorage.getItem("userId")}`}
               onClick={handleMenuToggle}
             >
               Mes événements

@@ -1,11 +1,20 @@
 import { Dispatch, SetStateAction } from "react";
 import { CreateEventFormProps } from "../@types/CreateEventFormProps";
 import { axiosInstance } from "./axiosInstance";
+import axios from "axios";
+
+const accessToken = localStorage.getItem("access_token");
 
 export const getAllEventsUser = async (userId: string | null) => {
-  const response = await axiosInstance.get(`event`, {
-    params: { userId },
- });
+  const response = await axios.get(`event/${userId}`,
+   { headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  },}
+  //   , {
+  //   //params: { userId },
+  // }
+  );
 
   return response.data;
 };

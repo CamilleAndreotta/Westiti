@@ -127,7 +127,7 @@ const Signup = () => {
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("avatar", response.data.avatar);
       onSuccess("Compte crée");
-      navigate(`/events/${response.data.id}`);
+      navigate(`/dashboard/${response.data.id}`);
     } catch (error) {
       onError("Erreur:" + error);
       console.log("Erreur:", error);

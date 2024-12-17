@@ -43,7 +43,7 @@ const Signin: React.FC = () => {
         autoClose: 2000,
         position: "bottom-center",
       });
-      navigate(`/events/${localStorage.getItem("userId")}`);
+      navigate(`/dashboard/${localStorage.getItem("userId")}`);
     } catch (error) {
       console.log("Erreur:", error);
     }
