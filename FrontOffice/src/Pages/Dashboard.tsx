@@ -1,4 +1,4 @@
-// EventsPage.tsx
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -35,6 +35,7 @@ const Dashboard: React.FC = () => {
   const [isJoinEventModalOpen, setIsJoinEventModalOpen] = useState(false);
   const [eventCode, setEventCode] = useState<string>("");
   const [eventsList, setEventsList] = useState<EventProps[] | []>([]);
+  const [loading, setLoading] = useState(false)
   const [createEventForm, setCreateEventForm] = useState<CreateEventFormProps>({
     name: "",
     started_at: "",
@@ -52,6 +53,7 @@ const Dashboard: React.FC = () => {
   // Récupération des événements de l'utilisateur
   useEffect(() => {
     // get all user events
+    const userId = localStorage.getItem("userId");
     if (!accessToken || !userId) {
       navigate("/signin");
     }
@@ -59,6 +61,8 @@ const Dashboard: React.FC = () => {
       try {
         const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
+        console.log(eventsList);
+        
       } catch (error) {
         console.log(error);
       }
@@ -94,6 +98,7 @@ const Dashboard: React.FC = () => {
 
   const joinEvent = async (e: any) => {
     try {
+      const userId = localStorage.getItem('userId')
       const response = await handleJoinEventSubmit(e, eventCode);
       if (response && response.status === 201) {
         setIsJoinEventModalOpen(false);
@@ -103,7 +108,7 @@ const Dashboard: React.FC = () => {
             response.data[response.data.length - 1].event_id.name
           }`
         );
-        const eventsUser = await getAllEventsUser();
+        const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
       }
     } catch (error) {
@@ -127,7 +132,7 @@ const Dashboard: React.FC = () => {
         </div>
         <h1 className="dashboard__title">Voici vos événements</h1>
         <div className="dashboard__container">
-          {eventsList.length > 0 &&
+          {Array.isArray(eventsList) && eventsList.length > 0 ? (
             eventsList.map((event: EventProps) => (
               <Link
                 key={event.event_id.id}
@@ -140,10 +145,12 @@ const Dashboard: React.FC = () => {
                   dataImage={event.event_id.picture}
                   header={event.event_id.name}
                   content={event.event_id.content}
-                  key={event.event_id.id}
                 />
               </Link>
-            ))}
+            ))
+          ) : (
+            <p>Aucun événement trouvé.</p>
+          )}
         </div>
 
         {/* Modale pour créer un événement */}

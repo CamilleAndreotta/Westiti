@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { FileProps } from "../@types/FileProps";
-
 import { PhotoProps } from "../@types/PhotoProps";
 import type { Event } from "../@types/Event";
+
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
@@ -107,7 +107,7 @@ const Event = () => {
       <div className="event__page">
         <div className="event__box">
           <div className="back__arrow">
-            <Link to={`/events/${userId}`}>
+            <Link to={`/dashboard/${userId}`}>
               <img src={BackArrowIcon} alt="Retour aux événements" />
             </Link>
           </div>
