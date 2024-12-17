@@ -1,4 +1,4 @@
-// EventsPage.tsx
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -26,6 +26,8 @@ import "../styles/modale.css";
 import "../styles/button.css";
 import "../styles/input.css";
 import "../styles/dashboard.scss";
+import Loading from "../Components/Loading";
+import { log } from "node:console";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ const Dashboard: React.FC = () => {
   const [isJoinEventModalOpen, setIsJoinEventModalOpen] = useState(false);
   const [eventCode, setEventCode] = useState<string>("");
   const [eventsList, setEventsList] = useState<EventProps[] | []>([]);
+  const [loading, setLoading] = useState(false)
   const [createEventForm, setCreateEventForm] = useState<CreateEventFormProps>({
     name: "",
     started_at: "",
@@ -52,15 +55,18 @@ const Dashboard: React.FC = () => {
   // Récupération des événements de l'utilisateur
   useEffect(() => {
     // get all user events
+    const userId = localStorage.getItem("userId");
     if (!accessToken || !userId) {
       navigate("/signin");
     }
     const fetchData = async (): Promise<void> => {
+      setLoading(true)
       try {
         const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
+         setLoading(false);
       } catch (error) {
-        console.log(error);
+         setLoading(false);
       }
     };
     fetchData();
@@ -70,6 +76,8 @@ const Dashboard: React.FC = () => {
     e.preventDefault();
     try {
       const response = await handleCreateEventSubmit(e, createEventForm);
+      console.log(response);
+      
       if (response.createdEvent.status === 201) {
         setIsCreateEventModalOpen(false);
         setCreateEventForm({
@@ -82,6 +90,8 @@ const Dashboard: React.FC = () => {
             "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
           creator_id: localStorage.getItem("userId"),
         });
+        console.log(response);
+        
         const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
         onSuccess("2vénement crée");
@@ -94,6 +104,7 @@ const Dashboard: React.FC = () => {
 
   const joinEvent = async (e: any) => {
     try {
+      const userId = localStorage.getItem('userId')
       const response = await handleJoinEventSubmit(e, eventCode);
       if (response && response.status === 201) {
         setIsJoinEventModalOpen(false);
@@ -103,7 +114,7 @@ const Dashboard: React.FC = () => {
             response.data[response.data.length - 1].event_id.name
           }`
         );
-        const eventsUser = await getAllEventsUser();
+        const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
       }
     } catch (error) {
@@ -113,6 +124,7 @@ const Dashboard: React.FC = () => {
   };
   return (
     <Layout>
+       {loading && <Loading/>}
       <div className="dashboard">
         <div className="dashboard__buttons">
           <Button
@@ -127,7 +139,7 @@ const Dashboard: React.FC = () => {
         </div>
         <h1 className="dashboard__title">Voici vos événements</h1>
         <div className="dashboard__container">
-          {eventsList.length > 0 &&
+          {Array.isArray(eventsList) && eventsList.length > 0 ? (
             eventsList.map((event: EventProps) => (
               <Link
                 key={event.event_id.id}
@@ -140,10 +152,12 @@ const Dashboard: React.FC = () => {
                   dataImage={event.event_id.picture}
                   header={event.event_id.name}
                   content={event.event_id.content}
-                  key={event.event_id.id}
                 />
               </Link>
-            ))}
+            ))
+          ) : (
+            <p>Aucun événement trouvé.</p>
+          )}
         </div>
 
         {/* Modale pour créer un événement */}

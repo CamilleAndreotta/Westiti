@@ -63,7 +63,9 @@ const Profile: FC = () => {
   const handleDeleteUser = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_DEV_API_URL}/user/${localStorage.getItem("userId")}`,
+        `${import.meta.env.VITE_DEV_API_URL}/user/${localStorage.getItem(
+          "userId"
+        )}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -71,12 +73,14 @@ const Profile: FC = () => {
           },
         }
       );
-      // if (response.status === 200) {
-      //   onSuccess("Compte supprimé avec succès");
-      //   localStorage.clear();
-      //   navigate("/");
-      // }
-      return response
+
+
+      if (response.status === 200) {
+        onSuccess("Compte supprimé avec succès");
+        localStorage.clear();
+        navigate("/");
+      }
+      return response;
     } catch (error) {
       onError(
         "Une erreur s'est produite pendant la suppression de votre compte"
@@ -115,16 +119,15 @@ const Profile: FC = () => {
         </Modale>
       </div>
       {/*    {modalIsOpen && ( */}
-       {/* @ts-ignore */}
+      {/* @ts-ignore */}
       <Modale className="modale__overlay" modalIsOpen={modalIsOpen}>
         <div className="modale__box">
           <Button
             className="btn"
             onClick={async () => {
-              const response = await handleDeleteUser()
-              console.log(response)
+              const response = await handleDeleteUser();
+              console.log(response);
             }}
-            
           >
             Oui
           </Button>
