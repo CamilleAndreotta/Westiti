@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -9,30 +10,33 @@ import type { Event } from "../@types/Event";
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
-import { getAllEventPhotosByUsertId, getEventByEventId, validFileSize } from "../Utils/event.function";
+import {
+  getAllEventPhotosByUsertId,
+  getEventByEventId,
+  validFileSize,
+} from "../Utils/event.function";
 import { acceptedFormats } from "../Utils/acceptedFormats";
-
-import "../styles/event.scss";
-import { axiosInstance } from "../Utils/axiosInstance";
 
 import BackArrowIcon from "../assets/img/back-arrow.svg";
 
+import "../styles/event.scss";
+import { log } from "node:console";
+
 const Event = () => {
-  const { onError } = useToast();
+  const { onError, onSuccess } = useToast();
   const { eventId } = useParams();
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const [event, setEvent] = useState<Event | null>();
-  const [_photos, setPhotos] = useState<PhotoProps[] | null>([]);
-  const [photosList, setPhotosList] = useState([]);
+  const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
   const maxSize = 5000000;
 
   useEffect(() => {
     try {
       const fetchData = async () => {
         const event = await getEventByEventId(eventId);
-        setEvent(event);
+        setEvent(event.data);
         const photos = await getAllEventPhotosByUsertId(eventId);
-        setPhotos(photos);
+        setPhotosList(photos.data);
       };
       fetchData();
     } catch (error) {
@@ -42,50 +46,54 @@ const Event = () => {
   }, []);
 
   const userId = localStorage.getItem("userId"); // Récupère l'ID utilisateur
-  
+
+  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files: any = e.target.files;
+    const filesArray: FileProps[] | any = Array.from(files);
+    const validArray = validFileSize(filesArray, maxSize);
+    setFiles(validArray);
+    return;
+  };
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!files) {
       return;
     }
     const formData = new FormData();
+    /*  const fileSelected: any = files[0]; */
     files.forEach((file: any) => {
       formData.append("file", file);
     });
+
     try {
       const userId = localStorage.getItem("userId");
-      const response = await axiosInstance.post(
-        `event/${eventId}/user/${userId}/upload`,
-        formData
+      const response = await axios.post(
+        `http://localhost:3000/api/event/${eventId}/user/${userId}/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
       );
+
       if (response.status !== 201) {
-        return response.data.message;
+        onError("Une erreur c'est produite pendant l'envoi des photos");
+        return;
       }
-      return response.data;
-    } catch (error: any) {
-      throw new Error(error);
+      setPhotosList(response.data);
+      setFiles(null);
+      onSuccess("Photos envoyées");
+      return;
+    } catch (error) {
+      onError("Une erreur c'est produite pendant l'envoi des photos");
+      console.log(error);
     }
   };
 
-  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files);
-
-    const files: any = e.target.files;
-    console.log(files);
-
-    const filesArray: FileProps[] | any = Array.from(files);
-    const validArray = validFileSize(filesArray, maxSize);
-    console.log(validArray);
-    setFiles(validArray);
-    return;
-  };
-
   const deleteImageFromFiles = (index: number | string) => {
-    //e.preventDefault()
-    console.log(index);
-
     if (typeof index === "string") {
-      console.log(index);
       return;
     }
     if (!files || index < 0 || index >= files.length) {
@@ -101,7 +109,11 @@ const Event = () => {
     });
     console.log("Fichiers restants :", files);
   };
+  const formatAddress = (address: string) => {
+    const formatedAddress = address.replace(/ /g, "#");
 
+    return formatedAddress;
+  };
   return (
     <Layout>
       <div className="event__page">
@@ -136,7 +148,20 @@ const Event = () => {
                   {new Date(event?.ended_at).toLocaleDateString("Fr-fr")}
                 </div>
               ) : null}
-              {event?.address ? <div>Adresse : {event.address}</div> : null}
+              {event?.address ? (
+                <div className="event__adress">
+                  {" "}
+                  Adresse :{" "}
+                  <a
+                    style={{ textDecoration: "none" }}
+                    href={`https://www.openstreetmap.org/search?query=${formatAddress(
+                      event.address
+                    )}`}
+                  >
+                    {event.address}
+                  </a>
+                </div>
+              ) : null}
               <div>Créé par : {event?.creator_id?.name || "Inconnu"}</div>
               <div>
                 Status d'upload :{" "}
@@ -161,7 +186,7 @@ const Event = () => {
               <button
                 className="event__button"
                 type="button"
-                onClick={handleUpdateImage}
+                onClick={(e) => handleUpdateImage(e)}
               >
                 Partager les images
               </button>
@@ -188,21 +213,24 @@ const Event = () => {
                 ))}
             </div>
           </form>
-          <div
-            className="event__photoslist"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              width: "100%",
-              height: "200px",
-              justifyContent: "space-around",
-            }}
-          >
+          <div className="event__photoslist">
             {photosList &&
               photosList.map((photo: any) => (
                 <div key={photo.id} className="event__photoslist-photo">
                   <img
-                    src={`${import.meta.env.VITE_DEV_API_URL}/${photo.url}`}
+                    src={`http://localhost:3000/${photo.url}`}
+                    alt={
+                      "photo" + photo.url.replace("public/uploads/photos/", "")
+                    }
+                    style={{ width: "300px", height: "300px" }}
+                  />
+                </div>
+              ))}
+            {event &&
+              event?.photos?.map((photo) => (
+                <div key={photo.id} className="event__photoslist-photo">
+                  <img
+                    src={`http://localhost:3000/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }
