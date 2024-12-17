@@ -80,6 +80,7 @@ export class EventService {
       include: {
         creator_id: {
           select: {
+            id: true,
             name: true,
           },
         },

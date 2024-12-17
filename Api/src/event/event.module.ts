@@ -10,6 +10,7 @@ import { UserEventService } from 'src/userevent/userevent.service';
 import { UserService } from 'src/user/user.service';
 import { MulterService } from 'src/multer/multer.service';
 import { PhotoService } from 'src/photo/photo.service';
+import { UploadFileAuthorization } from 'src/authorizations/upload-files.auth';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { PhotoService } from 'src/photo/photo.service';
     UserService,
     MulterService,
     PhotoService,
+    UploadFileAuthorization,
   ],
   exports: [EventService],
 })

@@ -45,7 +45,7 @@ export class UserService {
       name: data.name,
       email: data.email,
       avatar: data.avatar,
-      id: data.id
+      id: data.id,
     };
     return result;
   }
@@ -114,9 +114,8 @@ export class UserService {
   }
 
   remove(id: string) {
-
     this.prismaService.photo.deleteMany({
-      where: {userId: id}
+      where: { userId: id },
     });
 
     return this.prismaService.user.delete({
@@ -124,7 +123,7 @@ export class UserService {
     });
   }
 
-  async findUserWithParticipations(userId: string){
+  async findUserWithParticipations(userId: string) {
     return await this.prismaService.user.findFirst({
       where: {
         id: userId,
@@ -134,7 +133,4 @@ export class UserService {
       },
     });
   }
-
-
-
 }
