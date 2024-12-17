@@ -12,7 +12,7 @@ async function bootstrap() {
       'http://localhost',
       'http://app.localhost',
       'http://localhost:4173',
-      'http://frontoffice-westiti.localhost'
+      'http://frontoffice-westiti.localhost',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],

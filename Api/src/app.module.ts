@@ -9,7 +9,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 @Module({
-  imports: [UserModule, AuthModule, EventModule, PhotoModule,
+  imports: [
+    UserModule,
+    AuthModule,
+    EventModule,
+    PhotoModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'), // Chemin vers le dossier public
       serveRoot: '/public', // Préfixe dans l'URL
