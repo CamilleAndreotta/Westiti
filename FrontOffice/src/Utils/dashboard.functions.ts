@@ -3,18 +3,10 @@ import { CreateEventFormProps } from "../@types/CreateEventFormProps";
 import { axiosInstance } from "./axiosInstance";
 import axios from "axios";
 
-const accessToken = localStorage.getItem("access_token");
-
 export const getAllEventsUser = async (userId: string | null) => {
-  const response = await axios.get(`event/${userId}`,
-   { headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${accessToken}`,
-  },}
-  //   , {
-  //   //params: { userId },
-  // }
-  );
+  const response = await axiosInstance.get(`event`, {
+    params: { userId },
+ });
 
   return response.data;
 };
@@ -25,10 +17,17 @@ export const handleCreateEventSubmit = async (
 ): Promise<any> => {
   e.preventDefault();
   try {
+      const accessToken = localStorage.getItem("access_token");
     e.preventDefault();
-    const createdEvent: any = await axiosInstance.post(
-      "/event",
-      createEventForm
+    const createdEvent: any = await axios.post(
+      `${import.meta.env.VITE_DEV_API_URL}/event`,
+      createEventForm,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
     return { createdEvent };
   } catch (error) {
@@ -57,17 +56,28 @@ export const handleJoinEventSubmit = async (
   e.preventDefault();
 
   try {
+    const accessToken = localStorage.getItem("access_token");
     const userId: string | null = localStorage.getItem("userId");
     const data = {
       userId,
       access_code: eventCode,
     };    
-    const response = await axiosInstance.post(
-      `/event/join`,
-      data,
+    const response = await axios.post(
+      `http://localhost:3000/api/event/join`,
+      data, 
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
+    console.log(response);
+    
     return response    
   } catch (error) {
+    console.log(error);
+    
     console.error("Erreur lors de la jonction à l'événement");
   }
 };

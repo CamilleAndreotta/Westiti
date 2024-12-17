@@ -26,6 +26,8 @@ import "../styles/modale.css";
 import "../styles/button.css";
 import "../styles/input.css";
 import "../styles/dashboard.scss";
+import Loading from "../Components/Loading";
+import { log } from "node:console";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -58,13 +60,13 @@ const Dashboard: React.FC = () => {
       navigate("/signin");
     }
     const fetchData = async (): Promise<void> => {
+      setLoading(true)
       try {
         const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
-        console.log(eventsList);
-        
+         setLoading(false);
       } catch (error) {
-        console.log(error);
+         setLoading(false);
       }
     };
     fetchData();
@@ -74,6 +76,8 @@ const Dashboard: React.FC = () => {
     e.preventDefault();
     try {
       const response = await handleCreateEventSubmit(e, createEventForm);
+      console.log(response);
+      
       if (response.createdEvent.status === 201) {
         setIsCreateEventModalOpen(false);
         setCreateEventForm({
@@ -86,6 +90,8 @@ const Dashboard: React.FC = () => {
             "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
           creator_id: localStorage.getItem("userId"),
         });
+        console.log(response);
+        
         const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
         onSuccess("2vénement crée");
@@ -118,6 +124,7 @@ const Dashboard: React.FC = () => {
   };
   return (
     <Layout>
+       {loading && <Loading/>}
       <div className="dashboard">
         <div className="dashboard__buttons">
           <Button

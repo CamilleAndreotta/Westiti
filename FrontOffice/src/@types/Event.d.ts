@@ -1,3 +1,8 @@
+type Photos = {
+  id: string;
+  url: string;
+};
+
 export type Event = {
   id: string | null;
   content: string | null;
@@ -8,7 +13,8 @@ export type Event = {
   access_code: string | null;
   address: string | null;
   name: string | null;
-  creator?: {
+  creator_id?: {
     name: string;
   };
+  photos?: [Photos]
 };
