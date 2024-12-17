@@ -147,11 +147,10 @@ export class EventController {
     @Param('id') id: string,
     @Param('userId') userId: string,
   ) {
+    const event = await this.eventService.findOne(id);
+    const user = await this.userService.findOne(userId);
 
-    let event = await this.eventService.findOne(id);
-    let user = await this.userService.findOne(userId);
-
-    if(event.creator_id === user){
+    if (event.creator_id.id === user.id) {
       return this.photoService.findCreatorEventPhotos(id);
     }
 
