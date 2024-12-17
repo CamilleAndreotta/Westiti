@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
-import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { UploadFileDto } from './dto/upload-photos.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from 'src/user/entities/user.entity';
@@ -18,16 +17,18 @@ export class PhotoService {
     return `This action returns all photo`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} photo`;
+  findOne(id: string) {
+    return this.prismaService.photo.findUnique({
+      where: { id: id },
+    });
   }
 
-  update(id: number, updatePhotoDto: UpdatePhotoDto) {
-    return `This action updates a #${id} photo`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} photo`;
+  remove(id: string) {
+    return this.prismaService.photo.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 
   createMany(eventId: string, uploadPhotosDto: UploadFileDto) {
@@ -43,10 +44,18 @@ export class PhotoService {
     });
   }
 
-  async deletPhotosInEvent(userId: string, eventId: string) {
+  async deleteUserPhotosInEvent(userId: string, eventId: string) {
     return await this.prismaService.photo.deleteMany({
       where: {
         userId: userId,
+        eventId: eventId,
+      },
+    });
+  }
+
+  async deleteAllPhotosInEvent(eventId: string) {
+    return await this.prismaService.photo.deleteMany({
+      where: {
         eventId: eventId,
       },
     });
