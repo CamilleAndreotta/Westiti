@@ -133,6 +133,20 @@ export class EventController {
       });
     }
 
+    const userIsEventParticipant = await this.prismaService.userevent.findFirst({
+      where: {
+        userId: joinEventDto.userId
+      }
+    })
+
+    if(userIsEventParticipant){
+      throw new UnauthorizedException({
+        message: "Vous êtes déjà inscrit à cet évènement"
+      })
+    }
+
+    console.log(userIsEventParticipant);
+
     const eventId = event.id;
     await this.userEventService.jointEvent(joinEventDto, eventId);
 
