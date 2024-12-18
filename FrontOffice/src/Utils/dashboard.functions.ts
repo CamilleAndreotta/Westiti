@@ -1,13 +1,26 @@
 import { Dispatch, SetStateAction } from "react";
 import { CreateEventFormProps } from "../@types/CreateEventFormProps";
-import { axiosInstance } from "./axiosInstance";
+
 import axios from "axios";
 
-export const getAllEventsUser = async (userId: string | null) => {
-  const response = await axiosInstance.get(`event`, {
-    params: { userId },
- });
-
+export const getAllEventsUser  = async (
+): Promise<[] | { message: string }> => {
+  const userId = localStorage.getItem("userId");
+  const accessToken = localStorage.getItem("access_token")
+  console.log(accessToken)
+  const response = await axios.get(
+    `
+    ${import.meta.env.VITE_DEV_API_URL}/event`,
+    {
+      params: { userId },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  if (response.status === 401) {
+    return {message: "Vous n'êtes pas autorisé à accéder à cette ressource"};
+  }
   return response.data;
 };
 
@@ -17,7 +30,7 @@ export const handleCreateEventSubmit = async (
 ): Promise<any> => {
   e.preventDefault();
   try {
-      const accessToken = localStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
     e.preventDefault();
     const createdEvent: any = await axios.post(
       `${import.meta.env.VITE_DEV_API_URL}/event`,
@@ -51,7 +64,7 @@ export const handleCreateEventChange = (
 
 export const handleJoinEventSubmit = async (
   e: React.FormEvent<HTMLFormElement>,
-  eventCode: string | null,
+  eventCode: string | null
 ) => {
   e.preventDefault();
 
@@ -61,10 +74,10 @@ export const handleJoinEventSubmit = async (
     const data = {
       userId,
       access_code: eventCode,
-    };    
+    };
     const response = await axios.post(
       `http://localhost:3000/api/event/join`,
-      data, 
+      data,
       {
         headers: {
           "Content-Type": "application/json",
@@ -73,11 +86,11 @@ export const handleJoinEventSubmit = async (
       }
     );
     console.log(response);
-    
-    return response    
+
+    return response;
   } catch (error) {
     console.log(error);
-    
+
     console.error("Erreur lors de la jonction à l'événement");
   }
 };

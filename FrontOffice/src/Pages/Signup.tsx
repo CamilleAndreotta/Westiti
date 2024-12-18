@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios, { AxiosResponse } from "axios";
 import passwordValidator from "password-validator";
 import { Link, useNavigate } from "react-router-dom";
 import useToast from "../Hooks/useToast";
@@ -12,7 +13,6 @@ import "../styles/signup.scss";
 import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
-import axios from "axios";
 
 type UserSignupProps = {
   email: string;
@@ -71,7 +71,6 @@ const Signup = () => {
 
   const submit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-
     const testUserPassword: boolean = testPasswordSecurity(signup.password);
     if (!testUserPassword) {
       onError("Le mot de passe ne correspond pas aux prérequis de sécurité");
@@ -107,7 +106,7 @@ const Signup = () => {
         email: signup.email,
         name: signup.username,
       };
-      const response = await axios.post(
+      const response :AxiosResponse= await axios.post(
         `${import.meta.env.VITE_DEV_API_URL}/auth/register`,
         body,
         {
@@ -116,13 +115,12 @@ const Signup = () => {
           },
         }
       );
-
+      console.log(response);
       if (response.status !== 201) {
         console.log(response);
         onError("Erreur lors de la création du compte");
         return;
       }
-
       localStorage.setItem("isConnected", "true");
       localStorage.setItem("userId", response.data.id);
       localStorage.setItem("username", response.data.name);
@@ -133,9 +131,11 @@ const Signup = () => {
     } catch (error) {
       onError("Erreur:" + error);
       console.log("Erreur:", error);
-    } finally {
-      setTimeout(() => hideLoader(), 2000); // Désactive le loader
+      hideLoader();
     }
+    // finally {
+    //   setTimeout(() => hideLoader(), 2000); // Désactive le loader
+    // }
   };
 
   return (

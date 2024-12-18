@@ -45,8 +45,8 @@ const Dashboard: React.FC = () => {
   const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
   const [isJoinEventModalOpen, setIsJoinEventModalOpen] = useState(false);
   const [eventCode, setEventCode] = useState<string>("");
-  const [eventsList, setEventsList] = useState<EventProps[] | []>([]);
-  const [loading, setLoading] = useState(false);
+  const [eventsList, setEventsList] = useState<EventProps[] | [] | {message: string}>([]);
+  const [loading, setLoading] = useState(false)
   const [createEventForm, setCreateEventForm] = useState<CreateEventFormProps>({
     name: "",
     started_at: "",
@@ -71,7 +71,7 @@ const Dashboard: React.FC = () => {
     const fetchData = async (): Promise<void> => {
       setLoading(true);
       try {
-        const eventsUser = await getAllEventsUser(userId);
+        const eventsUser = await getAllEventsUser();
         setEventsList(eventsUser);
         setLoading(false);
       } catch (error) {
@@ -98,12 +98,10 @@ const Dashboard: React.FC = () => {
           type: "autres", // Réinitialise le type
           picture: eventImages["mariage"], // Réinitialise l'image
           creator_id: localStorage.getItem("userId"),
-        });
-        console.log(response);
-
-        const eventsUser = await getAllEventsUser(userId);
+        });        
+        const eventsUser = await getAllEventsUser();
         setEventsList(eventsUser);
-        onSuccess("2vénement crée");
+        onSuccess("événement crée");
       }
     } catch (error) {
       onError("Erreur pendant la création, de l'évent");
@@ -123,7 +121,7 @@ const Dashboard: React.FC = () => {
             response.data[response.data.length - 1].event_id.name
           }`
         );
-        const eventsUser = await getAllEventsUser(userId);
+        const eventsUser = await getAllEventsUser();
         setEventsList(eventsUser);
       }
     } catch (error) {
