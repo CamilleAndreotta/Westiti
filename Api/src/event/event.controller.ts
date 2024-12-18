@@ -149,6 +149,9 @@ export class EventController {
 
   @Post('/leave')
   public async leaveEvent(@Body() leaveEventDto: LeaveEventDto) {
+    console.log('leaveEventDto', leaveEventDto);
+
+    
     const user = await this.userService.findUserWithParticipations(
       leaveEventDto.userId,
     );

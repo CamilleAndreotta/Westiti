@@ -134,8 +134,8 @@ const Event = () => {
     console.log("Fichiers restants :", files);
   };
 
-  const handleDeletePhoto = async (id: null | string): Promise<void> => {
-    const data = await submitDeletePhoto(id, eventId);
+  const handleDeletePhoto = async (photoId: null | string): Promise<void> => {
+    const data = await submitDeletePhoto(photoId, eventId);
     if (data.status !== 200) {
       onError("Une erreur s'est produite pendant la suppression de la photo");
     }
@@ -147,7 +147,7 @@ const Event = () => {
       const accessToken = localStorage.getItem("access_token");
       const userId = localStorage.getItem("userId");
       const data = {
-        id: userId,
+        userId,
         eventId,
       };
       const response = await axios.post(
