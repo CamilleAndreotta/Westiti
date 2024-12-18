@@ -70,10 +70,6 @@ export class EventController {
     const user = await this.userService.findOne(deleteEventDto.userId);
     const event = await this.eventService.findOne(eventId);
 
-    console.log(user.id);
-    console.log(event.creator_id.id);
-    console.log(event.creator_id.id !== user.id);
-
     if (event.creator_id.id !== user.id) {
       throw new UnauthorizedException({
         message: "Vous n'avez pas les droits pour supprimer cet événement",

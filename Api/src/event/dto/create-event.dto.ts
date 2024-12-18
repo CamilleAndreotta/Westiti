@@ -8,3 +8,10 @@ export class CreateEventDto {
   address: string;
   type: string;
 }
+
+export enum EventType {
+  MARIAGE = "MARIAGE",
+  ANNIVERSAIRE = "ANNIVERSAIRE",
+  SOIREE_ETUDIANTE = "SOIREE_ETUDIANTE",
+  AUTRES = "AUTRES"
+}
