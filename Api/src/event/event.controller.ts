@@ -145,8 +145,6 @@ export class EventController {
       })
     }
 
-    console.log(userIsEventParticipant);
-
     const eventId = event.id;
     await this.userEventService.jointEvent(joinEventDto, eventId);
 

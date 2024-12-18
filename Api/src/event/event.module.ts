@@ -25,13 +25,12 @@ import { UploadFileAuthorization } from 'src/authorizations/upload-files.auth';
           cb(null, uploadDir);
         },
         filename: (req, file, cb) => {
-          const name = file.originalname.split('.')[0];
           const extension = extname(file.originalname);
           const randomName = Array(32)
             .fill(null)
             .map(() => Math.round(Math.random() * 16).toString(16))
             .join('');
-          cb(null, `${name}-${randomName}${extension}`);
+          cb(null, `img-${randomName}${extension}`);
         },
       }),
       fileFilter: (req, file, cb) => {
@@ -39,6 +38,9 @@ import { UploadFileAuthorization } from 'src/authorizations/upload-files.auth';
           cb(null, true);
         } else cb(new Error('Format non supporté'), false);
       },
+      limits: {
+        fileSize: 5000000
+      }
     }),
   ],
   controllers: [EventController],
