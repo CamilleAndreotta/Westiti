@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -28,6 +27,16 @@ import "../styles/input.css";
 import "../styles/dashboard.scss";
 import Loading from "../Components/Loading";
 
+const eventImages: { [key: string]: string } = {
+  mariage:
+    "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1990&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  anniversaire:
+    "https://images.unsplash.com/photo-1583875762487-5f8f7c718d14?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  soiree:
+    "https://images.unsplash.com/photo-1505236858219-8359eb29e329?q=80&w=1924&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  autres:
+    "https://images.unsplash.com/photo-1519214605650-76a613ee3245?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+};
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -37,15 +46,15 @@ const Dashboard: React.FC = () => {
   const [isJoinEventModalOpen, setIsJoinEventModalOpen] = useState(false);
   const [eventCode, setEventCode] = useState<string>("");
   const [eventsList, setEventsList] = useState<EventProps[] | []>([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [createEventForm, setCreateEventForm] = useState<CreateEventFormProps>({
     name: "",
     started_at: "",
     ended_at: "",
     address: "",
     content: "",
-    picture:
-      "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    type: "autres",
+    picture: eventImages["mariage"],
     creator_id: localStorage.getItem("userId"),
   });
 
@@ -60,13 +69,13 @@ const Dashboard: React.FC = () => {
       navigate("/signin");
     }
     const fetchData = async (): Promise<void> => {
-      setLoading(true)
+      setLoading(true);
       try {
         const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
-         setLoading(false);
+        setLoading(false);
       } catch (error) {
-         setLoading(false);
+        setLoading(false);
       }
     };
     fetchData();
@@ -77,7 +86,7 @@ const Dashboard: React.FC = () => {
     try {
       const response = await handleCreateEventSubmit(e, createEventForm);
       console.log(response);
-      
+
       if (response.createdEvent.status === 201) {
         setIsCreateEventModalOpen(false);
         setCreateEventForm({
@@ -86,12 +95,12 @@ const Dashboard: React.FC = () => {
           ended_at: "",
           address: "",
           content: "",
-          picture:
-            "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1895&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          type: "autres", // Réinitialise le type
+          picture: eventImages["mariage"], // Réinitialise l'image
           creator_id: localStorage.getItem("userId"),
         });
         console.log(response);
-        
+
         const eventsUser = await getAllEventsUser(userId);
         setEventsList(eventsUser);
         onSuccess("2vénement crée");
@@ -104,7 +113,7 @@ const Dashboard: React.FC = () => {
 
   const joinEvent = async (e: any) => {
     try {
-      const userId = localStorage.getItem('userId')
+      const userId = localStorage.getItem("userId");
       const response = await handleJoinEventSubmit(e, eventCode);
       if (response && response.status === 201) {
         setIsJoinEventModalOpen(false);
@@ -124,7 +133,7 @@ const Dashboard: React.FC = () => {
   };
   return (
     <Layout>
-       {loading && <Loading/>}
+      {loading && <Loading />}
       <div className="dashboard">
         <div className="dashboard__buttons">
           <Button
@@ -203,6 +212,26 @@ const Dashboard: React.FC = () => {
                 setCreateEventForm({ ...createEventForm, address: value })
               }
               label="Lieu de l'événement"
+            />
+            <Input
+              type="select"
+              name="type"
+              label="Type d'événement"
+              value={createEventForm.type}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setCreateEventForm({
+                  ...createEventForm,
+                  type: e.target.value,
+                  picture: eventImages[e.target.value],
+                })
+              }
+              options={[
+                { label: "Mariage", value: "mariage" },
+                { label: "Anniversaire", value: "anniversaire" },
+                { label: "Soirée étudiante", value: "soiree" },
+                { label: "Autres", value: "autres" },
+              ]}
+              required
             />
             <div className="user__box">
               <textarea

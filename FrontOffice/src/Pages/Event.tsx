@@ -21,6 +21,16 @@ import BackArrowIcon from "../assets/img/back-arrow.svg";
 
 import "../styles/event.scss";
 
+const eventTypeImages: Record<string, string> = {
+  mariage:
+    "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1990&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  anniversaire:
+    "https://images.unsplash.com/photo-1583875762487-5f8f7c718d14?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  soiree:
+    "https://images.unsplash.com/photo-1505236858219-8359eb29e329?q=80&w=1924&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  autres:
+    "https://images.unsplash.com/photo-1519214605650-76a613ee3245?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+};
 
 const Event = () => {
   const { onError, onSuccess } = useToast();
@@ -29,6 +39,13 @@ const Event = () => {
   const [event, setEvent] = useState<Event | null>();
   const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
   const maxSize = 5000000;
+
+  const getEventImage = (type: string | undefined): string => {
+    return (
+      eventTypeImages[type?.toLowerCase() as keyof typeof eventTypeImages] ||
+      eventTypeImages["autres"]
+    );
+  };
 
   useEffect(() => {
     try {
@@ -110,9 +127,8 @@ const Event = () => {
     console.log("Fichiers restants :", files);
   };
   const formatAddress = (address: string) => {
-    const formatedAddress = address.replace(/ /g, "#");
-
-    return formatedAddress;
+    const formattedAddress = encodeURIComponent(address); // Encode l'adresse proprement
+    return formattedAddress;
   };
   return (
     <Layout>
@@ -127,8 +143,8 @@ const Event = () => {
           <div className="event__informations">
             <div className="event__img">
               <img
-                src={event?.picture}
-                alt=""
+                src={getEventImage(event?.type)}
+                alt={event?.type || "autres"}
                 style={{ width: "250px", height: "130px" }}
               />
             </div>
@@ -157,6 +173,8 @@ const Event = () => {
                     href={`https://www.openstreetmap.org/search?query=${formatAddress(
                       event.address
                     )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {event.address}
                   </a>

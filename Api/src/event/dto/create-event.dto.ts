@@ -6,4 +6,5 @@ export class CreateEventDto {
   picture: string;
   creator_id: string;
   address: string;
+  type: string;
 }
