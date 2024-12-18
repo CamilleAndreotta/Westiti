@@ -51,6 +51,29 @@
   }
 }
 
+.event__adress {
+  font-size: 1rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espace entre le texte et l'icône */
+
+  a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .map-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-image: url("/path/to/map-icon.svg"); /* Icône de carte */
+    background-size: cover;
+    background-position: center;
+  }
+}
+
 .event__informations {
   display: flex;
   justify-content: space-between;

@@ -6,4 +6,5 @@ export interface CreateEventFormProps {
   content: string;
   picture: string;
   creator_id: any;
+  type: string;
 }

@@ -2,7 +2,6 @@ import axios from "axios";
 import { FileProps } from "../@types/FileProps";
 import { acceptedFormats } from "./acceptedFormats";
 
-
 export const validFileSize = (
   arrayOfFiles: [] | Array<FileProps>,
   maxSize: number
@@ -39,7 +38,8 @@ export const getEventByEventId = async (
           Authorization: `Bearer ${accessToken}`,
         },
       }
-    );    
+    );
+    console.log(response);
     return response;
   } catch (error: any) {
     console.log(error);
@@ -63,7 +63,7 @@ export const getAllEventPhotosByUsertId = async (
           Authorization: `Bearer ${accessToken}`,
         },
       }
-    );    
+    );
     return response;
   } catch (error: any) {
     throw new Error(error);
@@ -83,11 +83,11 @@ export const handleUpdateImage = async (
   const formData = new FormData();
   files.forEach((file: any) => {
     console.log(file);
-    
+
     formData.append("file", file);
   });
   console.log(formData);
-  
+
   try {
     const accessToken = localStorage.getItem("access_token");
     const userId = localStorage.getItem("userId");
@@ -106,13 +106,13 @@ export const handleUpdateImage = async (
       }
     );
     console.log(response);
-    
+
     if (response.status !== 201) {
       return response.data.message;
     }
     return response.data;
   } catch (error: any) {
-    console.log(error)
-   // throw new Error(error);
+    console.log(error);
+    // throw new Error(error);
   }
 };

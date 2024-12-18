@@ -16,5 +16,6 @@ export type Event = {
   creator_id?: {
     name: string;
   };
-  photos?: [Photos]
+  photos?: [Photos];
+  type: string;
 };
