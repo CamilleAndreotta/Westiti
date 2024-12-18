@@ -11,6 +11,7 @@ import Contact from "./Pages/Contact";
 import "aos/dist/aos.css";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./Pages/Dashboard";
+import NotFound from "./Pages/NotFound";
 
 const App = () => {
   AOS.init();
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/dashboard/:userId" element={<Dashboard />} />
         <Route path="/event/:eventId" element={<Event />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound/>}/>    
       </Routes>
       <ToastContainer />
     </BrowserRouter>

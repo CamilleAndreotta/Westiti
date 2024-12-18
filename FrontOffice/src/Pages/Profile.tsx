@@ -18,7 +18,7 @@ const Profile: FC = () => {
     id: null | string;
     name: null | string;
     email: null | string;
-    avatar: string | undefined;
+    avatar: undefined | string;
   };
 
   const navigate = useNavigate();
@@ -73,7 +73,6 @@ const Profile: FC = () => {
           },
         }
       );
-
 
       if (response.status === 200) {
         onSuccess("Compte supprimé avec succès");
