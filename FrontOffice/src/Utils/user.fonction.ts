@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { log } from "node:console";
+import { FormEvent } from "react";
+
 
 export const handleDeleteUser = async (
   onSuccess: (message: string) => void,
@@ -18,24 +19,35 @@ export const handleDeleteUser = async (
       }
     );
     console.log(response);
+    
     if (response.status === 200) {
       onSuccess("Compte supprimé avec succès");
       localStorage.clear();
       navigate("/");
     }
   } catch (error) {
+    
     onError("Une erreur c'est produite pendant la suppression de votre compte");
+    return
   }
 };
 
-export const submitLogin = async (e: React.FormEvent<HTMLFormElement>,
-  password:string ,
-  email: string) => {
+export const submitLogin = async (
+  e: FormEvent<HTMLFormElement | Element>,
+  password: string,
+  email: string
+) => {
   e.preventDefault();
-  
+
   //showLoader(); // Affiche le loader avant la requête
   try {
-    const response: AxiosResponse  = await axios.post(
+    const response: AxiosResponse<{
+      data: {
+        id: string;
+        username: string;
+        access_token: string;
+      };
+    }> = await axios.post(
       `${import.meta.env.VITE_DEV_API_URL}/auth/login`,
       {
         password,
@@ -46,13 +58,9 @@ export const submitLogin = async (e: React.FormEvent<HTMLFormElement>,
           "Content-Type": "application/json",
         },
       }
-    );    
+    );
     return response;
-    
-  } catch (error: any) {
-    if (error.response.status === 401) {
-     // onError(error.response.data.message);
-    }
-    //hideLoader();
+  } catch (error) {
+    return error;
   }
 };

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AxiosResponse } from "axios";
 
 import useToast from "../Hooks/useToast";
+import { useLoader } from "../contexts/LoaderContext";
+import { submitLogin } from "../Utils/user.fonction";
 
 import Button from "../Components/Button";
 import Input from "../Components/Input";
@@ -9,10 +12,7 @@ import AuthLayout from "../Components/AuthLayout";
 
 import "../styles/signin.css";
 import "../styles/button.css";
-import { submitLogin } from "../Utils/user.fonction";
 
-import { useLoader } from "../contexts/LoaderContext";
-import { log } from "node:console";
 
 const Signin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -22,10 +22,13 @@ const Signin: React.FC = () => {
   const { showLoader, hideLoader } = useLoader(); // Utilisation du hook Loader
 
   const handleLogin = async (e: any): Promise<void> => {
-    showLoader()
-    try {      
-      const response = await submitLogin(e, password, email);
+    showLoader();
+    try {
+      const response: any = await submitLogin(e, password, email);
       console.log(response);
+      if (response.status === 401) {
+        onError(response.response.data.message);
+      }
       if (response !== undefined) {
         localStorage.setItem("access_token", response.data.access_token);
         localStorage.setItem("isConnected", "true");
@@ -33,12 +36,11 @@ const Signin: React.FC = () => {
         localStorage.setItem("username", response.data.username);
         onSuccess("Connexion réussie");
         navigate(`/dashboard/${localStorage.getItem("userId")}`);
-        hideLoader()
+        hideLoader();
       }
     } catch (error) {
       console.log(error);
-      onError("Erreur lors de la connexion");
-      hideLoader()
+      hideLoader();
     }
   };
   return (

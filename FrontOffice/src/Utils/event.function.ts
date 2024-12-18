@@ -8,15 +8,16 @@ export const validFileSize = (
   maxSize: number
 ) => {
   return arrayOfFiles.filter((file: FileProps) => {
-    // @ts-ignore
-    if (!acceptedFormats.includes(file.type)) {
+    console.log(file);
+    
+    if (file && !acceptedFormats.includes(file.type)) {
       console.error(
         `Le format de fichier ${file.name} n'est pas accepté. Ignorée.`
       );
       return false;
     }
-    // @ts-ignore
-    if (file.size > maxSize) {
+
+    if (file.size && file.size > maxSize) {
       console.error(
         `La photo ${file.name} est trop lourde (${file.size} octets). Ignorée.`
       );
@@ -30,6 +31,7 @@ export const getEventByEventId = async (
   eventId: string | undefined
 ): Promise<any> => {
   try {
+    
     const accessToken = localStorage.getItem("access_token");
     const response = await axios.get(
       `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}`,
@@ -40,12 +42,9 @@ export const getEventByEventId = async (
         },
       }
     );
-    console.log(response);
     return response;
   } catch (error: any) {
-    console.log(error);
-
-    //throw new Error(error);
+    return error
   }
 };
 
