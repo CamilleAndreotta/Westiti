@@ -124,7 +124,7 @@ export class UserService {
   }
 
   async findUserWithParticipations(userId: string) {
-    return await this.prismaService.user.findFirst({
+    return await this.prismaService.user.findUnique({
       where: {
         id: userId,
       },

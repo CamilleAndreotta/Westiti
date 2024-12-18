@@ -14,13 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum EventType {
-  MARIAGE
-  ANNIVERSAIRE
-  SOIREE_ETUDIANTE
-  AUTRES
-}
-
 model user {
   id         String   @id @default(uuid())
   name       String
@@ -44,6 +37,7 @@ model event {
   access_code String
   upload_status Boolean
   picture String
+  event_type EventType @default(AUTRES)
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
   creator_id user @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -69,4 +63,11 @@ model photo {
   eventId String
   user_id user @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
+}
+
+enum EventType {
+  MARIAGE
+  ANNIVERSAIRE
+  SOIREE_ETUDIANTE
+  AUTRES
 }
