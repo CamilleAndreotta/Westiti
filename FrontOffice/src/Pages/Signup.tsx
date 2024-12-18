@@ -123,9 +123,22 @@ const Signup = () => {
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("avatar", response.data.avatar);
       onSuccess("Compte crée");
+      type LoginUser = {
+        status: number;
+        data: {
+          id: string;
+          name: string;
+          access_token: string;
+        };
+      };
+      const loginUser: LoginUser = await submitLogin(
+        e,
+        signup.password,
+        signup.email
+      );
+      console.log(loginUser);
 
-      const loginUser: any= await submitLogin(e, signup.password, signup.email);
-      if (loginUser.status === 201) {
+      if (loginUser && loginUser.status === 201) {
         localStorage.setItem("email", signup.email);
         localStorage.setItem("userId", loginUser.data.id);
         localStorage.setItem("access_token", loginUser.data.access_token);

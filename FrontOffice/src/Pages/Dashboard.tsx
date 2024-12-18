@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import Layout from "../Components/Layout";
@@ -216,7 +216,7 @@ const Dashboard: React.FC = () => {
               name="type"
               label="Type d'événement"
               value={createEventForm.type}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              onChange={(e) =>
                 setCreateEventForm({
                   ...createEventForm,
                   type: e.target.value,
@@ -258,13 +258,15 @@ const Dashboard: React.FC = () => {
           onClose={() => setIsJoinEventModalOpen(false)}
         >
           <h2 className="modale__title">Rejoindre un événement</h2>
-          <form onSubmit={(e: any) => joinEvent(e)}>
+          <form onSubmit={(e: FormEvent) => joinEvent(e)}>
             <Input
               type="text"
               name="eventCode"
               label="Code de l'événement"
               value={eventCode}
-              onChange={(e) => handleEventCodeChange(e, setEventCode)}
+              onChange={(e) =>
+                handleEventCodeChange(e, setEventCode)
+              }
               required
             />
             <Button type="submit" className="btn modale__btn">

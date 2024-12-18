@@ -22,6 +22,8 @@ import { acceptedFormats } from "../Utils/acceptedFormats";
 import BackArrowIcon from "../assets/img/back-arrow.svg";
 
 import "../styles/event.scss";
+import Button from "../Components/Button";
+import { log } from "node:console";
 
 const eventTypeImages: Record<string, string> = {
   mariage:
@@ -40,7 +42,6 @@ const Event = () => {
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const [event, setEvent] = useState<Event | null>();
   const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
-  const maxSize = 5000000;
 
   const getEventImage = (type: string | undefined): string => {
     return (
@@ -53,6 +54,12 @@ const Event = () => {
     try {
       const fetchData = async () => {
         const event = await getEventByEventId(eventId);
+        console.log(event);
+        if (event.data.status === 401) {
+          onError("Vous n'êtes pas autorisé à accéder à cet événement");
+          return
+        }
+        
         setEvent(event.data);
         const photos = await getAllEventPhotosByUsertId(eventId);
         setPhotosList(photos.data);
@@ -135,7 +142,29 @@ const Event = () => {
     const photos = await getAllEventPhotosByUsertId(eventId);
     setPhotosList(photos.data);
   };
-
+  const handleLeaveEvent = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const userId = localStorage.getItem("userId");
+      const data = {
+        id: userId,
+        eventId,
+      };
+      const response = await axios.post(
+        `${import.meta.env.VITE_DEV_API_URL}/event/leave`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Layout>
       <div className="event__page">
@@ -147,12 +176,18 @@ const Event = () => {
           </div>
           <h1 className="event__title">Événement {event?.name}</h1>
           <div className="event__informations">
-            <div className="event__img">
+            <div
+              className="event__img"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
               <img
                 src={getEventImage(event?.type)}
                 alt={event?.type || "autres"}
                 style={{ width: "250px", height: "130px" }}
               />
+              <Button className="btn" onClick={handleLeaveEvent}>
+                Quitter l'événement
+              </Button>
             </div>
 
             <div className="event__text">
