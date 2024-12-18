@@ -1,7 +1,7 @@
 import axios from "axios";
 import { FileProps } from "../@types/FileProps";
 import { acceptedFormats } from "./acceptedFormats";
-import { log } from "node:console";
+
 
 export const validFileSize = (
   arrayOfFiles: [] | Array<FileProps>,

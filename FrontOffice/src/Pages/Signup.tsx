@@ -12,7 +12,6 @@ import "../styles/signup.scss";
 import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
-import { log } from "node:console";
 import axios from "axios";
 
 type UserSignupProps = {

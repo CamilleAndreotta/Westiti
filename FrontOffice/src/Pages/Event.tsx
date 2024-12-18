@@ -20,7 +20,7 @@ import { acceptedFormats } from "../Utils/acceptedFormats";
 import BackArrowIcon from "../assets/img/back-arrow.svg";
 
 import "../styles/event.scss";
-import { log } from "node:console";
+
 
 const Event = () => {
   const { onError, onSuccess } = useToast();

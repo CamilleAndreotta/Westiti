@@ -16,6 +16,7 @@
   padding: 40px;
   box-sizing: border-box;
   text-align: center;
+  height: 100vh;
 
   @media screen and (max-width: 767px) {
     margin-top: 20px; /* Décalage pour éloigner la boîte du header */
@@ -234,4 +235,11 @@
   .event__img > img {
     width: 100% !important;
   }
+}
+
+.event__photoslist {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 1em;
 }

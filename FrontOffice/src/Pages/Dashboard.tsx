@@ -27,7 +27,7 @@ import "../styles/button.css";
 import "../styles/input.css";
 import "../styles/dashboard.scss";
 import Loading from "../Components/Loading";
-import { log } from "node:console";
+
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
