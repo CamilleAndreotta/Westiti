@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useState, useContext, ReactNode } from "react";
 import Loader from "../Components/Loader"; // Composant Loader
 
 // Typage des fonctions pour afficher/masquer le loader
