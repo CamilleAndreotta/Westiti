@@ -7,10 +7,8 @@ export const getAllEventsUser  = async (
 ): Promise<[] | { message: string }> => {
   const userId = localStorage.getItem("userId");
   const accessToken = localStorage.getItem("access_token")
-  console.log(accessToken)
   const response = await axios.get(
-    `
-    ${import.meta.env.VITE_DEV_API_URL}/event`,
+    `${import.meta.env.VITE_DEV_API_URL}/event`,
     {
       params: { userId },
       headers: {

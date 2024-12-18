@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useLoader } from "../contexts/LoaderContext";
 import useToast from "../Hooks/useToast";
 
 import Button from "../Components/Button";
 import Input from "../Components/Input";
 import AuthLayout from "../Components/AuthLayout";
 
-import axios from "axios";
-
 import "../styles/signin.css";
 import "../styles/button.css";
+import { submitLogin } from "../Utils/user.fonction";
+
+import { useLoader } from "../contexts/LoaderContext";
+import { log } from "node:console";
 
 const Signin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -20,39 +21,29 @@ const Signin: React.FC = () => {
   const { onError, onSuccess } = useToast();
   const { showLoader, hideLoader } = useLoader(); // Utilisation du hook Loader
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    showLoader(); // Affiche le loader avant la requête
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/auth/login`,
-        {
-          password: password,
-          email: email,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      localStorage.setItem("access_token", response.data.access_token);
-      localStorage.setItem("isConnected", "true");
-      localStorage.setItem("userId", response.data.id);
-      localStorage.setItem("username", response.data.username);
-      onSuccess("Connexion réussie");
-      navigate(`/dashboard/${localStorage.getItem("userId")}`);
-    } catch (error: any) {
-      if (error.response.status === 401) {
-        onError(error.response.data.message);
+  const handleLogin = async (e: any): Promise<void> => {
+    showLoader()
+    try {      
+      const response = await submitLogin(e, password, email);
+      console.log(response);
+      if (response !== undefined) {
+        localStorage.setItem("access_token", response.data.access_token);
+        localStorage.setItem("isConnected", "true");
+        localStorage.setItem("userId", response.data.id);
+        localStorage.setItem("username", response.data.username);
+        onSuccess("Connexion réussie");
+        navigate(`/dashboard/${localStorage.getItem("userId")}`);
+        hideLoader()
       }
+    } catch (error) {
+      console.log(error);
+      onError("Erreur lors de la connexion");
       hideLoader()
     }
   };
-
   return (
     <AuthLayout title="Connexion">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e: any) => handleLogin(e)}>
         <Input
           type="text"
           name="email"

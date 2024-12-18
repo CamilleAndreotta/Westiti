@@ -13,6 +13,8 @@ import "../styles/signup.scss";
 import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
+import { submitLogin } from "../Utils/user.fonction";
+import { log } from "node:console";
 
 type UserSignupProps = {
   email: string;
@@ -106,7 +108,7 @@ const Signup = () => {
         email: signup.email,
         name: signup.username,
       };
-      const response :AxiosResponse= await axios.post(
+      const response: AxiosResponse = await axios.post(
         `${import.meta.env.VITE_DEV_API_URL}/auth/register`,
         body,
         {
@@ -115,27 +117,26 @@ const Signup = () => {
           },
         }
       );
-      console.log(response);
-      if (response.status !== 201) {
-        console.log(response);
-        onError("Erreur lors de la création du compte");
-        return;
-      }
       localStorage.setItem("isConnected", "true");
       localStorage.setItem("userId", response.data.id);
       localStorage.setItem("username", response.data.name);
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("avatar", response.data.avatar);
       onSuccess("Compte crée");
-      navigate(`/dashboard/${response.data.id}`);
+
+      const loginUser: any= await submitLogin(e, signup.password, signup.email);
+      if (loginUser.status === 201) {
+        localStorage.setItem("email", signup.email);
+        localStorage.setItem("userId", loginUser.data.id);
+        localStorage.setItem("access_token", loginUser.data.access_token);
+        hideLoader();
+        navigate(`/dashboard/${response.data.id}`);
+      }
     } catch (error) {
       onError("Erreur:" + error);
       console.log("Erreur:", error);
       hideLoader();
     }
-    // finally {
-    //   setTimeout(() => hideLoader(), 2000); // Désactive le loader
-    // }
   };
 
   return (
