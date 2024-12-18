@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -11,9 +11,11 @@ import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 
 import {
+  formatAddress,
   getAllEventPhotosByUsertId,
   getEventByEventId,
-  validFileSize,
+  handleFilesChange,
+  submitDeletePhoto,
 } from "../Utils/event.function";
 import { acceptedFormats } from "../Utils/acceptedFormats";
 
@@ -64,13 +66,12 @@ const Event = () => {
 
   const userId = localStorage.getItem("userId"); // Récupère l'ID utilisateur
 
-  const handleFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files: any = e.target.files;
-    const filesArray: FileProps[] | any = Array.from(files);
-    const validArray = validFileSize(filesArray, maxSize);
-    setFiles(validArray);
-    return;
+  const selectFilesToUpload = (files: []) => {
+    const response = handleFilesChange(files);
+    console.log(response);
+    setFiles(response);
   };
+
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!files) {
@@ -81,7 +82,6 @@ const Event = () => {
     files.forEach((file: any) => {
       formData.append("file", file);
     });
-
     try {
       const userId = localStorage.getItem("userId");
       const response = await axios.post(
@@ -126,10 +126,16 @@ const Event = () => {
     });
     console.log("Fichiers restants :", files);
   };
-  const formatAddress = (address: string) => {
-    const formattedAddress = encodeURIComponent(address); // Encode l'adresse proprement
-    return formattedAddress;
+
+  const handleDeletePhoto = async (id: null | string): Promise<void> => {
+    const data = await submitDeletePhoto(id, eventId);
+    if (data.status !== 200) {
+      onError("Une erreur s'est produite pendant la suppression de la photo");
+    }
+    const photos = await getAllEventPhotosByUsertId(eventId);
+    setPhotosList(photos.data);
   };
+
   return (
     <Layout>
       <div className="event__page">
@@ -197,7 +203,11 @@ const Event = () => {
                 id="images"
                 multiple
                 accept={acceptedFormats.join(",")}
-                onChange={handleFilesChange}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  console.log(e.target.files);
+                  const targetFiles: any = e.target.files;
+                  selectFilesToUpload(targetFiles);
+                }}
               />
             </label>
             {files && files?.length > 0 && (
@@ -234,7 +244,14 @@ const Event = () => {
           <div className="event__photoslist">
             {photosList &&
               photosList.map((photo: any) => (
-                <div key={photo.id} className="event__photoslist-photo">
+                <div
+                  key={photo.id}
+                  className="event__photoslist-photo"
+                  id={photo.id}
+                >
+                  <button onClick={() => handleDeletePhoto(photo.id)}>
+                    Supprimer ?
+                  </button>
                   <img
                     src={`http://localhost:3000/${photo.url}`}
                     alt={

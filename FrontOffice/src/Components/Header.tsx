@@ -36,7 +36,10 @@ const Header: React.FC = () => {
 
   return (
     <div className={`header ${menuIsOpen ? "menu-open" : ""}`}>
-      <Link to={`/dashboard/${localStorage.getItem("userId")}`} className="logo">
+      <Link
+        to={`/dashboard/${localStorage.getItem("userId")}`}
+        className="logo"
+      >
         <img src={Logo} alt="logo" />
       </Link>
 
@@ -70,11 +73,11 @@ const Header: React.FC = () => {
               Mes événements
             </Link>
           </li>
-          <li>
-                <Link to="/contact" onClick={handleMenuToggle}>
-                  Contact
-                </Link>
-              </li>
+          {/* <li>
+            <Link to="/contact" onClick={handleMenuToggle}>
+              Contact
+            </Link>
+          </li> */}
           {userIsConnected && (
             <li
               onClick={() => {
@@ -82,7 +85,6 @@ const Header: React.FC = () => {
                 handleLogout();
               }}
             >
-              
               <span className="header__logout">Déconnexion</span>
             </li>
           )}

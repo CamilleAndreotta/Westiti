@@ -7,7 +7,6 @@ const useToast = () => {
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    progress: undefined,
   };
 
   const onSuccess = (message: string) => {

@@ -1,7 +1,8 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { FileProps } from "../@types/FileProps";
 import { acceptedFormats } from "./acceptedFormats";
 
+const accessToken = localStorage.getItem("access_token");
 export const validFileSize = (
   arrayOfFiles: [] | Array<FileProps>,
   maxSize: number
@@ -92,10 +93,6 @@ export const handleUpdateImage = async (
     const accessToken = localStorage.getItem("access_token");
     const userId = localStorage.getItem("userId");
     const response = await axios.post(
-      // `${
-      //   import.meta.env.VITE_DEV_API_URL
-      // }/event/${eventId}/user/${userId}/upload`,
-      // formData,
       `http://localhost:3000/api/event/${eventId}/user/${userId}/upload`,
       formData,
       {
@@ -115,4 +112,39 @@ export const handleUpdateImage = async (
     console.log(error);
     // throw new Error(error);
   }
+};
+
+export const submitDeletePhoto = async (
+  id: null | string,
+  eventId: string | undefined
+): Promise<AxiosResponse> => {
+  const userId: string | null = localStorage.getItem("userId");
+  const data = {
+    userId,
+    eventId,
+  };
+  const response: AxiosResponse = await axios.delete(
+    `${import.meta.env.VITE_DEV_API_URL}/photo/${id}`,
+    {
+      data,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  return response;
+};
+
+export const formatAddress = (address: string): string => {
+  const formatedAddress = encodeURIComponent(address);
+  return formatedAddress;
+};
+
+export const handleFilesChange = (files: Iterable<File>) => {
+  const maxSize = 5000000;
+  const filesArray: FileProps[] | any = Array.from(files);
+  const validArray = validFileSize(filesArray, maxSize);
+
+  return validArray;
 };

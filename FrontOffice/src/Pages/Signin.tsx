@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { toast } from "react-toastify";
-import { useLoader } from "../contexts/LoaderContext";
+import useToast from "../Hooks/useToast";
 
 import Button from "../Components/Button";
 import Input from "../Components/Input";
@@ -10,57 +9,41 @@ import AuthLayout from "../Components/AuthLayout";
 
 import "../styles/signin.css";
 import "../styles/button.css";
+import { submitLogin } from "../Utils/user.fonction";
+
+import { useLoader } from "../contexts/LoaderContext";
+import { log } from "node:console";
 
 const Signin: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
+  const { onError, onSuccess } = useToast();
   const { showLoader, hideLoader } = useLoader(); // Utilisation du hook Loader
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    showLoader(); // Affiche le loader avant la requête
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_DEV_API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            password: password,
-            email: email,
-          }),
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-      if (response.status !== 201) {
-        return;
+  const handleLogin = async (e: any): Promise<void> => {
+    showLoader()
+    try {      
+      const response = await submitLogin(e, password, email);
+      console.log(response);
+      if (response !== undefined) {
+        localStorage.setItem("access_token", response.data.access_token);
+        localStorage.setItem("isConnected", "true");
+        localStorage.setItem("userId", response.data.id);
+        localStorage.setItem("username", response.data.username);
+        onSuccess("Connexion réussie");
+        navigate(`/dashboard/${localStorage.getItem("userId")}`);
+        hideLoader()
       }
-
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("isConnected", "true");
-      localStorage.setItem("userId", data.id);
-      localStorage.setItem("username", data.username);
-
-      toast.success("Connexion réussie", {
-        autoClose: 2000,
-        position: "bottom-center",
-      });
-      navigate(`/dashboard/${localStorage.getItem("userId")}`);
     } catch (error) {
-      console.log("Erreur:", error);
-    } finally {
-      setTimeout(() => hideLoader(), 2000); // Cache le loader après la requête
+      console.log(error);
+      onError("Erreur lors de la connexion");
+      hideLoader()
     }
   };
-
   return (
     <AuthLayout title="Connexion">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e: any) => handleLogin(e)}>
         <Input
           type="text"
           name="email"
