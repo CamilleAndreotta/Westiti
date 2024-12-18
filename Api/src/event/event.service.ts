@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEventDto } from './dto/create-event.dto';
+import { CreateEventDto, EventType } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import ShortUniqueId from 'short-unique-id';
@@ -7,6 +7,7 @@ import { PhotoDto, UploadFileDto } from 'src/photo/dto/upload-photos.dto';
 import { Photo } from 'src/photo/entities/photo.entity';
 import { PhotoService } from 'src/photo/photo.service';
 import { eventNames } from 'process';
+
 
 @Injectable()
 export class EventService {
@@ -34,7 +35,23 @@ export class EventService {
       });
     } while (eventExistInDB !== null);
 
-    const event = await this.prismaService.event.create({
+    let type = null
+    switch(createEventDto.type) {
+      case 'mariage': 
+        type = EventType.MARIAGE
+        break;
+      case 'anniversaire':
+        type = EventType.ANNIVERSAIRE
+        break;
+      case 'soiree':
+        type = EventType.SOIREE_ETUDIANTE
+        break;
+      default:
+        type = EventType.AUTRES
+        break;
+    }
+
+    const event= await this.prismaService.event.create({
       data: {
         name: createEventDto.name,
         content: createEventDto.content,
@@ -49,6 +66,7 @@ export class EventService {
             id: createEventDto.creator_id,
           },
         },
+        event_type: type,
       },
     });
 
