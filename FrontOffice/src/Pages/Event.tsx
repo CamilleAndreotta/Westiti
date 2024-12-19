@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { FileProps } from "../@types/FileProps";
@@ -22,8 +22,8 @@ import { acceptedFormats } from "../Utils/acceptedFormats";
 import BackArrowIcon from "../assets/img/back-arrow.svg";
 
 import "../styles/event.scss";
+import Modale from "../Components/Modale";
 import Button from "../Components/Button";
-import { log } from "node:console";
 
 const eventTypeImages: Record<string, string> = {
   mariage:
@@ -40,8 +40,9 @@ const Event = () => {
   const { onError, onSuccess } = useToast();
   const { eventId } = useParams();
   const [files, setFiles] = useState<FileProps[] | null>([]);
-  const [event, setEvent] = useState<Event | null>();
+  const [event, setEvent] = useState<Event | null>(null);
   const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
+  const [isUploadPhotosModalOpen, setIsUploadPhotosModalOpen] = useState(false);
 
   const getEventImage = (event_type: string | undefined): string => {
     return (
@@ -81,6 +82,7 @@ const Event = () => {
 
   const handleUpdateImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsUploadPhotosModalOpen(false);
     if (!files) {
       return;
     }
@@ -92,7 +94,7 @@ const Event = () => {
     try {
       const userId = localStorage.getItem("userId");
       const response = await axios.post(
-        `http://localhost:3000/api/event/${eventId}/user/${userId}/upload`,
+        `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}/user/${userId}/upload`,
         formData,
         {
           headers: {
@@ -231,7 +233,7 @@ const Event = () => {
             </div>
           </div>
           <form className="event__form">
-            <label htmlFor="images" className="event__label">
+            <label htmlFor="images" className="event__label" >
               Ajouter des images
               <input
                 type="file"
@@ -242,39 +244,47 @@ const Event = () => {
                   console.log(e.target.files);
                   const targetFiles: any = e.target.files;
                   selectFilesToUpload(targetFiles);
+                  if (targetFiles?.length > 0) {
+                    setIsUploadPhotosModalOpen(true);
+                  }
                 }}
               />
             </label>
-            {files && files?.length > 0 && (
-              <button
-                className="event__button"
-                type="button"
-                onClick={(e) => handleUpdateImage(e)}
-              >
-                Partager les images
-              </button>
-            )}
-            <div className="event__files-section">
-              {files &&
-                files.map((file: any, index) => (
-                  <div key={index} className="img-div">
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      className="image"
-                    />
-                    <div className="middle">
-                      <button
-                        type="button"
-                        className="event__delete-button"
-                        onClick={() => deleteImageFromFiles(index)}
-                      >
-                        &times;
-                      </button>
+            <Modale
+              isOpen={isUploadPhotosModalOpen}
+              onClose={() => setIsUploadPhotosModalOpen(false)}
+            >
+              {files && files?.length > 0 && (
+                <button
+                  className="event__button"
+                  type="button"
+                  onClick={(e) => handleUpdateImage(e)}
+                >
+                  Partager les images
+                </button>
+              )}
+              <div className="event__files-section">
+                {files &&
+                  files.map((file: any, index) => (
+                    <div key={index} className="img-div">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="image"
+                      />
+                      <div className="middle">
+                        <button
+                          type="button"
+                          className="event__delete-button"
+                          onClick={() => deleteImageFromFiles(index)}
+                        >
+                          &times;
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </div>
+                  ))}
+              </div>
+            </Modale>
           </form>
           <div className="event__photoslist">
             {photosList &&
@@ -284,23 +294,23 @@ const Event = () => {
                   className="event__photoslist-photo"
                   id={photo.id}
                 >
-                  <button onClick={() => handleDeletePhoto(photo.id)}>
-                    Supprimer ?
-                  </button>
                   <img
-                    src={`http://localhost:3000/${photo.url}`}
+                    src={`${import.meta.env.VITE_DEV_API_SERVER}/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }
                     style={{ width: "300px", height: "300px" }}
                   />
+                  <button className="event__delete-photo" onClick={() => handleDeletePhoto(photo.id)}>
+                  &#128465;
+                  </button>
                 </div>
               ))}
             {event &&
               event?.photos?.map((photo) => (
                 <div key={photo.id} className="event__photoslist-photo">
                   <img
-                    src={`http://localhost:3000/${photo.url}`}
+                    src={`${import.meta.env.VITE_DEV_API_URL}/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }
