@@ -43,7 +43,7 @@ const Event = () => {
   const [event, setEvent] = useState<Event | null>(null);
   const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
   const [isUploadPhotosModalOpen, setIsUploadPhotosModalOpen] = useState(false);
-
+  const navigate = useNavigate();
   const getEventImage = (event_type: string | undefined): string => {
     return (
       eventTypeImages[event_type?.toLowerCase() as keyof typeof eventTypeImages] ||
@@ -55,7 +55,6 @@ const Event = () => {
     try {
       const fetchData = async () => {
         const event = await getEventByEventId(eventId);
-        console.log(event);
         if (event.data.status === 401) {
           onError("Vous n'êtes pas autorisé à accéder à cet événement");
           return
@@ -162,9 +161,15 @@ const Event = () => {
           },
         }
       );
-      console.log(response);
-    } catch (error) {
+      if (response.status === 201) {
+        navigate(`/dashboard/${userId}`);
+        
+      }
+    }
+    catch (error) {
       console.log(error);
+      
+      throw error;
     }
   };
   return (
