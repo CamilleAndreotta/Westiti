@@ -43,6 +43,16 @@ const Event = () => {
   const [event, setEvent] = useState<Event | null>(null);
   const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
   const [isUploadPhotosModalOpen, setIsUploadPhotosModalOpen] = useState(false);
+  const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState<boolean>(false);
+  const [photoToDelete, setPhotoToDelete] = useState<string | null>(null);
+
+  const openModal = (): void => {
+    setIsDeletePhotoModalOpen(true);
+  };
+
+  const closeModal = (): void => {
+    setIsDeletePhotoModalOpen(false);
+  };
   const navigate = useNavigate();
   const getEventImage = (event_type: string | undefined): string => {
     return (
@@ -306,9 +316,13 @@ const Event = () => {
                     }
                     style={{ width: "300px", height: "300px" }}
                   />
-                  <button className="event__delete-photo" onClick={() => handleDeletePhoto(photo.id)}>
+                  <Button className="event__delete-photo" onClick={() => {
+                    setPhotoToDelete(photo.id);
+                    openModal();
+                  }}
+                  >
                   &#128465;
-                  </button>
+                  </Button>
                 </div>
               ))}
             {event &&
@@ -324,6 +338,21 @@ const Event = () => {
                 </div>
               ))}
           </div>
+          <Modale isOpen={isDeletePhotoModalOpen} onClose={closeModal}>
+          <p>Êtes-vous sûr de vouloir supprimer cette photo ?</p>
+          <Button className="btn modale__btn" onClick={() => {
+            if (photoToDelete) {
+              handleDeletePhoto(photoToDelete);
+            }
+            closeModal();
+          }}
+            >
+            Oui
+          </Button>
+          <Button className="btn modale__btn" onClick={closeModal}>
+            Non
+          </Button>
+        </Modale>
         </div>
       </div>
     </Layout>
