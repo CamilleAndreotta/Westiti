@@ -31,6 +31,11 @@ cd Api
 npm install
 ```
 pour installer les dépendances backend du projet
+puis 
+``` bash
+cd ..
+```
+pour revenir au dossier racine.
 
 ## Créer un fichier .api.env
 Copier coller le ficher .api.env.exemple dans un fichier .api.env et remplir les champs
@@ -43,6 +48,11 @@ Copier coller le ficher .api.env.exemple dans un fichier .api.env et remplir les
 Une fois installé, à la racine du projet (projet-11-application-de-gestion-de-photos), lancer un terminal et éexécuter la commande 
 
 Pour Windows
+
+``` bash
+docker compose build 
+``` 
+
 ``` bash
 docker compose up -d
 ``` 
