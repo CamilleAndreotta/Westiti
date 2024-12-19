@@ -43,9 +43,9 @@ const Event = () => {
   const [event, setEvent] = useState<Event | null>();
   const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
 
-  const getEventImage = (type: string | undefined): string => {
+  const getEventImage = (event_type: string | undefined): string => {
     return (
-      eventTypeImages[type?.toLowerCase() as keyof typeof eventTypeImages] ||
+      eventTypeImages[event_type?.toLowerCase() as keyof typeof eventTypeImages] ||
       eventTypeImages["autres"]
     );
   };
@@ -181,8 +181,8 @@ const Event = () => {
               style={{ display: "flex", flexDirection: "column" }}
             >
               <img
-                src={getEventImage(event?.type)}
-                alt={event?.type || "autres"}
+                src={getEventImage(event?.event_type)}
+                alt={event?.event_type || "autres"}
                 style={{ width: "250px", height: "130px" }}
               />
               <Button className="btn" onClick={handleLeaveEvent}>
