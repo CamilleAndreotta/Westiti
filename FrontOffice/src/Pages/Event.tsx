@@ -45,6 +45,8 @@ const Event = () => {
   const [isUploadPhotosModalOpen, setIsUploadPhotosModalOpen] = useState(false);
   const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState<boolean>(false);
   const [photoToDelete, setPhotoToDelete] = useState<string | null>(null);
+  const [isDeleteEventModalOpen, setIsDeleteEventModalOpen] = useState<boolean>(false);
+  const [eventToDelete, setEventToDelete] = useState<string | null>(null);
 
   const openModal = (): void => {
     setIsDeletePhotoModalOpen(true);
@@ -81,7 +83,7 @@ const Event = () => {
     }
   }, []);
 
-  const userId = localStorage.getItem("userId"); // Récupère l'ID utilisateur
+  const userId = localStorage.getItem("userId");
 
   const selectFilesToUpload = (files: []) => {
     const response = handleFilesChange(files);
@@ -96,7 +98,7 @@ const Event = () => {
       return;
     }
     const formData = new FormData();
-    /*  const fileSelected: any = files[0]; */
+
     files.forEach((file: any) => {
       formData.append("file", file);
     });
@@ -114,7 +116,7 @@ const Event = () => {
       );
 
       if (response.status !== 201) {
-        onError("Une erreur c'est produite pendant l'envoi des photos");
+        onError("Une erreur s'est produite pendant l'envoi des photos");
         return;
       }
       setPhotosList(response.data);
@@ -122,7 +124,7 @@ const Event = () => {
       onSuccess("Photos envoyées");
       return;
     } catch (error) {
-      onError("Une erreur c'est produite pendant l'envoi des photos");
+      onError("Une erreur s'est produite pendant l'envoi des photos");
       console.log(error);
     }
   };
@@ -137,8 +139,7 @@ const Event = () => {
     }
     setFiles((prevState) => {
       if (prevState === null) {
-        // Si prevState est null, retourne simplement null ou un tableau vide
-        return null; // ou return [] si tu préfères un tableau vide.
+        return null;
       }
       return prevState.filter((_, i) => i !== index);
     });
@@ -153,7 +154,11 @@ const Event = () => {
     const photos = await getAllEventPhotosByUsertId(eventId);
     setPhotosList(photos.data);
   };
-  const handleLeaveEvent = async () => {
+
+  const handleLeaveEvent = async (eventId: string | null) => {
+    if (!eventId) {
+      return;
+    }
     try {
       const accessToken = localStorage.getItem("access_token");
       const userId = localStorage.getItem("userId");
@@ -201,7 +206,10 @@ const Event = () => {
                 alt={event?.event_type || "autres"}
                 style={{ width: "250px", height: "130px" }}
               />
-              <Button className="btn" onClick={handleLeaveEvent}>
+              <Button className="btn" onClick={() => {
+                setEventToDelete(event?.id);
+                setIsDeleteEventModalOpen(true);
+              }}>
                 Quitter l'événement
               </Button>
             </div>
@@ -349,6 +357,21 @@ const Event = () => {
             Oui
           </Button>
           <Button className="btn modale__btn" onClick={closeModal}>
+            Non
+          </Button>
+        </Modale>
+          <Modale isOpen={isDeleteEventModalOpen} onClose={() => setIsDeleteEventModalOpen(false)}>
+          <p>Êtes-vous sûr de vouloir quitter cet événement ?</p>
+          <Button className="btn modale__btn" onClick={() => {
+            if (eventToDelete) {
+              handleLeaveEvent(eventToDelete);
+            }
+            setIsDeleteEventModalOpen(false);
+          }}
+            >
+            Oui
+          </Button>
+          <Button className="btn modale__btn" onClick={() => setIsDeleteEventModalOpen(false)}>
             Non
           </Button>
         </Modale>
