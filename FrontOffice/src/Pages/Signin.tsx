@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AxiosResponse } from "axios";
 
 import useToast from "../Hooks/useToast";
 import { useLoader } from "../contexts/LoaderContext";
@@ -25,7 +24,7 @@ const Signin: React.FC = () => {
     showLoader();
     try {
       const response: any = await submitLogin(e, password, email);
-      console.log(response);
+
       if (response.status === 401) {
         onError(response.response.data.message);
       }
@@ -37,10 +36,12 @@ const Signin: React.FC = () => {
         onSuccess("Connexion réussie");
         navigate(`/dashboard/${localStorage.getItem("userId")}`);
         hideLoader();
+        return
       }
     } catch (error) {
       console.log(error);
       hideLoader();
+      return
     }
   };
   return (

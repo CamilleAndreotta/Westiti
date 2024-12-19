@@ -124,8 +124,8 @@ const Profile: FC = () => {
           <Button
             className="btn"
             onClick={async () => {
-              const response = await handleDeleteUser();
-              console.log(response);
+              await handleDeleteUser();
+          
             }}
           >
             Oui

@@ -8,7 +8,7 @@ export const validFileSize = (
   maxSize: number
 ) => {
   return arrayOfFiles.filter((file: FileProps) => {
-    console.log(file);
+
     
     if (file && !acceptedFormats.includes(file.type)) {
       console.error(
@@ -75,18 +75,18 @@ export const handleUpdateImage = async (
   files: any,
   eventId: string | undefined
 ) => {
-  console.log(files);
+
   e.preventDefault();
   if (!files) {
     return;
   }
   const formData = new FormData();
   files.forEach((file: any) => {
-    console.log(file);
+
 
     formData.append("file", file);
   });
-  console.log(formData);
+
 
   try {
     const accessToken = localStorage.getItem("access_token");
@@ -101,7 +101,7 @@ export const handleUpdateImage = async (
         },
       }
     );
-    console.log(response);
+
 
     if (response.status !== 201) {
       return response.data.message;

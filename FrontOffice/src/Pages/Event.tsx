@@ -1,11 +1,9 @@
-import axios from "axios";
-import React, { ChangeEvent, useEffect, useState } from "react";
+hWrQsjimport axios from "axios";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-
-import { FileProps } from "../@types/FileProps";
-import { PhotoProps } from "../@types/PhotoProps";
 import type { Event } from "../@types/Event";
+import { FileProps } from "../@types/FileProps";
 
 import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
@@ -25,6 +23,7 @@ import "../styles/event.scss";
 import Modale from "../Components/Modale";
 import Button from "../Components/Button";
 
+
 const eventTypeImages: Record<string, string> = {
   mariage:
     "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?q=80&w=1990&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -36,14 +35,15 @@ const eventTypeImages: Record<string, string> = {
     "https://images.unsplash.com/photo-1519214605650-76a613ee3245?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 };
 
-const Event = () => {
+const Event :FC = () : JSX.Element=> {
   const { onError, onSuccess } = useToast();
   const { eventId } = useParams();
   const [files, setFiles] = useState<FileProps[] | null>([]);
   const [event, setEvent] = useState<Event | null>(null);
   const [photosList, setPhotosList] = useState<PhotoProps[] | null>([]);
   const [isUploadPhotosModalOpen, setIsUploadPhotosModalOpen] = useState(false);
-  const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] = useState<boolean>(false);
+  const [isDeletePhotoModalOpen, setIsDeletePhotoModalOpen] =
+    useState<boolean>(false);
   const [photoToDelete, setPhotoToDelete] = useState<string | null>(null);
   const [isDeleteEventModalOpen, setIsDeleteEventModalOpen] = useState<boolean>(false);
   const [eventToDelete, setEventToDelete] = useState<string | null>(null);
@@ -58,8 +58,9 @@ const Event = () => {
   const navigate = useNavigate();
   const getEventImage = (event_type: string | undefined): string => {
     return (
-      eventTypeImages[event_type?.toLowerCase() as keyof typeof eventTypeImages] ||
-      eventTypeImages["autres"]
+      eventTypeImages[
+        event_type?.toLowerCase() as keyof typeof eventTypeImages
+      ] || eventTypeImages["autres"]
     );
   };
 
@@ -69,9 +70,9 @@ const Event = () => {
         const event = await getEventByEventId(eventId);
         if (event.data.status === 401) {
           onError("Vous n'êtes pas autorisé à accéder à cet événement");
-          return
+          return;
         }
-        
+
         setEvent(event.data);
         const photos = await getAllEventPhotosByUsertId(eventId);
         setPhotosList(photos.data);
@@ -87,7 +88,6 @@ const Event = () => {
 
   const selectFilesToUpload = (files: []) => {
     const response = handleFilesChange(files);
-    console.log(response);
     setFiles(response);
   };
 
@@ -105,7 +105,9 @@ const Event = () => {
     try {
       const userId = localStorage.getItem("userId");
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}/user/${userId}/upload`,
+        `${
+          import.meta.env.VITE_DEV_API_URL
+        }/event/${eventId}/user/${userId}/upload`,
         formData,
         {
           headers: {
@@ -143,7 +145,6 @@ const Event = () => {
       }
       return prevState.filter((_, i) => i !== index);
     });
-    console.log("Fichiers restants :", files);
   };
 
   const handleDeletePhoto = async (photoId: null | string): Promise<void> => {
@@ -178,13 +179,49 @@ const Event = () => {
       );
       if (response.status === 201) {
         navigate(`/dashboard/${userId}`);
-        
       }
-    }
-    catch (error) {
-      console.log(error);      
+    } catch (error) {
+      console.log(error);
       throw error;
     }
+  };
+  const handleDeleteEvent = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const userId = localStorage.getItem("userId");
+      if (!(event === null || event === undefined)) {
+        const creatorId = event.creator_id.id;
+        if (creatorId === userId) {
+          const response = await axios.delete(
+            `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}`,
+            {
+              data: {
+                userId,
+                eventId,
+              },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            onSuccess("L'événement a bien été supprimé")
+            navigate(`/dashboard/${userId}`);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  type PhotoProps = {
+    id: string;
+    name: string;
+    url: string;
   };
   return (
     <Layout>
@@ -206,12 +243,19 @@ const Event = () => {
                 alt={event?.event_type || "autres"}
                 style={{ width: "250px", height: "130px" }}
               />
-              <Button className="btn" onClick={() => {
+              {event &&
+              event.creator_id.id === localStorage.getItem("userId") ? (
+                <Button className="btn" onClick={handleDeleteEvent}>
+                  Supprimer l'événement
+                </Button>
+              ) : (
+                <Button className="btn" onClick={() => {
                 setEventToDelete(event?.id);
                 setIsDeleteEventModalOpen(true);
               }}>
-                Quitter l'événement
-              </Button>
+                  Quitter l'événement
+                </Button>
+              )}
             </div>
 
             <div className="event__text">
@@ -255,7 +299,7 @@ const Event = () => {
             </div>
           </div>
           <form className="event__form">
-            <label htmlFor="images" className="event__label" >
+            <label htmlFor="images" className="event__label">
               Ajouter des images
               <input
                 type="file"
@@ -263,7 +307,6 @@ const Event = () => {
                 multiple
                 accept={acceptedFormats.join(",")}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  console.log(e.target.files);
                   const targetFiles: any = e.target.files;
                   selectFilesToUpload(targetFiles);
                   if (targetFiles?.length > 0) {
@@ -310,7 +353,7 @@ const Event = () => {
           </form>
           <div className="event__photoslist">
             {photosList &&
-              photosList.map((photo: any) => (
+              photosList.map((photo: PhotoProps) => (
                 <div
                   key={photo.id}
                   className="event__photoslist-photo"
@@ -323,12 +366,14 @@ const Event = () => {
                     }
                     style={{ width: "300px", height: "300px" }}
                   />
-                  <Button className="event__delete-photo" onClick={() => {
-                    setPhotoToDelete(photo.id);
-                    openModal();
-                  }}
+                  <Button
+                    className="event__delete-photo"
+                    onClick={() => {
+                      setPhotoToDelete(photo.id);
+                      openModal();
+                    }}
                   >
-                  &#128465;
+                    &#128465;
                   </Button>
                 </div>
               ))}
@@ -346,20 +391,22 @@ const Event = () => {
               ))}
           </div>
           <Modale isOpen={isDeletePhotoModalOpen} onClose={closeModal}>
-          <p>Êtes-vous sûr de vouloir supprimer cette photo ?</p>
-          <Button className="btn modale__btn" onClick={() => {
-            if (photoToDelete) {
-              handleDeletePhoto(photoToDelete);
-            }
-            closeModal();
-          }}
+            <p>Êtes-vous sûr de vouloir supprimer cette photo ?</p>
+            <Button
+              className="btn modale__btn"
+              onClick={() => {
+                if (photoToDelete) {
+                  handleDeletePhoto(photoToDelete);
+                }
+                closeModal();
+              }}
             >
-            Oui
-          </Button>
-          <Button className="btn modale__btn" onClick={closeModal}>
-            Non
-          </Button>
-        </Modale>
+              Oui
+            </Button>
+            <Button className="btn modale__btn" onClick={closeModal}>
+              Non
+            </Button>
+          </Modale>
           <Modale isOpen={isDeleteEventModalOpen} onClose={() => setIsDeleteEventModalOpen(false)}>
           <p>Êtes-vous sûr de vouloir quitter cet événement ?</p>
           <Button className="btn modale__btn" onClick={() => {
