@@ -101,10 +101,10 @@ const Dashboard: React.FC = () => {
         });        
         const eventsUser = await getAllEventsUser();
         setEventsList(eventsUser);
-        onSuccess("événement crée");
+        onSuccess("Événement créé avec succès.");
       }
     } catch (error) {
-      onError("Erreur pendant la création, de l'évent");
+      onError("Erreur pendant la création, de l'événement.");
       console.log(error);
     }
   };
