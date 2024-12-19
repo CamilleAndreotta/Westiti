@@ -121,7 +121,7 @@ const Signup = () => {
       localStorage.setItem("username", response.data.name);
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("avatar", response.data.avatar);
-      onSuccess("Compte crée");
+      onSuccess("Compte créé avec succès.");
       
       // type LoginUser = {
       //   status: number;

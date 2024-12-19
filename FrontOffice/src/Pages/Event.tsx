@@ -123,7 +123,7 @@ const Event :FC = () : JSX.Element=> {
       }
       setPhotosList(response.data);
       setFiles(null);
-      onSuccess("Photos envoyées");
+      onSuccess("Photos envoyées avec succès.");
       return;
     } catch (error) {
       onError("Une erreur s'est produite pendant l'envoi des photos");
@@ -152,8 +152,10 @@ const Event :FC = () : JSX.Element=> {
     if (data.status !== 200) {
       onError("Une erreur s'est produite pendant la suppression de la photo");
     }
+    onSuccess("La photo a bien été supprimée.")
     const photos = await getAllEventPhotosByUsertId(eventId);
     setPhotosList(photos.data);
+
   };
 
   const handleLeaveEvent = async (eventId: string | null) => {
@@ -178,6 +180,7 @@ const Event :FC = () : JSX.Element=> {
         }
       );
       if (response.status === 201) {
+        onSuccess("Vous avez quitté l'événement avec succès.")
         navigate(`/dashboard/${userId}`);
       }
     } catch (error) {
