@@ -177,8 +177,7 @@ const Event = () => {
       }
     }
     catch (error) {
-      console.log(error);
-      
+      console.log(error);      
       throw error;
     }
   };
