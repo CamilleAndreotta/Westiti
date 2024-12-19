@@ -18,7 +18,6 @@ export const handleDeleteUser = async (
         },
       }
     );
-    console.log(response);
     
     if (response.status === 200) {
       onSuccess("Compte supprimé avec succès");
@@ -33,7 +32,7 @@ export const handleDeleteUser = async (
 };
 
 export const submitLogin = async (
-  e: FormEvent<HTMLFormElement | Element>,
+  e: FormEvent<HTMLInputElement> | any,
   password: string,
   email: string
 ) => {

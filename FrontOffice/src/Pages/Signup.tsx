@@ -14,7 +14,6 @@ import "../styles/input.css";
 import "../styles/button.css";
 import "aos/dist/aos.css";
 import { submitLogin } from "../Utils/user.fonction";
-import { log } from "node:console";
 
 type UserSignupProps = {
   email: string;
@@ -64,7 +63,7 @@ const Signup = () => {
     return true;
   };
 
-  const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSignup((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -123,20 +122,24 @@ const Signup = () => {
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("avatar", response.data.avatar);
       onSuccess("Compte crée");
-      type LoginUser = {
-        status: number;
-        data: {
-          id: string;
-          name: string;
-          access_token: string;
-        };
-      };
-      const loginUser: LoginUser = await submitLogin(
+      
+      // type LoginUser = {
+      //   status: number;
+      //   data: {
+      //     id: string;
+      //     name: string;
+      //     access_token: string;
+      //   };
+      // };
+      
+      const loginUser
+        :any
+        = await submitLogin(
         e,
         signup.password,
         signup.email
       );
-      console.log(loginUser);
+
 
       if (loginUser && loginUser.status === 201) {
         localStorage.setItem("email", signup.email);

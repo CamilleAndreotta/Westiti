@@ -13,9 +13,10 @@ export type Event = {
   access_code: string | null;
   address: string | null;
   name: string | null;
-  creator_id?: {
-    name: string;
+  creator_id: {
+    id: string | null;
+    name: string | null;
   };
   photos?: [Photos];
-  type: string;
+  event_type: string;
 };

@@ -85,7 +85,7 @@ const Dashboard: React.FC = () => {
     e.preventDefault();
     try {
       const response = await handleCreateEventSubmit(e, createEventForm);
-      console.log(response);
+
 
       if (response.createdEvent.status === 201) {
         setIsCreateEventModalOpen(false);
@@ -111,7 +111,6 @@ const Dashboard: React.FC = () => {
 
   const joinEvent = async (e: any) => {
     try {
-      const userId = localStorage.getItem("userId");
       const response = await handleJoinEventSubmit(e, eventCode);
       if (response && response.status === 201) {
         setIsJoinEventModalOpen(false);

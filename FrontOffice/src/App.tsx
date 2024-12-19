@@ -6,12 +6,21 @@ import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
 import Profile from "./Pages/Profile";
 import Event from "./Pages/Event";
-import Contact from "./Pages/Contact";
+//import Contact from "./Pages/Contact";
 
 import "aos/dist/aos.css";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./Pages/Dashboard";
 import NotFound from "./Pages/NotFound";
+
+//import { disableReactDevTools } from "./Utils/disableReactDevTools";
+
+ // Disable REACT DevTOOL production mode
+//    if (process.env.NODE_ENV === "production") disableReactDevTools();
+//  // Disable console.log in production
+//  if (process.env.NODE_ENV === "production") {
+//    console.log = () => {};
+//  }
 
 const App = () => {
   AOS.init();
@@ -24,7 +33,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard/:userId" element={<Dashboard />} />
         <Route path="/event/:eventId" element={<Event />} />
-        <Route path="/contact" element={<Contact />} />
+        {/* <Route path="/contact" element={<Contact />} /> */}
         <Route path="*" element={<NotFound/>}/>    
       </Routes>
       <ToastContainer />
