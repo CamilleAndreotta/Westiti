@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { CreateEventFormProps } from "../@types/CreateEventFormProps";
 
 import axios from "axios";
@@ -47,7 +47,8 @@ export const handleCreateEventSubmit = async (
 
 // Gestion des changements dans le formulaire de création d'événement
 export const handleCreateEventChange = (
-  e,
+  e:
+     React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   setCreateEventForm: React.Dispatch<
     React.SetStateAction<CreateEventFormProps>
   >,

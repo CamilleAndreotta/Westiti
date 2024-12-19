@@ -8,10 +8,10 @@ interface InputProps {
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
-  label: string;
+  label?: string;
   required?: boolean;
   placeholder?: string;
-  options?: { label: string; value: string }[]; // Options pour le type "select"
+  options?: { label: string; value?: string }[]; 
 }
 
 const Input: React.FC<InputProps> = ({

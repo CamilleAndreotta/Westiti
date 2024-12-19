@@ -67,9 +67,10 @@ export class EventController {
     @Param('id') eventId: string,
     @Body() deleteEventDto: DeleteEventDto,
   ) {
+
     const user = await this.userService.findOne(deleteEventDto.userId);
     const event = await this.eventService.findOne(eventId);
-
+    
     if (event.creator_id.id !== user.id) {
       throw new UnauthorizedException({
         message: "Vous n'avez pas les droits pour supprimer cet événement",
@@ -149,7 +150,7 @@ export class EventController {
 
   @Post('/leave')
   public async leaveEvent(@Body() leaveEventDto: LeaveEventDto) {
-    console.log('leaveEventDto', leaveEventDto);
+
 
     
     const user = await this.userService.findUserWithParticipations(
@@ -187,7 +188,7 @@ export class EventController {
     const event = await this.eventService.findOne(id);
     const user = await this.userService.findOne(userId);
 
-    if (event.creator_id.id === user.id) {
+    if (event.creator_id.id && (event.creator_id.id === user.id)) {
       return this.photoService.findCreatorEventPhotos(id);
     }
 
