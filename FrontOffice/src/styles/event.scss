@@ -192,6 +192,7 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+  margin: 20px;
 }
 
 .img-div {
@@ -276,4 +277,26 @@
   flex-wrap: wrap;
   justify-content: space-evenly;
   gap: 1em;
+
+  img {
+    border: #636374 solid 2px;
+    border-radius: 2px;
+  }
+
+  .event__delete-photo {
+    margin-top: 5px;
+    background: linear-gradient(45deg, #d5135a, #f05924);
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 5px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 20%;
+
+    &:hover {
+      background: linear-gradient(45deg, #ff2846, #f05924);
+    }
+  }
 }
