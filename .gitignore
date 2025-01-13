@@ -1,5 +1,7 @@
 postgresql
 .api.env
+.env
 /Api/node_modules
 /FrontOffice/node_modules
 FrontOffice/.env
+/FrontOffice/.env
