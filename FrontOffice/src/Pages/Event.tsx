@@ -253,6 +253,7 @@ const Event :FC = () : JSX.Element=> {
                 </Button>
               ) : (
                 <Button className="btn" onClick={() => {
+                  //@ts-ignore
                 setEventToDelete(event?.id);
                 setIsDeleteEventModalOpen(true);
               }}>

@@ -1,0 +1,138 @@
+services:
+  frontoffice-westiti:
+    container_name: frontoffice-westiti
+    build:
+      context: ./FrontOffice
+      dockerfile: dockerfile
+    volumes:
+      - ./FrontOffice:/usr/src/frontOffice
+      - /usr/src/frontOffice/node_modules
+    ports:
+      #- "5173:5173"
+      - "4173:4173"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.frontoffice-westiti.rule=Host(`${LOCAL_URL_APP}`)"
+    #   - "traefik.http.routers.frontoffice-westiti.entrypoints=web"
+    #   - "traefik.http.services.frontoffice-westiti.loadbalancer.server.port=5173"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontoffice-westiti.rule=Host(`${VPS_APP_URL}`)"
+      - "traefik.http.routers.frontoffice-westiti.entrypoints=websecure"
+      - "traefik.http.routers.frontoffice-westiti.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontoffice-westiti.loadbalancer.server.port=4173"
+    networks:
+      - westiti
+
+  
+  api-westiti:
+    container_name: api-westiti
+    build:
+      context: ./Api
+      dockerfile: dockerfile
+    volumes:
+      - ./Api:/usr/src/api
+      - /usr/src/api/node_modules
+    ports:
+      - "3000:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api-westiti.rule=Host(`${VPS_API_URL}`)"
+      - "traefik.http.routers.api-westiti.entrypoints=websecure"
+      - "traefik.http.routers.api-westiti.tls.certresolver=letsencrypt"
+      - "traefik.http.services.api-westiti.loadbalancer.server.port=3000"
+    #   labels:
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.api-westiti.rule=Host(`${LOCAL_URL_APP}`)"
+      # - "traefik.http.routers.api-westiti.entrypoints=web"
+      # - "traefik.http.services.api-westiti.loadbalancer.server.port=3000"
+    networks:
+      - westiti
+
+  postgres-westiti:
+    container_name: postgres-westiti
+    image: postgres:latest
+    
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    env_file:
+      - .env   
+    networks:
+      - westiti
+ 
+
+  adminer-westiti:
+    container_name: adminer-westiti
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.adminer-westiti.rule=Host(`${LOCAL_URL_ADMINER}`)"
+    #   - "traefik.http.routers.api-westiti.tls.certresolver=letsencrypt"
+    #   - "traefik.http.routers.adminer-westiti.entrypoints=web"
+    #   - "traefik.http.services.adminer-westiti.loadbalancer.server.port=8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api-westiti.rule=Host(`${VPS_ADMINER_URL}`)"
+      - "traefik.http.routers.api-westiti.entrypoints=websecure"
+      - "traefik.http.routers.api-westiti.tls.certresolver=letsencrypt"
+      - "traefik.http.services.api-westiti.loadbalancer.server.port=8080"
+    networks:
+      - westiti
+  
+  prisma-studio:
+    container_name: prisma-studio
+    image: timothyjmiller/prisma-studio:latest
+    restart: unless-stopped
+    env_file:
+     - .env
+    ports:
+      - 5555:5555
+  
+  # traefik:
+  #   image: traefik:latest
+  #   container_name: traefik
+  #   restart: always
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+  #     - ./traefik/acme.json:/acme.json
+  #   command:
+  #     - "--log.level=DEBUG"
+  #     - "--api.insecure=true" # acceder au dashboard sans authentification
+  #     - "--providers.docker=true" 
+  #     - "--entrypoints.web.address=:80"
+  #   labels:
+  #     - "traefik.enable=false"
+  #     - "traefik.http.routers.traefik.entrypoints=web"
+  #     - "traefik.http.routers.traefik.rule=Host(`${LOCAL_URL_TRAEFIK}`)"
+  #     - "traefik.http.routers.traefik.services=api@internal"
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/acme.json:/acme.json
+    labels:
+      - "traefik.enable=false"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.rule=Host(`${VPS_TRAEFIK_URL}`)"
+      - "traefik.http.routers.traefik.services=api@internal"
+    networks:
+        - westiti
+    env_file:
+      - .env
+
+networks:
+  westiti: 
+    driver: bridge
