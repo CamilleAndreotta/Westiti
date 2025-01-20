@@ -20,8 +20,10 @@ test("submitLogin should return mocked response data", async () => {
   // Configurer le mock pour retourner la réponse simulée
   axios.post.mockResolvedValue(mockResponse);
 
+  const mockEvent = { preventDefault: vi.fn() };
+
   // function to test
-  const response = await submitLogin(password, email);
+  const response = await submitLogin(mockEvent, password, email);
 
   // Assertions mises à jour
   //const baseURL = import.meta.VITE_API;
@@ -42,30 +44,4 @@ test("submitLogin should return mocked response data", async () => {
   expect(response).toEqual(mockResponse);
 });
 
-// test('submit new user should return mocked response data', async () => {
-//   const email = 'test@test.com';
-//   const password = '**P8ssW0rd!!358711';
-//   const passwordConfirmation = '**P8ssW0rd!!358711';
 
-//   // define mocked response data
-//   const mockResponse = {  token: 'mocked-token'  };
-
-//   // Configurer le mock pour retourner la réponse simulée
-//   axios.post.mockResolvedValue(mockResponse);
-
-//   // function to test
-//   const response = await submitLogin(password, email);
-
-//   // Assertions mises à jour
-//   const baseURL = import.meta.VITE_API;
-//   expect(axios.post).toHaveBeenCalledOnce(); // function called one time
-//   expect(axios.post).toHaveBeenCalledWith(
-//     `http://localhost:3000/api/auth/login`,
-//     {
-//       email: email,
-//       password: password,
-//     }
-//   ); // function called with expected arguments
-
-//   expect(response).toEqual(mockResponse.data);
-// });
