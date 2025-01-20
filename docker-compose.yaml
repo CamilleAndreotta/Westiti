@@ -1,0 +1,52 @@
+services:
+  frontoffice-westiti:
+    container_name: frontoffice-westiti
+    build:
+      context: ./FrontOffice
+      dockerfile: Dockerfile
+    volumes:
+      - ./FrontOffice:/usr/src/frontOffice
+      - /usr/src/frontOffice/node_modules
+    env_file:
+      - .env
+    ports:
+      - "5173:5173"
+    networks:
+      - westiti
+  
+  api-westiti:
+    container_name: api-westiti
+    build:
+      context: ./Api
+      dockerfile: Dockerfile
+    volumes:
+      - ./Api:/usr/src/api
+      - /usr/src/api/node_modules
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    networks:
+      - westiti
+
+  postgres-westiti:
+    container_name: postgres-westiti
+    image: postgres:latest
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - westiti
+  
+  adminer-westiti:
+    container_name: adminer-westiti
+    image: adminer:latest
+    ports:
+      - "8080:8080"
+    networks:      
+      - westiti
+
+networks:
+  westiti:
+    driver: bridge
