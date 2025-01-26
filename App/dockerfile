@@ -1,0 +1,23 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /usr/src/FrontOffice
+
+COPY package*.json .
+
+# RUN npm ci --only=production
+
+COPY ./dist ./dist
+
+# RUN npm run build
+
+# FROM node:20-alpine
+
+RUN npm install -g serve
+
+# WORKDIR /usr/src/FrontOffice
+
+# COPY --from=builder /usr/src/FrontOffice/dist ./dist
+
+EXPOSE 4173
+
+CMD ["serve", "-l", "4173", "-s", "dist"]
