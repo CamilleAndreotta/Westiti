@@ -74,7 +74,7 @@ export const handleJoinEventSubmit = async (
       access_code: eventCode,
     };
     const response = await axios.post(
-      `http://localhost:3000/api/event/join`,
+      `${import.meta.env.VITE_DEV_API_URL}/api/event/join`,
       data,
       {
         headers: {

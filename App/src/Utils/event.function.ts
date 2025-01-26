@@ -56,7 +56,7 @@ export const getAllEventPhotosByUsertId = async (
     const accessToken = localStorage.getItem("access_token");
     const userId = localStorage.getItem("userId");
     const response = await axios.get(
-      `http://localhost:3000/api/event/${eventId}/user/${userId}`,
+      `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/user/${userId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export const handleUpdateImage = async (
     const accessToken = localStorage.getItem("access_token");
     const userId = localStorage.getItem("userId");
     const response = await axios.post(
-      `http://localhost:3000/api/event/${eventId}/user/${userId}/upload`,
+      `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/user/${userId}/upload`,
       formData,
       {
         headers: {
