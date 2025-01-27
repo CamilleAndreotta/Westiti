@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import useToast from "../Hooks/useToast";
 
-import Logo from "../assets/img/logo.webp";
+import Logo from "../assets/img/logo_resize.webp";
 
 import "../styles/header.scss";
 
