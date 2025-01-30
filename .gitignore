@@ -7,3 +7,6 @@ postgresql
 .env.production
 ./Api/.env
 ./Api/.env.production
+./Api/.env.dev
+.env.dev
+/.env.dev
