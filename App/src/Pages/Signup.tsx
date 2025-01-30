@@ -108,6 +108,7 @@ const Signup = () => {
         password: signup.password,
         email: signup.email,
         name: signup.username,
+        password_confirmation : signup.password_confirmation
       };
       const response: AxiosResponse = await axios.post(
         `${import.meta.env.VITE_DEV_API_URL}/auth/register`,
@@ -194,8 +195,8 @@ const Signup = () => {
           classname="signup__password-confirmation"
         />
         <p className="signup__text">
-          Vous avez déjà un compte ?{" "}
-          <Link to="/signup" className="signup__link">
+          Vous avez déjà un compte ?
+          <Link to="/signin" className="signup__link">
             Connectez-vous
           </Link>
         </p>

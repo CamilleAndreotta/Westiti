@@ -27,6 +27,22 @@ export class AuthService {
       throw new UnauthorizedException({ message: 'Email existant' });
     }
 
+    if (registerDto.password !== registerDto.password_confirmation) {
+      throw new UnauthorizedException({
+        message:
+          'Mot de passe et mot de passe confirmation ne correspondent pas',
+      });
+    }
+    if (
+      !registerDto.password ||
+      !registerDto.password_confirmation ||
+      !registerDto.email ||
+      !registerDto.name
+    ) {
+      throw new UnauthorizedException({
+        message: 'Il manque des données pour pouvoir créer votre compte',
+      });
+    }
     if (
       registerDto.password.match(/[a-z]/g) === null ||
       registerDto.password.match(/[A-Z]/g) === null ||
@@ -48,7 +64,7 @@ export class AuthService {
     return this.userService.create(userDto);
   }
 
-  async signIn(email: string, password: string, res:Response) {
+  async signIn(email: string, password: string, res: Response) {
     const user = await this.userService.findByEmail(email);
     const isMatch = user
       ? await bcrypt.compare(password, user.password)
@@ -64,7 +80,7 @@ export class AuthService {
 
     res.cookie('access_token', token, {
       httpOnly: true, // 🔒 Empêche l'accès en JavaScript
-      secure: true,   // 🔒 Nécessite HTTPS en production
+      secure: true, // 🔒 Nécessite HTTPS en production
       sameSite: 'strict', // 🛑 Protège contre les attaques CSRF
     });
     return {

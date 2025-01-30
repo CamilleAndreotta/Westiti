@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Button from "../Components/Button";
 
-import image from "../assets/img/loadingscreen.webp";
-
+import imageDesktop from "../assets/img/loadingscreen_desktop.webp";
+import imageMobile from "../assets/img/loadingscreen_mobile.webp";
 
 import "../styles/homepage.css";
 import "../styles/button.css";
 
 const Homepage: React.FC = () => {
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+  
+  useEffect(() => {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+      window.addEventListener("resize", handleResize);
+  
+      // Nettoyage de l'événement lors du démontage
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
   return (
     <div className="homepage">
       <div className="homepage__box">
@@ -29,7 +41,7 @@ const Homepage: React.FC = () => {
           </div>
         </div>
         <div className="right__section">
-          <img src={image} alt="Home" />
+          <img src={isMobile ? imageMobile : imageDesktop} alt="Illustration" />
         </div>
       </div>
     </div>
