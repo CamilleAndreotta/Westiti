@@ -8,3 +8,4 @@ FrontOffice/.env
 .env.production
 traefik/acme.json
 /traefik/acme.json
+/Api/.env

@@ -23,10 +23,10 @@ import "../styles/event.scss";
 import Modale from "../Components/Modale";
 import Button from "../Components/Button";
 import WeedingPhoto from "../assets/img/mariage.webp";
-import BirthdayPhoto from "../assets/img/anniversary.webp";
+import BirthdayPhoto from "../assets/img/anniversaire.webp";
 import PartyPhoto from '../assets/img/soiree.webp'
 
-import OtherPhoto from "../assets/img/other.webp";
+import OtherPhoto from "../assets/img/autres.webp";
 
 const eventTypeImages: Record<string, string> = {
   mariage: WeedingPhoto,
