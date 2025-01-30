@@ -1,11 +1,9 @@
 postgresql
 .api.env
+./Api/node_modules
+./FrontOffice/node_modules
+./FrontOffice/.env
 .env
-/Api/node_modules
-/FrontOffice/node_modules
-FrontOffice/.env
-/FrontOffice/.env
 .env.production
-traefik/acme.json
-/traefik/acme.json
-/Api/.env
+./Api/.env
+./Api/.env.production

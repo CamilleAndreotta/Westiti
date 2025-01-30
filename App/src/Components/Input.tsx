@@ -11,7 +11,8 @@ interface InputProps {
   label?: string;
   required?: boolean;
   placeholder?: string;
-  options?: { label: string; value?: string }[]; 
+  options?: { label: string; value?: string }[];
+  classname?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -23,6 +24,7 @@ const Input: React.FC<InputProps> = ({
   required = false,
   placeholder,
   options,
+  classname,
 }) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
 
@@ -67,6 +69,7 @@ const Input: React.FC<InputProps> = ({
             value={value}
             onChange={onChange}
             placeholder={placeholder}
+            className={classname}
           />
           <label>{label}</label>
           {type === "password" && (

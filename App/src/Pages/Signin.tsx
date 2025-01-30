@@ -54,6 +54,7 @@ const Signin: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          classname='signin__email'
         />
         <Input
           type="password"
@@ -62,6 +63,7 @@ const Signin: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          classname='signin__password'
         />
         <p className="signup__text">
           Vous n'avez pas de compte ?{" "}

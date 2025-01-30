@@ -63,7 +63,9 @@ const Signup = () => {
     return true;
   };
 
-  const inputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const inputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setSignup((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -122,7 +124,7 @@ const Signup = () => {
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("avatar", response.data.avatar);
       onSuccess("Compte créé avec succès.");
-      
+
       // type LoginUser = {
       //   status: number;
       //   data: {
@@ -131,15 +133,12 @@ const Signup = () => {
       //     access_token: string;
       //   };
       // };
-      
-      const loginUser
-        :any
-        = await submitLogin(
+
+      const loginUser: any = await submitLogin(
         e,
         signup.password,
         signup.email
       );
-
 
       if (loginUser && loginUser.status === 201) {
         localStorage.setItem("email", signup.email);
@@ -165,6 +164,7 @@ const Signup = () => {
           value={signup.email}
           onChange={inputChange}
           required
+          classname='signup__email'
         />
         <Input
           type="text"
@@ -173,6 +173,7 @@ const Signup = () => {
           value={signup.username}
           onChange={inputChange}
           required
+          classname="signup__username"
         />
         <Input
           type="password"
@@ -181,6 +182,7 @@ const Signup = () => {
           value={signup.password}
           onChange={inputChange}
           required
+          classname="signup__password"
         />
         <Input
           type="password"
@@ -189,10 +191,11 @@ const Signup = () => {
           value={signup.password_confirmation}
           onChange={inputChange}
           required
+          classname="signup__password-confirmation"
         />
         <p className="signup__text">
           Vous avez déjà un compte ?{" "}
-          <Link to="/signin" className="signup__link">
+          <Link to="/signup" className="signup__link">
             Connectez-vous
           </Link>
         </p>
