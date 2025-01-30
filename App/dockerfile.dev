@@ -1,0 +1,23 @@
+FROM node:20-alpine
+
+WORKDIR /usr/src/FrontOffice
+
+COPY package*.json .
+
+# RUN npm ci --only=production
+
+COPY . .
+
+# RUN npm run build
+
+# FROM node:20-alpine
+
+RUN npm install i
+
+# WORKDIR /usr/src/FrontOffice
+
+# COPY --from=builder /usr/src/FrontOffice/dist ./dist
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev"]

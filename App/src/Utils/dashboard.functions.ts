@@ -3,15 +3,18 @@ import { CreateEventFormProps } from "../@types/CreateEventFormProps";
 
 import axios from "axios";
 
+// axios send credentials (cookie) by ddefault with every requests
+axios.defaults.withCredentials = true;
+
 export const getAllEventsUser = async (): Promise<[] | { message: string }> => {
   const userId = localStorage.getItem("userId");
-  const accessToken = localStorage.getItem("access_token");
+  //const accessToken = localStorage.getItem("access_token");
   const response = await axios.get(
     `${import.meta.env.VITE_DEV_API_URL}/event`,
     {
       params: { userId },
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer ${accessToken}`,
       },
     }
   );
@@ -27,16 +30,16 @@ export const handleCreateEventSubmit = async (
 ): Promise<any> => {
   e.preventDefault();
   try {
-    const accessToken = localStorage.getItem("access_token");
-    e.preventDefault();
+    //const accessToken = localStorage.getItem("access_token");
     const createdEvent: any = await axios.post(
       `${import.meta.env.VITE_DEV_API_URL}/event`,
       createEventForm,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          // Authorization: `Bearer ${accessToken}`,
         },
+
       }
     );
     return { createdEvent };
@@ -67,7 +70,7 @@ export const handleJoinEventSubmit = async (
   e.preventDefault();
 
   try {
-    const accessToken = localStorage.getItem("access_token");
+    //const accessToken = localStorage.getItem("access_token");
     const userId: string | null = localStorage.getItem("userId");
     const data = {
       userId,
@@ -79,7 +82,7 @@ export const handleJoinEventSubmit = async (
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          // Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -92,7 +95,7 @@ export const handleJoinEventSubmit = async (
 
 // Gestion des changements dans le formulaire de rejoindre un événement
 export const handleEventCodeChange = (
-  e: any,
+  e: React.ChangeEvent<HTMLInputElement>,
   setEventCode: Dispatch<SetStateAction<string>>
 ) => {
   setEventCode(e.target.value);

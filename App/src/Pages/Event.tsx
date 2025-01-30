@@ -167,7 +167,7 @@ const Event :FC = () : JSX.Element=> {
       return;
     }
     try {
-      const accessToken = localStorage.getItem("access_token");
+      //const accessToken = localStorage.getItem("access_token");
       const userId = localStorage.getItem("userId");
       const data = {
         userId,
@@ -179,7 +179,7 @@ const Event :FC = () : JSX.Element=> {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            // Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -194,7 +194,7 @@ const Event :FC = () : JSX.Element=> {
   };
   const handleDeleteEvent = async () => {
     try {
-      const accessToken = localStorage.getItem("access_token");
+      //const accessToken = localStorage.getItem("access_token");
       const userId = localStorage.getItem("userId");
       if (!(event === null || event === undefined)) {
         const creatorId = event.creator_id.id;
@@ -208,7 +208,7 @@ const Event :FC = () : JSX.Element=> {
               },
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
+                // Authorization: `Bearer ${accessToken}`,
               },
             }
           );

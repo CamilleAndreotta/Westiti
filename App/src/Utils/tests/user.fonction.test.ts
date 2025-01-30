@@ -1,6 +1,6 @@
 import { test, expect, vi } from "vitest";
 import axios from "axios";
-import { submitLogin } from "../Utils/user.fonction";
+import { submitLogin } from "../user.fonction";
 
 // Moquer Axios
 vi.mock("axios");

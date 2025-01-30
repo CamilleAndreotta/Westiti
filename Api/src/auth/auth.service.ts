@@ -4,6 +4,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { RegisterDto } from './dto/register.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +48,7 @@ export class AuthService {
     return this.userService.create(userDto);
   }
 
-  async signIn(email: string, password: string) {
+  async signIn(email: string, password: string, res:Response) {
     const user = await this.userService.findByEmail(email);
     const isMatch = user
       ? await bcrypt.compare(password, user.password)
@@ -59,10 +60,17 @@ export class AuthService {
     }
 
     const payload = { id: user.id, email: user.email };
+    const token = await this.jwtService.signAsync(payload);
+
+    res.cookie('access_token', token, {
+      httpOnly: true, // 🔒 Empêche l'accès en JavaScript
+      secure: true,   // 🔒 Nécessite HTTPS en production
+      sameSite: 'strict', // 🛑 Protège contre les attaques CSRF
+    });
     return {
       id: user.id,
       username: user.name,
-      access_token: await this.jwtService.signAsync(payload),
+      //access_token: await this.jwtService.signAsync(payload),
     };
   }
 }

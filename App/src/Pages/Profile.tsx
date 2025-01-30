@@ -13,7 +13,12 @@ import "../styles/modale.css";
 
 import "../styles/profile.scss";
 
+// axios send credentials (cookie)
+axios.defaults.withCredentials = true;
+
 const Profile: FC = () => {
+  // axios send credentials (cookie)
+axios.defaults.withCredentials = true;
   type UserProps = {
     id: null | string;
     name: null | string;

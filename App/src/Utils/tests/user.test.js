@@ -1,4 +1,4 @@
-import { submitLogin } from "./user.fonction";
+import { submitLogin } from "../user.fonction";
 import {describe, expect, it, beforeAll, afterEach, afterAll, vi} from "vitest";
 
 import axios from "axios";
