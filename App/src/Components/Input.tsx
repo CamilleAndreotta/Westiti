@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/input.css";
+import "../styles/input.scss";
 
 interface InputProps {
   type: string;

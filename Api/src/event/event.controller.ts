@@ -44,6 +44,7 @@ export class EventController {
   @Get()
   public async findAll(@Query() query: { userId: string }) {
     const userId = query.userId;
+    console.log(userId);
     if (userId === undefined) {
       throw new UnauthorizedException({
         message: 'Vous ne pouvez pas effectuer cette opération.',

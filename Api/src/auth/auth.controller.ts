@@ -1,11 +1,10 @@
-import { Controller, Post, Body,   Res
- } from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { ApiForbiddenResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from './decorators/public.decorators';
-import { Response } from 'express'; 
+import { Response } from 'express';
 @ApiTags('Authentification')
 @Controller('/api/auth')
 export class AuthController {
@@ -28,11 +27,24 @@ export class AuthController {
   @ApiForbiddenResponse({
     description: 'Email et/ou mot de passe incorrect',
   })
-  async signIn(@Body() loginDto: LoginDto, @Res() res: Response) {
+  async signIn(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     try {
-      return await this.authService.signIn(loginDto.email, loginDto.password, res);
+      return await this.authService.signIn(
+        loginDto.email,
+        loginDto.password,
+        res,
+      );
     } catch (error) {
       throw error;
     }
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token');
+    return res.status(200).json({ message: 'Déconnexion réussie' });
   }
 }

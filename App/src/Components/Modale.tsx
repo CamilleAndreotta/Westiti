@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import "../styles/modale.css";
+import "../styles/modale.scss";
 
 interface ModaleProps {
   children: React.ReactNode;

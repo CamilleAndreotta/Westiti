@@ -10,8 +10,8 @@ import AuthLayout from "../Components/AuthLayout";
 import { useLoader } from "../contexts/LoaderContext";
 
 import "../styles/signup.scss";
-import "../styles/input.css";
-import "../styles/button.css";
+import "../styles/input.scss";
+import "../styles/button.scss";
 import "aos/dist/aos.css";
 import { submitLogin } from "../Utils/user.fonction";
 

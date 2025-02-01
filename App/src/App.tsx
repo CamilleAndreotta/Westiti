@@ -8,11 +8,11 @@ import Profile from "./Pages/Profile";
 import Event from "./Pages/Event";
 //import Contact from "./Pages/Contact";
 
-import "aos/dist/aos.css";
-import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./Pages/Dashboard";
 import NotFound from "./Pages/NotFound";
 
+import "aos/dist/aos.css";
+import "react-toastify/dist/ReactToastify.css";
 //import { disableReactDevTools } from "./Utils/disableReactDevTools";
 
  // Disable REACT DevTOOL production mode

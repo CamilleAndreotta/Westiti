@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-WORKDIR /usr/src/FrontOffice
+WORKDIR /usr/src/App
 
 COPY package*.json .
 
@@ -14,9 +14,9 @@ COPY . .
 
 RUN npm install i
 
-# WORKDIR /usr/src/FrontOffice
+# WORKDIR /usr/src/App
 
-# COPY --from=builder /usr/src/FrontOffice/dist ./dist
+# COPY --from=builder /usr/src/App/dist ./dist
 
 EXPOSE 5173
 

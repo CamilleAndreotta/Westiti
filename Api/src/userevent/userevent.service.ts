@@ -7,6 +7,8 @@ export class UserEventService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findUserEvents(userId: string) {
+    console.log(userId);
+    
     return await this.prismaService.userevent.findMany({
       where: {
         userId: userId,

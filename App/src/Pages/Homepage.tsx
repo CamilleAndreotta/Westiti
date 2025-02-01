@@ -6,8 +6,8 @@ import Button from "../Components/Button";
 import imageDesktop from "../assets/img/loadingscreen_desktop.webp";
 import imageMobile from "../assets/img/loadingscreen_mobile.webp";
 
-import "../styles/homepage.css";
-import "../styles/button.css";
+import "../styles/homepage.scss";
+import "../styles/button.scss";
 
 const Homepage: React.FC = () => {
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);

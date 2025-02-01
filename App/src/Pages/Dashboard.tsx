@@ -21,9 +21,9 @@ import {
 import { CreateEventFormProps } from "../@types/CreateEventFormProps";
 import { EventProps } from "../@types/EventProps";
 
-import "../styles/modale.css";
-import "../styles/button.css";
-import "../styles/input.css";
+import "../styles/modale.scss";
+import "../styles/button.scss";
+import "../styles/input.scss";
 import "../styles/dashboard.scss";
 import Loading from "../Components/Loading";
 
@@ -57,21 +57,21 @@ const Dashboard: React.FC = () => {
     picture: eventImages["mariage"],
     creator_id: localStorage.getItem("userId"),
   });
-
-  const accessToken: string | null = localStorage.getItem("access_token");
+("access_token");
   const userId: string | null = localStorage.getItem("userId");
 
   // Récupération des événements de l'utilisateur
   useEffect(() => {
     // get all user events
     const userId = localStorage.getItem("userId");
-    if (!accessToken || !userId) {
+    if (!userId) {
       navigate("/signin");
     }
     const fetchData = async (): Promise<void> => {
       setLoading(true);
       try {
         const eventsUser = await getAllEventsUser();
+        console.log(eventsUser);
         setEventsList(eventsUser);
         setLoading(false);
       } catch (error) {
@@ -79,7 +79,7 @@ const Dashboard: React.FC = () => {
       }
     };
     fetchData();
-  }, [userId, accessToken]);
+  }, [userId]);
 
   const submitEvent = async (e: any) => {
     e.preventDefault();
@@ -143,7 +143,7 @@ const Dashboard: React.FC = () => {
             Rejoindre un événement
           </Button>
         </div>
-        <h1 className="dashboard__title">Voici vos événements</h1>
+        <h1 className="dashboard__title">Voici vos événements <button onClick={getAllEventsUser}>recharger</button></h1>
         <div className="dashboard__container">
           {Array.isArray(eventsList) && eventsList.length > 0 ? (
             eventsList.map((event: EventProps) => (

@@ -9,7 +9,7 @@ import Modale from "../Components/Modale"; // Import de votre composant Modale
 
 import axios from "axios";
 
-import "../styles/modale.css";
+import "../styles/modale.scss";
 
 import "../styles/profile.scss";
 

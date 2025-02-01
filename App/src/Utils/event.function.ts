@@ -2,10 +2,8 @@ import axios, { AxiosResponse } from "axios";
 import { FileProps } from "../@types/FileProps";
 import { acceptedFormats } from "./acceptedFormats";
 
-// axios send credentials (cookie)
-axios.defaults.withCredentials = true;
 
-//const accessToken = localStorage.getItem("access_token");
+
 export const validFileSize = (
   arrayOfFiles: [] | Array<FileProps>,
   maxSize: number
@@ -35,14 +33,14 @@ export const getEventByEventId = async (
 ): Promise<any> => {
   try {
     
-    //const accessToken = localStorage.getItem("access_token");
     const response = await axios.get(
       `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}`,
       {
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${accessToken}`,
+       
         },
+        withCredentials: true,
       }
     );
     return response;
@@ -65,6 +63,7 @@ export const getAllEventPhotosByUsertId = async (
           "Content-Type": "application/json",
           // Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       }
     );
     return response;
@@ -92,7 +91,6 @@ export const handleUpdateImage = async (
 
 
   try {
-    //const accessToken = localStorage.getItem("access_token");
     const userId = localStorage.getItem("userId");
     const response = await axios.post(
       `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/user/${userId}/upload`,
@@ -102,6 +100,7 @@ export const handleUpdateImage = async (
           "Content-Type": "application/json",
           // Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       }
     );
 
@@ -133,6 +132,7 @@ export const submitDeletePhoto = async (
         "Content-Type": "application/json",
         // Authorization: `Bearer ${accessToken}`,
       },
+      withCredentials: true,
     }
   );
   return response;

@@ -55,6 +55,8 @@ export class AuthGuard implements CanActivate {
   private extractTokenFromRequest(request: Request): string | undefined {
     // 1️⃣ Vérifie d'abord si le token est dans les cookies HTTPOnly
     if (request.cookies?.access_token) {
+      console.log(request.cookies?.access_token);
+      
       return request.cookies.access_token;
     }
     // 2️⃣ Si pas de cookie, on regarde dans le header Authorization

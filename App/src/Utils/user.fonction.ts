@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { FormEvent } from "react";
 
-
 export const handleDeleteUser = async (
   onSuccess: (message: string) => void,
   onError: (message: string) => void,
@@ -16,23 +15,23 @@ export const handleDeleteUser = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
+        withCredentials: true,
       }
     );
-    
+
     if (response.status === 200) {
       onSuccess("Compte supprimé avec succès");
       localStorage.clear();
       navigate("/");
     }
   } catch (error) {
-    
     onError("Une erreur c'est produite pendant la suppression de votre compte");
-    return
+    return;
   }
 };
 
 export const submitLogin = async (
-  e: FormEvent<HTMLInputElement> | any,
+  e: FormEvent<HTMLInputElement> | any,
   password: string,
   email: string
 ) => {
@@ -56,10 +55,12 @@ export const submitLogin = async (
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       }
-    );
+    );    
     return response;
   } catch (error) {
+    console.log(error);
     return error;
   }
 };

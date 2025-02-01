@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import useToast from "../Hooks/useToast";
@@ -9,11 +9,10 @@ import Button from "../Components/Button";
 import Input from "../Components/Input";
 import AuthLayout from "../Components/AuthLayout";
 
-import "../styles/signin.css";
-import "../styles/button.css";
+import "../styles/signin.scss";
+import "../styles/button.scss";
 
-
-const Signin: React.FC = () => {
+const Signin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
@@ -21,29 +20,33 @@ const Signin: React.FC = () => {
   const { showLoader, hideLoader } = useLoader(); // Utilisation du hook Loader
 
   const handleLogin = async (e: any): Promise<void> => {
+    
+
     showLoader();
+    e.preventDefault();
     try {
       const response: any = await submitLogin(e, password, email);
-
+      console.log(response.data);
       if (response.status === 401) {
         onError(response.response.data.message);
       }
       if (response !== undefined) {
-        localStorage.setItem("access_token", response.data.access_token);
+        console.log(response);
+
         localStorage.setItem("isConnected", "true");
-        localStorage.setItem("userId", response.data.id);
-        localStorage.setItem("username", response.data.username);
+        localStorage.setItem("userId", response.data.user.id);
+        localStorage.setItem("username", response.data.user.username);
         onSuccess("Connexion réussie");
         navigate(`/dashboard/${localStorage.getItem("userId")}`);
         hideLoader();
-        return
+        return;
       }
+      
     } catch (error) {
-      console.log(error);
-      hideLoader();
-      return
+      console.log("Erreur Axios :", error);
     }
   };
+  //@ts-ignore
   return (
     <AuthLayout title="Connexion">
       <form onSubmit={(e: any) => handleLogin(e)}>
@@ -54,7 +57,7 @@ const Signin: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          classname='signin__email'
+          classname="signin__email"
         />
         <Input
           type="password"
@@ -63,7 +66,7 @@ const Signin: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          classname='signin__password'
+          classname="signin__password"
         />
         <p className="signup__text">
           Vous n'avez pas de compte ?{" "}
@@ -78,5 +81,4 @@ const Signin: React.FC = () => {
     </AuthLayout>
   );
 };
-
 export default Signin;

@@ -8,19 +8,23 @@ axios.defaults.withCredentials = true;
 
 export const getAllEventsUser = async (): Promise<[] | { message: string }> => {
   const userId = localStorage.getItem("userId");
-  //const accessToken = localStorage.getItem("access_token");
   const response = await axios.get(
     `${import.meta.env.VITE_DEV_API_URL}/event`,
     {
       params: { userId },
-      headers: {
-        // Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
     }
   );
+  console.log(response);
+  
   if (response.status === 401) {
+
+    
+
     return { message: "Vous n'êtes pas autorisé à accéder à cette ressource" };
   }
+  
   return response.data;
 };
 
@@ -39,7 +43,7 @@ export const handleCreateEventSubmit = async (
           "Content-Type": "application/json",
           // Authorization: `Bearer ${accessToken}`,
         },
-
+        withCredentials: true,
       }
     );
     return { createdEvent };
@@ -50,8 +54,9 @@ export const handleCreateEventSubmit = async (
 
 // Gestion des changements dans le formulaire de création d'événement
 export const handleCreateEventChange = (
-  e:
-     React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  e: React.ChangeEvent<
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  >,
   setCreateEventForm: React.Dispatch<
     React.SetStateAction<CreateEventFormProps>
   >,
@@ -84,6 +89,7 @@ export const handleJoinEventSubmit = async (
           "Content-Type": "application/json",
           // Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       }
     );
     return response;

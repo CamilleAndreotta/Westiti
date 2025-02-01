@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/autocomplete.css";
+import "../styles/autocomplete.scss";
 import { AutoCompleteInputProps } from "../@types/AutoCompleteInputProps";
 
 const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({

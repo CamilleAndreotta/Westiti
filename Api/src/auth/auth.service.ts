@@ -75,18 +75,25 @@ export class AuthService {
       });
     }
 
+    
     const payload = { id: user.id, email: user.email };
     const token = await this.jwtService.signAsync(payload);
 
+    // ✅ Corrige les options du cookie
     res.cookie('access_token', token, {
-      httpOnly: true, // 🔒 Empêche l'accès en JavaScript
-      secure: true, // 🔒 Nécessite HTTPS en production
-      sameSite: 'strict', // 🛑 Protège contre les attaques CSRF
+      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure:false, // ✅ Utiliser `false` en local
+      sameSite: "lax",// ✅ 'lax' en local pour éviter les problèmes
     });
-    return {
+    console.log(res.getHeaders()['set-cookie'])
+    console.log('✅ Réponse envoyée au frontend :', {
       id: user.id,
       username: user.name,
-      //access_token: await this.jwtService.signAsync(payload),
+    });
+    return {
+      message: 'Connexion réussie',
+      user: { id: user.id, username: user.name },
     };
   }
 }

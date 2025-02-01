@@ -7,6 +7,7 @@ import useToast from "../Hooks/useToast";
 import Logo from "../assets/img/logo_resize.webp";
 
 import "../styles/header.scss";
+import axios from "axios";
 
 const Header: React.FC = () => {
   const { onError, onSuccess } = useToast();
@@ -21,17 +22,32 @@ const Header: React.FC = () => {
   };
 
   const handleLogout = async (): Promise<void> => {
+    console.log("je tente de déco");
+
     try {
-      onSuccess("Déconnexion réussie");
-      localStorage.clear();
-      setMenuIsOpen(false);
-      setUserIsConnected(null);
-      navigate("/");
+      const response = await axios.post(
+        `${import.meta.env.VITE_DEV_API_URL}/auth/logout`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        onSuccess("Déconnexion réussie");
+        localStorage.clear();
+        setMenuIsOpen(false);
+        setUserIsConnected(null);
+        navigate("/");
+      }
     } catch (error) {
       onError("Erreur lors de la déconnexion");
-      console.log(error, "Logout");
+      console.log(error);
     }
   };
+  
   const currentYear = new Date().getFullYear();
 
   return (

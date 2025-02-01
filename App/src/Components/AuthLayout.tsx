@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import imageDesktop from "../assets/img/loadingscreen_desktop.webp";
 import imageMobile from "../assets/img/loadingscreen_mobile.webp";
 import BackArrowIcon from "../assets/img/back-arrow.svg";
-import "../styles/homepage.css";
+import "../styles/homepage.scss";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
