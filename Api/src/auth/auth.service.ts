@@ -83,14 +83,14 @@ export class AuthService {
     res.cookie('access_token', token, {
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure:false, // ✅ Utiliser `false` en local
-      sameSite: "lax",// ✅ 'lax' en local pour éviter les problèmes
+      secure:false, // ✅ Utiliser `false` en local true en prod
+      sameSite: "lax",// ✅ 'lax' en local pour éviter les problèmes  none en prod
     });
-    console.log(res.getHeaders()['set-cookie'])
+    /* console.log(res.getHeaders()['set-cookie'])
     console.log('✅ Réponse envoyée au frontend :', {
       id: user.id,
       username: user.name,
-    });
+    }); */
     return {
       message: 'Connexion réussie',
       user: { id: user.id, username: user.name },

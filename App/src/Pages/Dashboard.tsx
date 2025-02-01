@@ -143,7 +143,9 @@ const Dashboard: React.FC = () => {
             Rejoindre un événement
           </Button>
         </div>
-        <h1 className="dashboard__title">Voici vos événements <button onClick={getAllEventsUser}>recharger</button></h1>
+        <h1 className="dashboard__title">Voici vos événements 
+          {/* <button onClick={getAllEventsUser}>recharger</button> */}
+        </h1>
         <div className="dashboard__container">
           {Array.isArray(eventsList) && eventsList.length > 0 ? (
             eventsList.map((event: EventProps) => (

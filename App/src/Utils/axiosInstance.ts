@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//const accessToken = localStorage.getItem("access_token");
+
 // axios send credentials (cookie)
 export const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_DEV_API_URL}`,

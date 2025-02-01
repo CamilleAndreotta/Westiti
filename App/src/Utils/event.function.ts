@@ -54,10 +54,10 @@ export const getAllEventPhotosByUsertId = async (
   eventId: string | undefined
 ): Promise<any> => {
   try {
-    //const accessToken = localStorage.getItem("access_token");
+    
     const userId = localStorage.getItem("userId");
     const response = await axios.get(
-      `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/user/${userId}`,
+      `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}/user/${userId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -66,6 +66,8 @@ export const getAllEventPhotosByUsertId = async (
         withCredentials: true,
       }
     );
+    console.log(response);
+    
     return response;
   } catch (error: any) {
     throw new Error(error);

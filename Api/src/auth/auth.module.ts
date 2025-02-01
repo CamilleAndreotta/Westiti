@@ -11,7 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
     UserModule,
     JwtModule.register({
       global: true,
-      secret: 'sekret!@Westiti',
+      secret: process.env.SECRET,
       signOptions: { expiresIn: '3600s' },
     }),
   ],

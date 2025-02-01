@@ -17,14 +17,11 @@ export const getAllEventsUser = async (): Promise<[] | { message: string }> => {
     }
   );
   console.log(response);
-  
+
   if (response.status === 401) {
-
-    
-
     return { message: "Vous n'êtes pas autorisé à accéder à cette ressource" };
   }
-  
+
   return response.data;
 };
 
@@ -34,14 +31,12 @@ export const handleCreateEventSubmit = async (
 ): Promise<any> => {
   e.preventDefault();
   try {
-    //const accessToken = localStorage.getItem("access_token");
     const createdEvent: any = await axios.post(
       `${import.meta.env.VITE_DEV_API_URL}/event`,
       createEventForm,
       {
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${accessToken}`,
         },
         withCredentials: true,
       }
@@ -75,7 +70,6 @@ export const handleJoinEventSubmit = async (
   e.preventDefault();
 
   try {
-    //const accessToken = localStorage.getItem("access_token");
     const userId: string | null = localStorage.getItem("userId");
     const data = {
       userId,

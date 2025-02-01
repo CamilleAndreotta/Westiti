@@ -167,7 +167,7 @@ const Event :FC = () : JSX.Element=> {
       return;
     }
     try {
-      //const accessToken = localStorage.getItem("access_token");
+      
       const userId = localStorage.getItem("userId");
       const data = {
         userId,
@@ -194,7 +194,7 @@ const Event :FC = () : JSX.Element=> {
   };
   const handleDeleteEvent = async () => {
     try {
-      //const accessToken = localStorage.getItem("access_token");
+      
       const userId = localStorage.getItem("userId");
       if (!(event === null || event === undefined)) {
         const creatorId = event.creator_id.id;
@@ -368,7 +368,7 @@ const Event :FC = () : JSX.Element=> {
                   id={photo.id}
                 >
                   <img
-                    src={`${import.meta.env.VITE_DEV_API_SERVER}/${photo.url}`}
+                    src={`${import.meta.env.VITE_DEV_API_URL}/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }
