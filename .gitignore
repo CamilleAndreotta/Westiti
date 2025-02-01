@@ -10,3 +10,4 @@ postgresql
 ./Api/.env.dev
 .env.dev
 /.env.dev
+/backup
