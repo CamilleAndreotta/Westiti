@@ -38,7 +38,7 @@ describe("submitLogin", () => {
     const password = mockedCredentials.password;
    
     mock
-      .onPost(`${import.meta.env.VITE_DEV_API_URL}/auth/login`)
+      .onPost(`${import.meta.env.VITE_API_URL}/auth/login`)
       .reply(200, mockResponse);
     
     const mockEvent = { preventDefault: vi.fn() };
@@ -59,7 +59,7 @@ describe("submitLogin", () => {
       },
     };
     mock
-      .onPost(`${import.meta.env.VITE_DEV_API_URL}/user/login`)
+      .onPost(`${import.meta.env.VITE_API_URL}/user/login`)
       .reply(401, mockErrorResponse);
 
     const mockEvent = { preventDefault: vi.fn() };

@@ -110,7 +110,7 @@ const Event :FC = () : JSX.Element=> {
       const userId = localStorage.getItem("userId");
       const response = await axios.post(
         `${
-          import.meta.env.VITE_DEV_API_URL
+          import.meta.env.VITE_API_URL
         }/event/${eventId}/user/${userId}/upload`,
         formData,
         {
@@ -174,7 +174,7 @@ const Event :FC = () : JSX.Element=> {
         eventId,
       };
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/event/leave`,
+        `${import.meta.env.VITE_API_URL}/event/leave`,
         data,
         {
           headers: {
@@ -200,7 +200,7 @@ const Event :FC = () : JSX.Element=> {
         const creatorId = event.creator_id.id;
         if (creatorId === userId) {
           const response = await axios.delete(
-            `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}`,
+            `${import.meta.env.VITE_API_URL}/event/${eventId}`,
             {
               data: {
                 userId,
@@ -368,7 +368,7 @@ const Event :FC = () : JSX.Element=> {
                   id={photo.id}
                 >
                   <img
-                    src={`${import.meta.env.VITE_DEV_API_URL}/${photo.url}`}
+                    src={`${import.meta.env.VITE_API_URL}/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }
@@ -389,7 +389,7 @@ const Event :FC = () : JSX.Element=> {
               event?.photos?.map((photo) => (
                 <div key={photo.id} className="event__photoslist-photo">
                   <img
-                    src={`${import.meta.env.VITE_DEV_API_URL}/${photo.url}`}
+                    src={`${import.meta.env.VITE_API_URL}/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }

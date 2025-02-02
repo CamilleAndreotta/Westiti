@@ -68,7 +68,7 @@ axios.defaults.withCredentials = true;
   const handleDeleteUser = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_DEV_API_URL}/user/${localStorage.getItem(
+        `${import.meta.env.VITE_API_URL}/user/${localStorage.getItem(
           "userId"
         )}`,
         {

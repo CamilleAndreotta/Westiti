@@ -9,7 +9,7 @@ export const handleDeleteUser = async (
   try {
     const userId = localStorage.getItem("userId");
     const response = await axios.delete(
-      `${import.meta.env.VITE_DEV_API_URL}/api/user/${userId}`,
+      `${import.meta.env.VITE_API_URL}/api/user/${userId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export const submitLogin = async (
         access_token: string;
       };
     }> = await axios.post(
-      `${import.meta.env.VITE_DEV_API_URL}/auth/login`,
+      `${import.meta.env.VITE_API_URL}/auth/login`,
       {
         password,
         email,

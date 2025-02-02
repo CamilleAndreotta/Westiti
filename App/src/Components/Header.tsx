@@ -26,7 +26,7 @@ const Header: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/auth/logout`,
+        `${import.meta.env.VITE_API_URL}/auth/logout`,
         {
           headers: {
             "Content-Type": "application/json",

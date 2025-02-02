@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 export const getAllEventsUser = async (): Promise<[] | { message: string }> => {
   const userId = localStorage.getItem("userId");
   const response = await axios.get(
-    `${import.meta.env.VITE_DEV_API_URL}/event`,
+    `${import.meta.env.VITE_API_URL}/event`,
     {
       params: { userId },
       headers: { "Content-Type": "application/json" },
@@ -32,7 +32,7 @@ export const handleCreateEventSubmit = async (
   e.preventDefault();
   try {
     const createdEvent: any = await axios.post(
-      `${import.meta.env.VITE_DEV_API_URL}/event`,
+      `${import.meta.env.VITE_API_URL}/event`,
       createEventForm,
       {
         headers: {
@@ -76,7 +76,7 @@ export const handleJoinEventSubmit = async (
       access_code: eventCode,
     };
     const response = await axios.post(
-      `${import.meta.env.VITE_DEV_API_URL}/api/event/join`,
+      `${import.meta.env.VITE_API_URL}/api/event/join`,
       data,
       {
         headers: {

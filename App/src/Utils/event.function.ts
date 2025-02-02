@@ -34,7 +34,7 @@ export const getEventByEventId = async (
   try {
     
     const response = await axios.get(
-      `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}`,
+      `${import.meta.env.VITE_API_URL}/event/${eventId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export const getAllEventPhotosByUsertId = async (
     
     const userId = localStorage.getItem("userId");
     const response = await axios.get(
-      `${import.meta.env.VITE_DEV_API_URL}/event/${eventId}/user/${userId}`,
+      `${import.meta.env.VITE_API_URL}/event/${eventId}/user/${userId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export const handleUpdateImage = async (
   try {
     const userId = localStorage.getItem("userId");
     const response = await axios.post(
-      `${import.meta.env.VITE_DEV_API_URL}/api/event/${eventId}/user/${userId}/upload`,
+      `${import.meta.env.VITE_API_URL}/api/event/${eventId}/user/${userId}/upload`,
       formData,
       {
         headers: {
@@ -127,7 +127,7 @@ export const submitDeletePhoto = async (
     eventId,
   };
   const response: AxiosResponse = await axios.delete(
-    `${import.meta.env.VITE_DEV_API_URL}/photo/${id}`,
+    `${import.meta.env.VITE_API_URL}/photo/${id}`,
     {
       data,
       headers: {

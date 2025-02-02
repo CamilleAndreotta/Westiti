@@ -111,12 +111,13 @@ const Signup = () => {
         password_confirmation : signup.password_confirmation
       };
       const response: AxiosResponse = await axios.post(
-        `${import.meta.env.VITE_DEV_API_URL}/auth/register`,
+        `${import.meta.env.VITE_API_URL}/auth/register`,
         body,
         {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
       localStorage.setItem("isConnected", "true");
