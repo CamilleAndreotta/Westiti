@@ -126,7 +126,7 @@ const Signup = () => {
       localStorage.setItem("email", response.data.email);
       localStorage.setItem("avatar", response.data.avatar);
       onSuccess("Compte créé avec succès.");
-
+      navigate(`/signin`);
       // type LoginUser = {
       //   status: number;
       //   data: {
@@ -136,19 +136,19 @@ const Signup = () => {
       //   };
       // };
 
-      const loginUser: any = await submitLogin(
-        e,
-        signup.password,
-        signup.email
-      );
+      // const loginUser: any = await submitLogin(
+      //   e,
+      //   signup.password,
+      //   signup.email
+      // );
 
-      if (loginUser && loginUser.status === 201) {
-        localStorage.setItem("email", signup.email);
-        localStorage.setItem("userId", loginUser.data.id);
-        localStorage.setItem("access_token", loginUser.data.access_token);
-        hideLoader();
-        navigate(`/dashboard/${response.data.id}`);
-      }
+      // if (loginUser && loginUser.status === 201) {
+      //   localStorage.setItem("email", signup.email);
+      //   localStorage.setItem("userId", loginUser.data.id);
+      //   localStorage.setItem("access_token", loginUser.data.access_token);
+      //   hideLoader();
+      //   navigate(`/dashboard/${response.data.id}`);
+      // }
     } catch (error) {
       onError("Erreur:" + error);
       console.log("Erreur:", error);

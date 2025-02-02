@@ -273,7 +273,8 @@ const Dashboard: React.FC = () => {
               name="eventCode"
               label="Code de l'événement"
               value={eventCode}
-              onChange={(e) => handleEventCodeChange(e, setEventCode)}
+              
+              onChange={(e:any) => handleEventCodeChange(e, setEventCode)}
               required
             />
             <Button type="submit" className="btn modale__btn">

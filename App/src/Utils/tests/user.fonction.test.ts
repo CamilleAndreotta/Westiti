@@ -18,6 +18,7 @@ test("submitLogin should return mocked response data", async () => {
   };
 
   // Configurer le mock pour retourner la réponse simulée
+  //@ts-ignore
   axios.post.mockResolvedValue(mockResponse);
 
   const mockEvent = { preventDefault: vi.fn() };
