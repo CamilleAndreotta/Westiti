@@ -19,6 +19,9 @@ RUN npm run build
 # Étape 2 : Créer l'image finale avec les fichiers construits
 FROM node:20-alpine
 
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+
 # Définir le répertoire de travail pour le serveur
 WORKDIR /usr/src/App
 

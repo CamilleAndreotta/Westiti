@@ -45,8 +45,10 @@ const Dashboard: React.FC = () => {
   const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
   const [isJoinEventModalOpen, setIsJoinEventModalOpen] = useState(false);
   const [eventCode, setEventCode] = useState<string>("");
-  const [eventsList, setEventsList] = useState<EventProps[] | [] | {message: string}>([]);
-  const [loading, setLoading] = useState(false)
+  const [eventsList, setEventsList] = useState<
+    EventProps[] | [] | { message: string }
+  >([]);
+  const [loading, setLoading] = useState(false);
   const [createEventForm, setCreateEventForm] = useState<CreateEventFormProps>({
     name: "",
     started_at: "",
@@ -57,7 +59,7 @@ const Dashboard: React.FC = () => {
     picture: eventImages["mariage"],
     creator_id: localStorage.getItem("userId"),
   });
-("access_token");
+  ("access_token");
   const userId: string | null = localStorage.getItem("userId");
 
   // Récupération des événements de l'utilisateur
@@ -86,7 +88,6 @@ const Dashboard: React.FC = () => {
     try {
       const response = await handleCreateEventSubmit(e, createEventForm);
 
-
       if (response.createdEvent.status === 201) {
         setIsCreateEventModalOpen(false);
         setCreateEventForm({
@@ -98,7 +99,7 @@ const Dashboard: React.FC = () => {
           type: "autres", // Réinitialise le type
           picture: eventImages["mariage"], // Réinitialise l'image
           creator_id: localStorage.getItem("userId"),
-        });        
+        });
         const eventsUser = await getAllEventsUser();
         setEventsList(eventsUser);
         onSuccess("Événement créé avec succès.");
@@ -143,7 +144,8 @@ const Dashboard: React.FC = () => {
             Rejoindre un événement
           </Button>
         </div>
-        <h1 className="dashboard__title">Voici vos événements 
+        <h1 className="dashboard__title">
+          Voici vos événements
           {/* <button onClick={getAllEventsUser}>recharger</button> */}
         </h1>
         <div className="dashboard__container">
@@ -164,7 +166,13 @@ const Dashboard: React.FC = () => {
               </Link>
             ))
           ) : (
-            <p>Aucun événement trouvé.</p>
+            <p
+              style={{
+                fontSize: "2rem",
+              }}
+            >
+              Aucun événement trouvé.
+            </p>
           )}
         </div>
 
@@ -265,9 +273,7 @@ const Dashboard: React.FC = () => {
               name="eventCode"
               label="Code de l'événement"
               value={eventCode}
-              onChange={(e) =>
-                handleEventCodeChange(e, setEventCode)
-              }
+              onChange={(e) => handleEventCodeChange(e, setEventCode)}
               required
             />
             <Button type="submit" className="btn modale__btn">

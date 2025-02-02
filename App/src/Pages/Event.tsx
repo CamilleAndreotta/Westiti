@@ -248,7 +248,7 @@ const Event :FC = () : JSX.Element=> {
               <img
                 src={getEventImage(event?.event_type)}
                 alt={event?.event_type || "autres"}
-                style={{ width: "250px", height: "130px" }}
+                /* style={{ width: "250px", height: "130px" }} */
               />
               {event &&
               event.creator_id.id === localStorage.getItem("userId") ? (
@@ -368,11 +368,11 @@ const Event :FC = () : JSX.Element=> {
                   id={photo.id}
                 >
                   <img
-                    src={`${import.meta.env.VITE_API_URL}/${photo.url}`}
+                    src={`${import.meta.env.VITE_URL_PHOTO}/${photo.url}`}
                     alt={
                       "photo" + photo.url.replace("public/uploads/photos/", "")
                     }
-                    style={{ width: "300px", height: "300px" }}
+                    /* style={{ width: "300px", height: "300px" }} */
                   />
                   <Button
                     className="event__delete-photo"
