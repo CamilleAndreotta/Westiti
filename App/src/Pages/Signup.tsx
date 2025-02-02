@@ -13,7 +13,7 @@ import "../styles/signup.scss";
 import "../styles/input.scss";
 import "../styles/button.scss";
 import "aos/dist/aos.css";
-import { submitLogin } from "../Utils/user.fonction";
+// import { submitLogin } from "../Utils/user.fonction";
 
 type UserSignupProps = {
   email: string;
