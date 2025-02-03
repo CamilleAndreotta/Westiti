@@ -6,7 +6,7 @@ services:
       dockerfile: dockerfile.dev
     volumes:
       - ./App:/usr/src/app
-      - /usr/src/app/node_modules
+      - /usr/src/app/node_modules/
     env_file:
       - .env    
     ports:
@@ -26,7 +26,7 @@ services:
       dockerfile: dockerfile.dev
     volumes:
       - ./Api:/usr/src/api
-      - /usr/src/api/node_modules
+      - /usr/src/api/node_modules/
     env_file:
       - .env
     ports:
@@ -39,28 +39,28 @@ services:
       - "traefik.http.routers.api-westiti.entrypoints=web"
       - "traefik.http.services.api-westiti.loadbalancer.server.port=3000"
 
-  # traefik:
-  #   image: "traefik:v2.10"
-  #   container_name: "traefik"
-  #   restart: always
-  #   command:
-  #     - "--api.dashboard=true"
-  #     - "--entrypoints.web.address=:80"
-  #     - "--providers.docker=true"
-  #     - "--providers.docker.exposedByDefault=false"
-  #   ports:
-  #     - "80:80"  # HTTP seulement
-  #     - "8080:8080"  # Dashboard Traefik (optionnel)
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock"
-  #     - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.traefik.entrypoints=web"
-  #     - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
-  #     - "traefik.http.routers.traefik.service=api@internal"
-  #   networks:
-  #     - westiti
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    restart: always
+    command:
+      - "--api.dashboard=true"
+      - "--entrypoints.web.address=:80"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+    ports:
+      - "80:80"  # HTTP seulement
+      - "8080:8080"  # Dashboard Traefik (optionnel)
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - ./traefik/traefik.dev.yml:/etc/traefik/traefik.yml
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+    networks:
+      - westiti
   postgres-westiti:
     container_name: postgres-westiti
     image: postgres:latest

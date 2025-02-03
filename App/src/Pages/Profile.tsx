@@ -6,7 +6,7 @@ import useToast from "../Hooks/useToast";
 import Layout from "../Components/Layout";
 import Button from "../Components/Button";
 import Modale from "../Components/Modale"; // Import de votre composant Modale
-
+import ProfileImg from "../assets/img/image-mobile__150150.webp";
 import axios from "axios";
 
 import "../styles/modale.scss";
@@ -18,7 +18,7 @@ axios.defaults.withCredentials = true;
 
 const Profile: FC = () => {
   // axios send credentials (cookie)
-axios.defaults.withCredentials = true;
+  axios.defaults.withCredentials = true;
   type UserProps = {
     id: null | string;
     name: null | string;
@@ -48,8 +48,7 @@ axios.defaults.withCredentials = true;
       id: userId,
       name: name,
       email: email,
-      avatar:
-        "https://t3.ftcdn.net/jpg/01/26/91/78/360_F_126917812_XlWgkaV9f81Hde4wvmvJWM3huJRvy5EM.webp",
+      avatar: ProfileImg,
     });
 
     if (isConnected === "false") {
@@ -130,7 +129,6 @@ axios.defaults.withCredentials = true;
             className="btn"
             onClick={async () => {
               await handleDeleteUser();
-          
             }}
           >
             Oui
