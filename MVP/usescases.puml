@@ -1,0 +1,61 @@
+@startuml WeStiti
+left to right direction
+
+actor "Visiteur" as Visitor
+actor "Utilisateur Non Connecté" as NonConnectedUser
+actor "Utilisateur Connecté" as ConnectedUser
+actor "Participant" as Participant
+actor "Organisateur" as Organizer
+/' actor "Modérateur" as Moderator
+actor "Admin" as Admin   '/
+
+NonConnectedUser --|> Visitor
+Participant --|> ConnectedUser
+' Moderator --|> Participant
+' Organizer --|> Moderator
+' Admin --|> Organizer
+
+rectangle "App" {
+
+    rectangle "Espace Connexion/Inscription" {
+        usecase "Créer un compte" as UC1
+        usecase "Connexion avec email/mot de passe" as UC2
+    }
+
+    rectangle "Espace Compte" {
+        usecase "Voir le tableau de bord" as UC3
+        usecase "Mettre à jour son profil" as UC13
+        usecase "Supprimer son compte" as UC14
+    }
+
+    rectangle "Espace Événement" {
+        usecase "Accéder à un événement via URL ou code à 6 chiffres" as UC4
+        usecase "Téléverser photos" as UC5
+        usecase "Voir Mes Contributions" as UC6
+       
+    }
+
+
+    rectangle "Espace Organisateur" {
+        rectangle "Gestion des Événements" {
+            usecase "Créer/Consulter/Modifier/Supprimer un événement" as UC15
+           
+        }
+    }
+}
+
+Visitor --> UC1
+NonConnectedUser --> UC2
+
+ConnectedUser --> UC3
+ConnectedUser --> UC13
+ConnectedUser --> UC14
+
+Participant --> UC4
+Participant --> UC5
+Participant --> UC6
+
+ Organizer --> UC15
+
+
+@enduml

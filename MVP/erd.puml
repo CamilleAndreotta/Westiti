@@ -1,0 +1,55 @@
+@startuml ERD
+
+entity "User" {
+  +id: UUID
+  --
+  name
+  email
+  password
+  avatar
+  created_at
+  updated_at
+}
+
+
+entity "Event" {
+  +id: UUID
+  --
+  created_at
+  updated_at
+  name
+  content
+  started_at
+  ended_at
+  access_code
+  upload_status
+  creator_id
+  code
+}
+
+entity "UserEvent" {
+  user_id
+  event_id
+}
+
+entity "Photo" {
+  +id: UUID
+  --
+  url
+  uploaded_at
+  status
+  --
+  event_id
+  user_id
+}
+
+/' User ||--o{ Event : "creates/participates" '/
+User ||-right-o{ UserEvent
+Event ||-left-o{ UserEvent
+User ||--o{ Photo
+Event ||--o{ Photo
+
+
+
+
+@enduml
