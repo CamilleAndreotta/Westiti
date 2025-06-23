@@ -1,98 +1,102 @@
-import { useState } from "react";
+// Header.tsx
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import Logo from "../Assets/Img/logo.webp";
-import BurgerMenuClosed from "../Assets/Img/burger-menu-svgrepo-com.svg";
-import BurgerMenuOpen from "../Assets/Img/close-svgrepo-com.svg";
+import useToast from "../Hooks/useToast";
 
-import "../styles/header.css";
+import Logo from "../assets/img/logo.webp";
 
-const Header = () => {
-  const [menuBurgerIsOpen, setMenuBurgerIsOpen] = useState(false);
-  const [userIsConnected, setUserIsConnected] = useState(false);
-  
+import "../styles/header.scss";
+
+const Header: React.FC = () => {
+  const { onError, onSuccess } = useToast();
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const [userIsConnected, setUserIsConnected] = useState(
+    localStorage.getItem("isConnected")
+  );
   const navigate = useNavigate();
 
-  const userName: string = "John Doe";
-  const userId: number = 1;
-
-  const handleMenuBurger = (): void => {
-    setMenuBurgerIsOpen(!menuBurgerIsOpen);
+  const handleMenuToggle = (): void => {
+    setMenuIsOpen(!menuIsOpen);
   };
+
   const handleLogout = async (): Promise<void> => {
     try {
-      const response = await fetch(`http://localhost:3000/logout/${userId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (response.status !== 200) {
-        console.log("Une erreur s'est produite pendant la déconnexion");
-        return;
-      }
-      console.log("L'utilisateur a été déconnecté");
-
+      onSuccess("Déconnexion réussie");
+      localStorage.clear();
+      setMenuIsOpen(false);
+      setUserIsConnected(null);
       navigate("/");
-      console.log(data);
     } catch (error) {
+      onError("Erreur lors de la déconnexion");
       console.log(error, "Logout");
     }
   };
+  const currentYear = new Date().getFullYear();
+
   return (
-    <div className="header">
-      <div className="header__container">
-        <img className="header__logo" src={Logo} alt="logo" />
-        {menuBurgerIsOpen ? (
-          <img
-            src={BurgerMenuOpen}
-            className="header__burger-icon header__burger-icon--open"
-            onClick={handleMenuBurger}
-            alt="Close menu"
-          />
-        ) : (
-          <img
-            src={BurgerMenuClosed}
-            className="header__burger-icon header__burger-icon--closed"
-            onClick={handleMenuBurger}
-            alt="Open menu"
-          />
-        )}
+    <div className={`header ${menuIsOpen ? "menu-open" : ""}`}>
+      <Link
+        to={`/dashboard/${localStorage.getItem("userId")}`}
+        className="logo"
+      >
+        <img src={Logo} alt="logo" />
+      </Link>
 
-        {menuBurgerIsOpen && (
-          <div className="header__menu header__menu--open" data-aos="fade-down">
-            <ul className="header__list">
-              {userIsConnected ? (
-                <li className="header__list-item">
-                  <Link to={`/profile/${userId}`}>{userName}</Link>
-                </li>
-              ) : (
-                <li className="header__list-item">
-                  <Link to={`/signin`}>Se connecter</Link>
-                </li>
-              )}
-
-              <li className="header__list-item">
-                <Link to={`/my-events/${userId}`}>Mes événements</Link>
-              </li>
-              <li className="header__list-item">
-                <Link to={`/register-to-an-event`}>Rejoindre un événement</Link>
-              </li>
-              <li className="header__list-item">
-                <Link to={`/register-new-event`}>
-                  Créer un nouvel événement
-                </Link>
-              </li>
-              {userIsConnected && (
-                <li className="header__list-logout" onClick={handleLogout}>
-                  Déconnexion
-                </li>
-              )}
-            </ul>
-          </div>
-        )}
+      <div className="menu-icon" onClick={handleMenuToggle}>
+        {/* L'icône du menu sera stylisée avec CSS */}
       </div>
+      <nav className="nav">
+        <ul className="pt-5">
+          {userIsConnected ? (
+            <li>
+              <Link
+                to={`/profile/${localStorage.getItem("userId")}`}
+                onClick={handleMenuToggle}
+              >
+                {localStorage.getItem("username")}
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <Link to={`/signin`} onClick={handleMenuToggle}>
+                Se connecter
+              </Link>
+            </li>
+          )}
+
+          <li>
+            <Link
+              to={`/dashboard/${localStorage.getItem("userId")}`}
+              onClick={handleMenuToggle}
+            >
+              Mes événements
+            </Link>
+          </li>
+          {/* <li>
+            <Link to="/contact" onClick={handleMenuToggle}>
+              Contact
+            </Link>
+          </li> */}
+          {userIsConnected && (
+            <li
+              onClick={() => {
+                handleMenuToggle();
+                handleLogout();
+              }}
+            >
+              <span className="header__logout">Déconnexion</span>
+            </li>
+          )}
+          {/* Ajout du texte "Westiti2024" en bas du menu */}
+          <li className="nav__footer">
+            <span>
+              Westiti©
+              {currentYear}
+            </span>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };
