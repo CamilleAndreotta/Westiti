@@ -1,6 +1,6 @@
 FROM node:20-alpine as base
 
-WORKDIR /usr/src/api
+WORKDIR /usr/src/frontOffice
 
 COPY package*.json ./
 
@@ -14,4 +14,4 @@ RUN npx prisma generate
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]

@@ -4,7 +4,6 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { RegisterDto } from './dto/register.dto';
-import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -27,22 +26,6 @@ export class AuthService {
       throw new UnauthorizedException({ message: 'Email existant' });
     }
 
-    if (registerDto.password !== registerDto.password_confirmation) {
-      throw new UnauthorizedException({
-        message:
-          'Mot de passe et mot de passe confirmation ne correspondent pas',
-      });
-    }
-    if (
-      !registerDto.password ||
-      !registerDto.password_confirmation ||
-      !registerDto.email ||
-      !registerDto.name
-    ) {
-      throw new UnauthorizedException({
-        message: 'Il manque des données pour pouvoir créer votre compte',
-      });
-    }
     if (
       registerDto.password.match(/[a-z]/g) === null ||
       registerDto.password.match(/[A-Z]/g) === null ||
@@ -64,7 +47,7 @@ export class AuthService {
     return this.userService.create(userDto);
   }
 
-  async signIn(email: string, password: string, res: Response) {
+  async signIn(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
     const isMatch = user
       ? await bcrypt.compare(password, user.password)
@@ -75,25 +58,11 @@ export class AuthService {
       });
     }
 
-    
     const payload = { id: user.id, email: user.email };
-    const token = await this.jwtService.signAsync(payload);
-
-    // ✅ Corrige les options du cookie
-    res.cookie('access_token', token, {
-      maxAge: 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      secure:false, // ✅ Utiliser `false` en local true en prod
-      sameSite: "lax",// ✅ 'lax' en local pour éviter les problèmes  none en prod
-    });
-    /* console.log(res.getHeaders()['set-cookie'])
-    console.log('✅ Réponse envoyée au frontend :', {
+    return {
       id: user.id,
       username: user.name,
-    }); */
-    return {
-      message: 'Connexion réussie',
-      user: { id: user.id, username: user.name },
+      access_token: await this.jwtService.signAsync(payload),
     };
   }
 }

@@ -1,0 +1,100 @@
+@startuml WeStiti
+left to right direction
+
+actor "Visiteur" as Visitor
+actor "Utilisateur Non Connecté" as NonConnectedUser
+actor "Utilisateur Connecté" as ConnectedUser
+actor "Participant" as Participant
+actor "Organisateur" as Organizer
+actor "Modérateur" as Moderator
+actor "Admin" as Admin  
+
+NonConnectedUser --|> Visitor
+Participant --|> ConnectedUser
+Moderator --|> Participant
+Organizer --|> Moderator
+Admin --|> Organizer
+
+rectangle "App" {
+
+    rectangle "Espace Connexion/Inscription" {
+        usecase "Créer un compte" as UC1
+        usecase "Connexion avec OTP" as UC2
+    }
+
+    rectangle "Espace Compte" {
+        usecase "Voir le tableau de bord" as UC3
+        usecase "Mettre à jour son profil" as UC13
+        usecase "Supprimer son compte" as UC14
+    }
+
+    rectangle "Espace Événement" {
+        usecase "Accéder à un événement via QR code ou code à 6 chiffres" as UC4
+        usecase "Téléverser photos/vidéos" as UC5
+        usecase "Voir Mes Contributions" as UC6
+        usecase "Télécharger photos" as UC7
+        usecase "Recevoir une notification de clôture" as UC8
+        usecase "Liker des photos" as UC9
+        usecase "Recevoir un diaporama des photos les plus likées" as UC10
+        usecase "Recevoir une notification de validation des photos" as UC11
+        usecase "Gérer ses propres photos/vidéos avant validation" as UC12
+    }
+
+    rectangle "Espace Modération" {
+        usecase "Modérer les utilisateurs" as UC23
+        usecase "Approuver/Rejeter photos/vidéos" as UC24
+    }
+
+    rectangle "Espace Admin" {
+        usecase "Gérer les utilisateurs" as UC25
+        usecase "Gérer les événements" as UC26
+        usecase "Gérer les photos" as UC28
+    }
+
+    rectangle "Espace Organisateur" {
+        rectangle "Gestion des Événements" {
+            usecase "Créer/Consulter/Modifier/Supprimer un événement" as UC15
+            usecase "Générer QR code ou lien pour événement" as UC16
+            usecase "Définir ou clôturer les téléversements" as UC18
+            usecase "Organiser photos par utilisateur" as UC17
+            usecase "Télécharger toutes les photos" as UC19
+            usecase "Envoyer une notification de clôture" as UC20
+            usecase "Assigner un modérateur" as UC22
+        }
+    }
+}
+
+Visitor --> UC1
+NonConnectedUser --> UC2
+
+ConnectedUser --> UC3
+ConnectedUser --> UC13
+ConnectedUser --> UC14
+
+Participant --> UC4
+Participant --> UC5
+Participant --> UC6
+Participant --> UC7
+Participant --> UC8
+Participant --> UC9
+Participant --> UC10
+Participant --> UC11
+Participant --> UC12
+
+Organizer --> UC15
+Organizer --> UC16
+Organizer --> UC17
+Organizer --> UC18
+Organizer --> UC19
+Organizer --> UC20
+' Organizer --> UC21
+Organizer --> UC22
+
+Moderator --> UC23
+Moderator --> UC24
+
+Admin --> UC25
+Admin --> UC26
+' Admin --> UC27
+Admin --> UC28
+@enduml
