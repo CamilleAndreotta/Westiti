@@ -1,4 +1,4 @@
-sservices:
+services:
   frontoffice-westiti:
     container_name: frontoffice-westiti
     build:
