@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import useToast from "../Hooks/useToast";
 
 import Logo from "../assets/img/logo.webp";
+import BurgerMenuClosed from "../assets/img/burger-menu-svgrepo-com.svg";
+import BurgerMenuOpen from "../assets/img/close-svgrepo-com.svg";
 
 import "../styles/header.scss";
 
