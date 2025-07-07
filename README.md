@@ -58,4 +58,8 @@ sudo docker compose up
 
 ## Se rendre sur le projet déployé
 
-Une fois le projet démarré, accéder à l'application à l'adresse http://localhost:5173 pour le frontend, et http://localhost:3000 pour l'api
+Une fois le projet démarré, accéder à l'application à l'adresse http://localhost:5173 pour le frontend, et http://localhost:3000 pour l'api Démarerr le projet en mode dev: 
+ 
+ le docker.override vient ecraser des varaiable u docker-compose  afin de démarrer en mode developpement
+ 
+ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d

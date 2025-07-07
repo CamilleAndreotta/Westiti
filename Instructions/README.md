@@ -17,7 +17,7 @@ Ce rendre dans le dossier récupéré depuis Github (par défaut dans le dossier
 
 Ouvrir un terminal:
 ``` bash
-cd FrontOffice
+cd App
 npm install
 ```
 pour installer les dépéndances frontend du projet
@@ -82,6 +82,6 @@ npm run prisma
 ## Se rendre sur le projet déployé
 
 Une fois le projet démarré, accéder à l'application aux adresses:
-- Pour le front :  http://localhost:5173 ou http://frontoffice-westiti.localhost
+- Pour le front :  http://localhost:5173 ou http://App-westiti.localhost
 
 - Pour le back/API :  pour le frontend, et http://localhost:3000 ou http://api-westiti.localhost
